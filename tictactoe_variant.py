@@ -312,12 +312,6 @@ class Tictactoe():
                     game_ongoing = False
                     print(result_map[result])
 
-
-
-
-
-
-
     # method to get a numerical metric for the next possible move
     def minimax(self, isMax):
         # doesn't return anything if game is going on, so only return
@@ -354,6 +348,47 @@ class Tictactoe():
 
         return best_score
 
+    # method to get a numerical metric for the next possible move with alpha beta pruning
+    # aim to prune branches where alpha >= beta to diminish search space
+    def minimax_with_alpha_beta_pruning(self, isMax, alpha = -math.inf, beta = math.inf):
+        # doesn't return anything if game is going on, so only return
+        # if it actually has an outcome
+        # Basically, if the last move leads to a draw, loss or win, the result value(1,-1 or 0) itself is the value
+        # the challenge is only when we have to build up recursively when there is no immediate final result
+        outcome = self.detect_win_loss()
+        # this second layer explanation can be understood from documentation of the method
+        ai_adjusted_outcome = self.generate_win_loss_metrics_wrt_AI(outcome)
+        if ai_adjusted_outcome is not None:
+            return ai_adjusted_outcome
+        # min player is trying to minimize this score for max and max player is trying to maximize this score for themselves
+        best_score =-math.inf if isMax else math.inf
+        # get the current turn player's symbol
+        current_player = self.ai_player_code if isMax else 1 - self.ai_player_code
+        current_symbol = self.get_player_symbol(current_player)
+        possible_moves = self.get_possible_moves()
+
+        for move in possible_moves:
+            self.board[move[0]][move[1]] = current_symbol
+            self.increment_total_move_count()
+
+            # Recursively call minimax for the next player's turn
+            score = self.minimax_with_alpha_beta_pruning(not isMax, alpha, beta)
+
+            # Undo the move
+            self.undo_last_move(move)
+
+            # Step 6: Update best score
+            if isMax:
+                best_score = max(best_score, score)
+                alpha = max(best_score, alpha)
+            else:
+                best_score = min(best_score, score)
+                beta = min(best_score, beta)
+
+            if alpha >= beta:
+                break
+
+        return best_score
 
     # basically using the move evaluation found in the previous step to choose an optimal move by evaluating
     # for each move possible given current empty spaces
@@ -370,7 +405,8 @@ class Tictactoe():
             # increase the move_count by one
             self.increment_total_move_count()
             # trying to evaluate min player's
-            score = self.minimax(False)
+            # score = self.minimax(False)
+            score = self.minimax_with_alpha_beta_pruning(False, -math.inf, math.inf)
             # it was only for trial so need to go back to previous state after trying
             self.undo_last_move(next_move)
             if score > best_score:
