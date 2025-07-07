@@ -77,6 +77,8 @@ class Tictactoe():
         }
         self.vs_human = vs_human
         self.ai_player_code = ai_player_code
+        # Ran into error first
+        self.central_heuristic_evaluation_map = self.set_central_control_heuristic_map()
 
     # To get board_dimesions/size
     def get_board_size(self):
@@ -184,6 +186,7 @@ class Tictactoe():
     def make_ai_move(self):
         ai_player_code = self.get_AI_player_code()
         best_move = self.select_optimal_ai_move()
+        print(best_move)
         self.board[best_move[0]][best_move[1]] = self.get_player_symbol(ai_player_code)
         self.increment_total_move_count()
         self.display_board()
@@ -390,13 +393,63 @@ class Tictactoe():
 
         return best_score
 
+    # heuristic aid added to evaluate scores for positions and prevent searching till terminal positions
+    # method to get a numerical metric for the next possible move with alpha beta pruning
+    # aim to prune branches where alpha >= beta to diminish search space
+    def heuristic_minimax_with_alpha_beta_pruning(self, isMax, depth, alpha=-math.inf, beta=math.inf,):
+            # doesn't return anything if game is going on, so only return
+            # if it actually has an outcome
+            # Basically, if the last move leads to a draw, loss or win, the result value(1,-1 or 0) itself is the value
+            # the challenge is only when we have to build up recursively when there is no immediate final result
+            outcome = self.detect_win_loss()
+            # this second layer explanation can be understood from documentation of the method
+            ai_adjusted_outcome = self.generate_win_loss_metrics_wrt_AI(outcome)
+            if ai_adjusted_outcome is not None:
+                return ai_adjusted_outcome
+
+            # reached the max depth we set so we can just return the heuristic evaluation of the board
+            if depth == 0:
+                return self.heuristically_evaluate_board()
+
+            # min player is trying to minimize this score for max and max player is trying to maximize this score for themselves
+            best_score = -math.inf if isMax else math.inf
+            # get the current turn player's symbol
+            current_player = self.ai_player_code if isMax else 1 - self.ai_player_code
+            current_symbol = self.get_player_symbol(current_player)
+            possible_moves = self.get_possible_moves()
+
+            for move in possible_moves:
+                self.board[move[0]][move[1]] = current_symbol
+                self.increment_total_move_count()
+
+                # Recursively call minimax for the next player's turn
+                score = self.heuristic_minimax_with_alpha_beta_pruning(not isMax, depth -1,  alpha, beta)
+
+                # Undo the move
+                self.undo_last_move(move)
+
+                # Step 6: Update best score
+                if isMax:
+                    best_score = max(best_score, score)
+                    alpha = max(best_score, alpha)
+                else:
+                    best_score = min(best_score, score)
+                    beta = min(best_score, beta)
+
+                if alpha >= beta:
+                    break
+
+            return best_score
+
+
     # basically using the move evaluation found in the previous step to choose an optimal move by evaluating
     # for each move possible given current empty spaces
     def select_optimal_ai_move(self):
+        current_board_size = self.get_board_size()
         current_player = self.ai_player_code
         current_symbol = self.get_player_symbol(current_player)
         possible_moves = self.get_possible_moves()
-        # choosing the lowest abs value possible intially
+        # choosing the lowest abs value possible initially
         best_score = -math.inf
         best_follow_up_move = None
         for next_move in possible_moves:
@@ -405,8 +458,15 @@ class Tictactoe():
             # increase the move_count by one
             self.increment_total_move_count()
             # trying to evaluate min player's
+            # score to be used for minimax without alpha beta pruning
             # score = self.minimax(False)
-            score = self.minimax_with_alpha_beta_pruning(False, -math.inf, math.inf)
+            # score to be used for minimax with alpha beta pruning
+            # score = self.minimax_with_alpha_beta_pruning(False, -math.inf, math.inf)
+            score = 0
+            if current_board_size <= 3:
+                score = self.minimax_with_alpha_beta_pruning(False, -math.inf, math.inf)
+            else:
+                score = self.heuristic_minimax_with_alpha_beta_pruning(False,9-current_board_size, -math.inf, math.inf)
             # it was only for trial so need to go back to previous state after trying
             self.undo_last_move(next_move)
             if score > best_score:
@@ -415,6 +475,177 @@ class Tictactoe():
         return best_follow_up_move
 
 
-# entry point to launch the game
-if __name__ == "__main__":
-    launch_game_with_user_config()
+    # To be used to prevent our alpha beta minimax from going till the end
+    # and get slowed down instead we can try and use a heuristic function to look for what seems like a better positions
+    # only needed when game size is greater than 3 otherwise exhaustive search does the trick
+    def heuristically_evaluate_board(self):
+        multiplier = 0.18
+        fork_multiplier = 0.28
+        heuristic_value_diagonals = self.clamp(self.calculate_heuristic_value_diagonals())
+        heuristic_value_rows = self.clamp(self.calculate_heuristic_value_rows())
+        heuristic_value_columns = self.clamp(self.calculate_heuristic_value_columns())
+        heuristic_value_central_dominance = self.clamp(self.calculate_heuristic_value_central_dominance())
+        heuristic_value_fork = self.clamp(self.calculate_heuristic_value_fork())
+        return multiplier*(heuristic_value_central_dominance + heuristic_value_columns + heuristic_value_rows + heuristic_value_diagonals) + (fork_multiplier* heuristic_value_fork)
+
+
+    # to avoid repetition
+    # can be used for rows, columns and diagonals
+    def streak_heuristic_helper(self, streak):
+        current_board_size = self.get_board_size()
+        ai_player_code = self.ai_player_code
+        ai_symbol = self.get_player_symbol(ai_player_code)
+        opponent_symbol = self.get_player_symbol((ai_player_code + 1) % 2)
+        ai_symbol_count = streak.count(ai_symbol)
+        opponent_symbol_count = streak.count(opponent_symbol)
+        empty_count = streak.count("")
+        # basically if your opponent has even a single piece along the diagonal, not worth exploring much
+        if opponent_symbol_count != 0:
+            if opponent_symbol_count < current_board_size//2:
+                return 0
+            else:
+                # defensive, penalizes increasing opponent presence if u haven't established your presence already
+                if ai_symbol_count == 0:
+                    return  - (2 ** (opponent_symbol_count / current_board_size))
+                else:
+                    return - (opponent_symbol_count / current_board_size) * 0.5  # lighter penalty
+        # part after + is a bias term to incentivize exploration of completely empty rows, columns and diagonals
+        # offensive move
+        return 2 ** (ai_symbol_count/current_board_size) + (empty_count / current_board_size) * 0.1
+
+
+    # method to obtain heuristic value for both diagonals
+    def calculate_heuristic_value_diagonals(self):
+        current_board_state = self.get_current_board_state()
+        current_board_size = self.get_board_size()
+        # diagonal 1
+        diagonal_1 = [current_board_state[x][x] for x in range(current_board_size)]
+        diagonal_1_heuristic_score = self.streak_heuristic_helper(diagonal_1)
+        # diagonal 2
+        diagonal_2 = [current_board_state[x][(current_board_size-1) - x] for x in range(current_board_size)]
+        diagonal_2_heuristic_score = self.streak_heuristic_helper(diagonal_2)
+        return (diagonal_1_heuristic_score + diagonal_2_heuristic_score)/2
+
+    def calculate_heuristic_value_rows(self):
+        current_board_state = self.get_current_board_state()
+        current_board_size = self.get_board_size()
+        result = 0
+        for row in current_board_state:
+            result += self.streak_heuristic_helper(row)
+        # otherwise result goes too much for bigger boards, averaging keeps it somewhat normalized
+        result = result/current_board_size
+        return result
+
+    # to keep values in range [-1,1]
+    def clamp(self, value):
+        if value == 0.0:
+            return value
+        elif value > 0.0:
+            return min(1.0, value)
+        else:
+            return max(-1.0, value)
+
+    def calculate_heuristic_value_columns(self):
+        current_board_state = self.get_current_board_state()
+        current_board_size = self.get_board_size()
+        result = 0
+        for number in range(current_board_size):
+            column = [current_board_state[value][number] for value in range(current_board_size)]
+            result += self.streak_heuristic_helper(column)
+        # otherwise result goes too much for bigger boards, averaging keeps it somewhat normalized
+        result = result / current_board_size
+        return result
+
+
+    def set_central_control_heuristic_map(self):
+        current_board_size = self.get_board_size()
+        current_board_state = self.get_current_board_state()
+        score_template_map = [[0.0 for x in range(current_board_size)] for y in range(current_board_size)]
+        mid = (current_board_size - 1) / 2 if current_board_size % 2 == 0 else current_board_size // 2
+        ai_player_code = self.get_AI_player_code()
+        ai_symbol = self.get_player_symbol(ai_player_code)
+        for i in range(current_board_size):
+            for j in range(current_board_size):
+                if current_board_state[i][j] == ai_symbol:
+                    # using manhattan distance from center for convenience
+                    row_dist = abs(i - mid)
+                    col_dist = abs(j - mid)
+                    total_dist = row_dist + col_dist
+                    # this is mostly to prevent values from really explode for bigger tictactoe boards
+                    # also prevents these metrics from dominating over other metrics
+                    normalized_total_distance = total_dist/current_board_size
+                    # Center is most valuable, then edges, then corners
+                    # squaring to penalize distant ones even more
+                    score_template_map[i][j] = (1 - normalized_total_distance) ** 2
+        return score_template_map
+
+    # heavily incentivizes central control
+    def calculate_heuristic_value_central_dominance(self):
+        result = 0
+        central_heuristic_evaluation_map = self.set_central_control_heuristic_map()
+        for row in central_heuristic_evaluation_map:
+            result += sum(row)
+        return result
+
+    # basically if there is at least 1 winnable line through a square
+    def is_unchallenged(self, line, player_symbol, opponent_symbol):
+        return line.count(opponent_symbol) == 0 and line.count(player_symbol) >= 1
+
+    # given a co-ordinate get its intersecting lines
+    def get_intersecting_lines(self, move):
+        current_board_size = self.get_board_size()
+        current_board_state = self.get_current_board_state()
+        x, y = move
+        row = [current_board_state[x][n] for n in range(current_board_size)]
+        column = [current_board_state[n][y] for n in range(current_board_size)]
+        result = [row, column]
+        # point lies on main diagonal
+        if x == y:
+            result.append([current_board_state[a][a] for a in range(current_board_size)])
+        # point lies on opposite diagonal
+        if y == (current_board_size -1) - x:
+            result.append([current_board_state[a][(current_board_size -1) - a] for a in range(current_board_size)])
+        return result
+
+
+    #for heuristic offence and defence
+    def calculate_heuristic_value_fork(self):
+        current_board_size = self.get_board_size()
+        current_board_state = self.get_current_board_state()
+        ai_player_code = self.ai_player_code
+        ai_symbol = self.get_player_symbol(ai_player_code)
+        opponent_symbol = self.get_player_symbol((ai_player_code + 1) % 2)
+        player_fork_count = 0
+        opponent_fork_count = 0
+        # to prevent duplicate position counting
+        ai_fork_positions = set()
+        # to prevent duplicate position counting
+        opponent_fork_positions = set()
+        for i in range(current_board_size):
+            for j in range(current_board_size):
+                if current_board_state[i][j] == ai_symbol:
+                    intersecting_lines = self.get_intersecting_lines([i,j])
+                    ai_winning_lines = 0
+                    for line in intersecting_lines:
+                        if self.is_unchallenged(line,ai_symbol,opponent_symbol):
+                            ai_winning_lines += 1
+                        if ai_winning_lines >= 2:
+                            ai_fork_positions.add((i,j))
+        for i in range(current_board_size):
+            for j in range(current_board_size):
+                if current_board_state[i][j] == opponent_symbol:
+                    intersecting_lines = self.get_intersecting_lines([i,j])
+                    opponent_winning_lines = 0
+                    for line in intersecting_lines:
+                        if self.is_unchallenged(line,opponent_symbol,ai_symbol):
+                            opponent_winning_lines += 1
+                        if opponent_winning_lines >= 2:
+                            opponent_fork_positions.add((i,j))
+        ai_fork_score = len(ai_fork_positions)
+        opponent_fork_score = len(opponent_fork_positions)
+        # this is so I can prevent division by 0 errors
+        return (ai_fork_score - opponent_fork_score)/max(1,ai_fork_score + opponent_fork_score)
+
+
+
+launch_game_with_user_config()
