@@ -3,6 +3,9 @@
 import math
 
 
+conclusive_result_multiplier = 1000
+
+
 def obtain_desired_board_size():
     board_size = 0
     invalid_board_size = True
@@ -58,7 +61,7 @@ def launch_game_with_user_config():
 
 # Let us represent players with player 1 by 0 and player 2 by 1
 # default setting to be against human player, and size and win_length to conventional 3*3
-class Tictactoe():
+class Tictactoe:
     def __init__(self, size=3, win_length=3, vs_human = True, ai_player_code = None):
         self.size = size
         self.win_length = win_length
@@ -80,7 +83,7 @@ class Tictactoe():
         # Ran into error first
         self.central_heuristic_evaluation_map = self.set_central_control_heuristic_map()
 
-    # To get board_dimesions/size
+    # To get board_dimensions/size
     def get_board_size(self):
         return self.size
 
@@ -262,13 +265,17 @@ class Tictactoe():
     # but doing it based on the detect_win_loss function would give wrong results
     def generate_win_loss_metrics_wrt_AI(self, outcome):
         ai_player_code = self.get_AI_player_code()
+        if outcome is None:
+            return None
+        if outcome == 0:
+            return 0
         if ai_player_code == 1:
-            if outcome in [-1,1,0]:
-                return -1 * outcome
+            if outcome in [-1,1]:
+                return -1 * outcome * conclusive_result_multiplier
             else:
-                return outcome
+                return outcome * conclusive_result_multiplier
         else:
-            return outcome
+            return outcome * conclusive_result_multiplier
 
 
     # Show game result
@@ -353,7 +360,8 @@ class Tictactoe():
 
     # method to get a numerical metric for the next possible move with alpha beta pruning
     # aim to prune branches where alpha >= beta to diminish search space
-    def minimax_with_alpha_beta_pruning(self, isMax, alpha = -math.inf, beta = math.inf):
+    # we add a depth_to_result parameter to allow for setting of search depths
+    def minimax_with_alpha_beta_pruning(self, isMax, depth_to_result, alpha = -math.inf, beta = math.inf):
         # doesn't return anything if game is going on, so only return
         # if it actually has an outcome
         # Basically, if the last move leads to a draw, loss or win, the result value(1,-1 or 0) itself is the value
@@ -362,6 +370,11 @@ class Tictactoe():
         # this second layer explanation can be understood from documentation of the method
         ai_adjusted_outcome = self.generate_win_loss_metrics_wrt_AI(outcome)
         if ai_adjusted_outcome is not None:
+            if ai_adjusted_outcome > 0:
+                return ai_adjusted_outcome - depth_to_result
+            if ai_adjusted_outcome < 0:
+                # basically, if we are losing, we prolong the result
+                return ai_adjusted_outcome + depth_to_result
             return ai_adjusted_outcome
         # min player is trying to minimize this score for max and max player is trying to maximize this score for themselves
         best_score =-math.inf if isMax else math.inf
@@ -375,7 +388,7 @@ class Tictactoe():
             self.increment_total_move_count()
 
             # Recursively call minimax for the next player's turn
-            score = self.minimax_with_alpha_beta_pruning(not isMax, alpha, beta)
+            score = self.minimax_with_alpha_beta_pruning(not isMax, depth_to_result + 1, alpha, beta)
 
             # Undo the move
             self.undo_last_move(move)
@@ -396,7 +409,8 @@ class Tictactoe():
     # heuristic aid added to evaluate scores for positions and prevent searching till terminal positions
     # method to get a numerical metric for the next possible move with alpha beta pruning
     # aim to prune branches where alpha >= beta to diminish search space
-    def heuristic_minimax_with_alpha_beta_pruning(self, isMax, depth, alpha=-math.inf, beta=math.inf,):
+    # we add a depth_to_result parameter to allow for setting of search depths
+    def heuristic_minimax_with_alpha_beta_pruning(self, isMax, max_ai_search_depth, depth_to_result, alpha=-math.inf, beta=math.inf):
             # doesn't return anything if game is going on, so only return
             # if it actually has an outcome
             # Basically, if the last move leads to a draw, loss or win, the result value(1,-1 or 0) itself is the value
@@ -405,10 +419,17 @@ class Tictactoe():
             # this second layer explanation can be understood from documentation of the method
             ai_adjusted_outcome = self.generate_win_loss_metrics_wrt_AI(outcome)
             if ai_adjusted_outcome is not None:
+                # alpha beta pruning/minimax doesn't differentiate between quicker and longer wins,
+                # if we can reduce the heuristic value according to how many moves before win
+                if ai_adjusted_outcome > 0:
+                    return ai_adjusted_outcome - depth_to_result
+                # basically, if we are losing, we prolong the result
+                if ai_adjusted_outcome < 0:
+                    return ai_adjusted_outcome + depth_to_result
                 return ai_adjusted_outcome
 
             # reached the max depth we set so we can just return the heuristic evaluation of the board
-            if depth == 0:
+            if max_ai_search_depth == 0:
                 return self.heuristically_evaluate_board()
 
             # min player is trying to minimize this score for max and max player is trying to maximize this score for themselves
@@ -423,7 +444,7 @@ class Tictactoe():
                 self.increment_total_move_count()
 
                 # Recursively call minimax for the next player's turn
-                score = self.heuristic_minimax_with_alpha_beta_pruning(not isMax, depth -1,  alpha, beta)
+                score = self.heuristic_minimax_with_alpha_beta_pruning(not isMax, max_ai_search_depth - 1, depth_to_result + 1, alpha, beta)
 
                 # Undo the move
                 self.undo_last_move(move)
@@ -463,15 +484,24 @@ class Tictactoe():
             # score to be used for minimax with alpha beta pruning
             # score = self.minimax_with_alpha_beta_pruning(False, -math.inf, math.inf)
             score = 0
+            # Basically, if the board is smaller, you don't need to rely on heuristics, if not you do
             if current_board_size <= 3:
-                score = self.minimax_with_alpha_beta_pruning(False, -math.inf, math.inf)
+                score = self.minimax_with_alpha_beta_pruning(False,1, -math.inf, math.inf)
             else:
-                score = self.heuristic_minimax_with_alpha_beta_pruning(False,9-current_board_size, -math.inf, math.inf)
+                # If the number of moves is less than this number, we can do a search till the end with alpha beta pruning, instead of having to rely on heuristics
+                if len(possible_moves) <= 10:
+                    score = self.minimax_with_alpha_beta_pruning(False, 1,  -math.inf, math.inf)
+                else:
+                    # the depth_to_result being set to 1 here is because when u first call this method
+                    # it is checking the board states exactly 1 move away from now
+                    # which in turn would update the values and do it 1 move from them and so on
+                    score = self.heuristic_minimax_with_alpha_beta_pruning(False,9-current_board_size, 1, -math.inf, math.inf)
             # it was only for trial so need to go back to previous state after trying
             self.undo_last_move(next_move)
             if score > best_score:
                 best_score = score
                 best_follow_up_move = next_move
+        print(f"Evaluation Score of Position is {best_score}")
         return best_follow_up_move
 
 
@@ -615,8 +645,6 @@ class Tictactoe():
         ai_player_code = self.ai_player_code
         ai_symbol = self.get_player_symbol(ai_player_code)
         opponent_symbol = self.get_player_symbol((ai_player_code + 1) % 2)
-        player_fork_count = 0
-        opponent_fork_count = 0
         # to prevent duplicate position counting
         ai_fork_positions = set()
         # to prevent duplicate position counting
