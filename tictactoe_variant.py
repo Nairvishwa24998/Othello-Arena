@@ -2,71 +2,21 @@
 # If not in valid range then keep asking until is
 import math
 
+import numpy as np
+from scipy.special import softmax
 
-conclusive_result_multiplier = 1000
-
-
-def obtain_desired_board_size():
-    board_size = 0
-    invalid_board_size = True
-    while invalid_board_size:
-        try:
-            board_size = int(input("Please input a natural number as the input in the range 2 to 7!"))
-            if board_size < 2 or board_size > 7:
-                print("Please ensure the provided value is a natural number in the range 2 to 7!")
-            else:
-                invalid_board_size = False
-        except ValueError:
-            print("Please ensure the provided value is a natural number in the range 2 to 7!")
-    return board_size
-
-def choose_opponent_type():
-    invalid_opponent_type = True
-    response = ""
-    while invalid_opponent_type:
-        try:
-            response = int(input("Please choose 0 for human opponent and 1 for AI opponent"))
-            if response in [0,1]:
-                invalid_opponent_type = False
-        except ValueError:
-            print("Please enter either 0 or 1!")
-    return response
-
-def choose_play_order():
-    invalid_play_order = True
-    response = ""
-    while invalid_play_order:
-        try:
-            response = int(input("Please choose 0 to make the AI go first and 1 to make the AI go second"))
-            if response in [0,1]:
-                invalid_play_order = False
-        except ValueError:
-            print("Please enter either 0 or 1!")
-    return response
-
-# Launch game with user set configuration
-def launch_game_with_user_config():
-    vs_human = True
-    ai_player_code = None
-    board_size = obtain_desired_board_size()
-    opponent = choose_opponent_type()
-    # AI opponent case
-    if opponent == 1:
-        vs_human = False
-        ai_player_code = choose_play_order()
-    # In human case, play order doesn't really matter since current implementation makes sure the signs alternate
-    tictactoe = Tictactoe(size=board_size, win_length=board_size, vs_human=vs_human, ai_player_code=ai_player_code)
-    tictactoe.run_game()
-
+from constant_strings import CONCLUSIVE_RESULT_MULTIPLIER, TEMPERATURE_CONTROL_FOR_MIN_RANDOMNESS
 
 # Let us represent players with player 1 by 0 and player 2 by 1
 # default setting to be against human player, and size and win_length to conventional 3*3
 class Tictactoe:
-    def __init__(self, size=3, win_length=3, vs_human = True, ai_player_code = None):
+    def __init__(self, size=3, win_length=3, temperature_control = TEMPERATURE_CONTROL_FOR_MIN_RANDOMNESS,vs_human = True, ai_player_code = None, simulation_mode = False):
         self.size = size
         self.win_length = win_length
-        self.board = [['']*size for _ in range(size)]
+        self.temperature_control = temperature_control
+        self.board = [['.']*size for _ in range(size)]
         self.total_moves = 0
+        self.simulation_mode = simulation_mode
         # to indicate which player moves X and which moves 0
         # currently the player who goes first gets X and the one who goes second gets 0
         self.assigned_move = {
@@ -81,11 +31,25 @@ class Tictactoe:
         self.vs_human = vs_human
         self.ai_player_code = ai_player_code
         # Ran into error first
-        self.central_heuristic_evaluation_map = self.set_central_control_heuristic_map()
+        self.central_heuristic_evaluation_map = None
 
     # To get board_dimensions/size
     def get_board_size(self):
         return self.size
+
+    def get_temperature_control(self):
+        return self.temperature_control
+
+    def set_temperature_control(self, custom_temperature):
+        self.temperature_control = custom_temperature
+
+    # to decide whether game is AI vs AI or not
+    def get_game_mode(self):
+        return self.simulation_mode
+
+    def set_to_simulation_mode(self):
+        self.simulation_mode = True
+        return self.simulation_mode
 
     # To get the current board_state
     def get_current_board_state(self):
@@ -99,11 +63,23 @@ class Tictactoe:
     def get_AI_player_code(self):
         return self.ai_player_code
 
+
+    # to be used to make AI play both sides by
+    def alternate_AI_player_code(self):
+        if self.ai_player_code == 0:
+            self.ai_player_code = 1
+        else:
+            self.ai_player_code = 0
+
+
+
+
+
     # get remaining moves/possible moves based on empty slots
     def get_possible_moves(self):
         current_board_state = self.get_current_board_state()
         board_size = self.get_board_size()
-        result = [(x,y) for x in range(board_size) for y in range(board_size) if current_board_state[x][y] == ""]
+        result = [(x,y) for x in range(board_size) for y in range(board_size) if current_board_state[x][y] == "."]
         return result
 
     # to get total moves so far
@@ -123,7 +99,7 @@ class Tictactoe:
     # to undo last move to try out different branches
     def undo_last_move(self, last_move):
         self.decrement_total_move_count()
-        self.board[last_move[0]][last_move[1]] = ""
+        self.board[last_move[0]][last_move[1]] = "."
 
 
     # To display the board to the user
@@ -138,7 +114,7 @@ class Tictactoe:
     def is_occupied(self,move_coordinates):
         current_board_state = self.get_current_board_state()
         # attempted position is not empty, so we shouldn't allow the move
-        if current_board_state[move_coordinates[0]][move_coordinates[1]] != "":
+        if current_board_state[move_coordinates[0]][move_coordinates[1]] != ".":
             print("The position is occupied try a different position!")
             return True
         return False
@@ -188,7 +164,7 @@ class Tictactoe:
 
     def make_ai_move(self):
         ai_player_code = self.get_AI_player_code()
-        best_move = self.select_optimal_ai_move()
+        best_move = self.select_optimal_ai_move_with_temperature_control()
         print(best_move)
         self.board[best_move[0]][best_move[1]] = self.get_player_symbol(ai_player_code)
         self.increment_total_move_count()
@@ -271,11 +247,11 @@ class Tictactoe:
             return 0
         if ai_player_code == 1:
             if outcome in [-1,1]:
-                return -1 * outcome * conclusive_result_multiplier
+                return -1 * outcome * CONCLUSIVE_RESULT_MULTIPLIER
             else:
-                return outcome * conclusive_result_multiplier
+                return outcome * CONCLUSIVE_RESULT_MULTIPLIER
         else:
-            return outcome * conclusive_result_multiplier
+            return outcome * CONCLUSIVE_RESULT_MULTIPLIER
 
 
     # Show game result
@@ -296,31 +272,72 @@ class Tictactoe:
     #             print(result_map[result])
 
     #  to run the game and link above methods together
+    # def run_game(self):
+    #     print("Game has now begun")
+    #     self.display_board()
+    #     game_ongoing = True
+    #     if self.ai_player_code is None:
+    #         while game_ongoing:
+    #             self.make_move()
+    #             result = self.detect_win_loss()
+    #             result_map = self.fetch_result_map()
+    #             if result is not None:
+    #                 game_ongoing = False
+    #                 print(result_map[result])
+    #     else:
+    #         # would indicate the order
+    #         ai_player_order = self.get_AI_player_code()
+    #         while game_ongoing:
+    #             if self.get_total_move_count() % 2 == ai_player_order:
+    #                 self.make_ai_move()
+    #             else:
+    #                 self.make_move()
+    #             result = self.detect_win_loss()
+    #             result_map = self.fetch_result_map()
+    #             if result is not None:
+    #                 game_ongoing = False
+    #                 print(result_map[result])
+
+    #  to run the game and link above methods together
     def run_game(self):
-        print("Game has now begun")
-        self.display_board()
-        game_ongoing = True
-        if self.ai_player_code is None:
+        simulation_mode = self.get_game_mode()
+        if simulation_mode:
+            # AI plays both moves here so we can simulate that by just alternating the
+            # symbol usage
+            game_ongoing = True
             while game_ongoing:
-                self.make_move()
+                self.make_ai_move()
                 result = self.detect_win_loss()
                 result_map = self.fetch_result_map()
+                self.alternate_AI_player_code()
                 if result is not None:
                     game_ongoing = False
                     print(result_map[result])
         else:
-            # would indicate the order
-            ai_player_order = self.get_AI_player_code()
-            while game_ongoing:
-                if self.get_total_move_count() % 2 == ai_player_order:
-                    self.make_ai_move()
-                else:
+            print("Game has now begun")
+            self.display_board()
+            game_ongoing = True
+            if self.ai_player_code is None:
+                while game_ongoing:
                     self.make_move()
-                result = self.detect_win_loss()
-                result_map = self.fetch_result_map()
-                if result is not None:
-                    game_ongoing = False
-                    print(result_map[result])
+                    result = self.detect_win_loss()
+                    result_map = self.fetch_result_map()
+                    if result is not None:
+                        game_ongoing = False
+                        print(result_map[result])
+            else:
+                # would indicate the order
+                ai_player_order = self.get_AI_player_code()
+                while game_ongoing:
+                    if self.get_total_move_count() % 2 == ai_player_order:
+                        self.make_ai_move()
+                    else:
+                        self.make_move()
+                    result = self.detect_win_loss()
+                    result_map = self.fetch_result_map()
+                    if result is not None:
+                        game_ongoing = False
+                        print(result_map[result])
 
     # method to get a numerical metric for the next possible move
     def minimax(self, isMax):
@@ -463,9 +480,61 @@ class Tictactoe:
             return best_score
 
 
+    # # basically using the move evaluation found in the previous step to choose an optimal move by evaluating
+    # # for each move possible given current empty spaces
+    # def select_optimal_ai_move(self):
+    #     current_board_size = self.get_board_size()
+    #     current_player = self.ai_player_code
+    #     current_symbol = self.get_player_symbol(current_player)
+    #     possible_moves = self.get_possible_moves()
+    #     # choosing the lowest abs value possible initially
+    #     best_score = -math.inf
+    #     best_follow_up_move = None
+    #     for next_move in possible_moves:
+    #         # trying each of the list of possible empty space given the current board state
+    #         self.board[next_move[0]][next_move[1]] = current_symbol
+    #         # increase the move_count by one
+    #         self.increment_total_move_count()
+    #         # trying to evaluate min player's
+    #         # score to be used for minimax without alpha beta pruning
+    #         # score = self.minimax(False)
+    #         # score to be used for minimax with alpha beta pruning
+    #         # score = self.minimax_with_alpha_beta_pruning(False, -math.inf, math.inf)
+    #         score = 0
+    #         # Basically, if the board is smaller, you don't need to rely on heuristics, if not you do
+    #         if current_board_size <= 3:
+    #             score = self.minimax_with_alpha_beta_pruning(False,1, -math.inf, math.inf)
+    #         else:
+    #             # If the number of moves is less than this number, we can do a search till the end with alpha beta pruning, instead of having to rely on heuristics
+    #             if len(possible_moves) <= 10:
+    #                 score = self.minimax_with_alpha_beta_pruning(False, 1,  -math.inf, math.inf)
+    #             else:
+    #                 # the depth_to_result being set to 1 here is because when u first call this method
+    #                 # it is checking the board states exactly 1 move away from now
+    #                 # which in turn would update the values and do it 1 move from them and so on
+    #                 score = self.heuristic_minimax_with_alpha_beta_pruning(False,9-current_board_size, 1, -math.inf, math.inf)
+    #         # it was only for trial so need to go back to previous state after trying
+    #         self.undo_last_move(next_move)
+    #         if score > best_score:
+    #             best_score = score
+    #             best_follow_up_move = next_move
+    #     print(f"Evaluation Score of Position is {best_score}")
+    #     return best_follow_up_move
+
+    # basically using the softmax function to create a bunch of probabilities
+    def generate_probability_distribution_with_temperature(self,move_score_list, temperature_control ):
+        score_list = np.array([score for move,score in move_score_list], dtype=np.float64)
+        # probability_distribution = np.exp(score_list/temperature_control)
+        # probability_summation = sum(probability_distribution)
+        # probability_distribution = probability_distribution/probability_summation
+        probability_distribution = softmax(score_list/temperature_control)
+        return probability_distribution
+
+
     # basically using the move evaluation found in the previous step to choose an optimal move by evaluating
     # for each move possible given current empty spaces
-    def select_optimal_ai_move(self):
+    def select_optimal_ai_move_with_temperature_control(self):
+        temperature_control = self.get_temperature_control()
         current_board_size = self.get_board_size()
         current_player = self.ai_player_code
         current_symbol = self.get_player_symbol(current_player)
@@ -473,6 +542,7 @@ class Tictactoe:
         # choosing the lowest abs value possible initially
         best_score = -math.inf
         best_follow_up_move = None
+        move_score_list = []
         for next_move in possible_moves:
             # trying each of the list of possible empty space given the current board state
             self.board[next_move[0]][next_move[1]] = current_symbol
@@ -498,9 +568,16 @@ class Tictactoe:
                     score = self.heuristic_minimax_with_alpha_beta_pruning(False,9-current_board_size, 1, -math.inf, math.inf)
             # it was only for trial so need to go back to previous state after trying
             self.undo_last_move(next_move)
-            if score > best_score:
-                best_score = score
-                best_follow_up_move = next_move
+            # if score > best_score:
+            #     best_score = score
+            #     best_follow_up_move = next_move
+            move_score_list.append((next_move, score))
+        probability_distribution = self.generate_probability_distribution_with_temperature(move_score_list,
+                                                                                           temperature_control)
+        print(f"Probability distribution is - {probability_distribution}")
+        probability_based_idx = np.random.choice(len(move_score_list), p=probability_distribution)
+        best_follow_up_move = move_score_list[probability_based_idx][0]
+        best_score = move_score_list[probability_based_idx][1]
         print(f"Evaluation Score of Position is {best_score}")
         return best_follow_up_move
 
@@ -528,7 +605,7 @@ class Tictactoe:
         opponent_symbol = self.get_player_symbol((ai_player_code + 1) % 2)
         ai_symbol_count = streak.count(ai_symbol)
         opponent_symbol_count = streak.count(opponent_symbol)
-        empty_count = streak.count("")
+        empty_count = streak.count(".")
         # basically if your opponent has even a single piece along the diagonal, not worth exploring much
         if opponent_symbol_count != 0:
             if opponent_symbol_count < current_board_size//2:
@@ -607,6 +684,7 @@ class Tictactoe:
                     # Center is most valuable, then edges, then corners
                     # squaring to penalize distant ones even more
                     score_template_map[i][j] = (1 - normalized_total_distance) ** 2
+        self.central_heuristic_evaluation_map = score_template_map
         return score_template_map
 
     # heavily incentivizes central control
@@ -674,6 +752,3 @@ class Tictactoe:
         # this is so I can prevent division by 0 errors
         return (ai_fork_score - opponent_fork_score)/max(1,ai_fork_score + opponent_fork_score)
 
-
-
-launch_game_with_user_config()
