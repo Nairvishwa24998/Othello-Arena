@@ -63,6 +63,7 @@ def choose_play_order():
 
 # method to get user requirements
 # we can use it for both start new game and set custom position
+# Also add flag to choose level of AI agent- Alpha Beta, MCTS, MCTS with Neural Net
 def get_user_requirements():
     user_requirements = {
         "vs_human" : True,

@@ -1,27 +1,35 @@
-# get preferred board size
-# If not in valid range then keep asking until is
 import math
+from copy import deepcopy
+import random
 
 import numpy as np
 from scipy.special import softmax
 
-from constant_strings import CONCLUSIVE_RESULT_MULTIPLIER, TEMPERATURE_CONTROL_FOR_MIN_RANDOMNESS
+
+from constant_strings import CONCLUSIVE_RESULT_MULTIPLIER, TEMPERATURE_CONTROL_FOR_MIN_RANDOMNESS, \
+    MAX_MOVE_COUNT_WITH_INITIAL_TEMPERATURE_CONTROL, MOVE_X, MOVE_O
+
 
 # Let us represent players with player 1 by 0 and player 2 by 1
 # default setting to be against human player, and size and win_length to conventional 3*3
 class Tictactoe:
-    def __init__(self, size=3, win_length=3, temperature_control = TEMPERATURE_CONTROL_FOR_MIN_RANDOMNESS,vs_human = True, ai_player_code = None, simulation_mode = False):
+    def __init__(self, size=3, win_length=3, temperature_control = TEMPERATURE_CONTROL_FOR_MIN_RANDOMNESS,vs_human = True, ai_player_code = None, simulation_mode = False, mcts_random_run = False):
         self.size = size
         self.win_length = win_length
         self.temperature_control = temperature_control
         self.board = [['.']*size for _ in range(size)]
         self.total_moves = 0
+        # we can use this to store game_states and moves played
+        self.move_list  = []
+        # Note this has been set for simulation purposes
+        self.search_depth = 2
         self.simulation_mode = simulation_mode
+        self.mcts_random_run = mcts_random_run
         # to indicate which player moves X and which moves 0
         # currently the player who goes first gets X and the one who goes second gets 0
         self.assigned_move = {
-            0 : "X",
-            1 : "O"
+            0 : MOVE_X,
+            1 : MOVE_O
         }
         self.result_map = {
             0 : "Draw",
@@ -31,7 +39,19 @@ class Tictactoe:
         self.vs_human = vs_human
         self.ai_player_code = ai_player_code
         # Ran into error first
+        # Accidentally called the score_template_map setter method here first
+        # lead to issues. Much safer to set it later on
         self.central_heuristic_evaluation_map = None
+        self.match_result = None
+
+    # to aid use in MCTS algorithm
+    def clone_instance(self):
+        return deepcopy(self)
+
+    # player whose turn it is to make a move
+    # 0 means first player, 1 means second player
+    def current_player(self):
+        return self.total_moves % 2
 
     # To get board_dimensions/size
     def get_board_size(self):
@@ -46,6 +66,14 @@ class Tictactoe:
     # to decide whether game is AI vs AI or not
     def get_game_mode(self):
         return self.simulation_mode
+
+    # to decide whether game is AI vs AI or not
+    def get_mcts_random_run_mode(self):
+        return self.simulation_mode
+
+    def set_to_mcts_random_run_mode(self):
+        self.mcts_random_run = True
+        return self.mcts_random_run
 
     def set_to_simulation_mode(self):
         self.simulation_mode = True
@@ -63,17 +91,12 @@ class Tictactoe:
     def get_AI_player_code(self):
         return self.ai_player_code
 
-
     # to be used to make AI play both sides by
     def alternate_AI_player_code(self):
         if self.ai_player_code == 0:
             self.ai_player_code = 1
         else:
             self.ai_player_code = 0
-
-
-
-
 
     # get remaining moves/possible moves based on empty slots
     def get_possible_moves(self):
@@ -161,10 +184,24 @@ class Tictactoe:
         # increment total move counter by 1
         self.increment_total_move_count()
 
+    # just for MCTS purposes
+    def make_random_move(self):
+        possible_moves = self.get_possible_moves()
+        player_to_move = self.current_player()
+        move = random.choice(possible_moves)
+        self.get_current_board_state()[move[0]][move[1]] = self.get_player_symbol(player_to_move)
+        # increment total move counter by 1
+        self.increment_total_move_count()
+        return move
+
 
     def make_ai_move(self):
+        # Neural Network needs the board state prior to the move, in a flattened form
+        # so it can be used as a vector/list/tensor along with the policy map for that corresponding state
+        pre_move_flattened_state_2d = "".join(str(cell) for row in self.board for cell in row)
         ai_player_code = self.get_AI_player_code()
-        best_move = self.select_optimal_ai_move_with_temperature_control()
+        best_move, policy_map = self.select_optimal_ai_move_with_temperature_control()
+        self.move_list.append((pre_move_flattened_state_2d, policy_map))
         print(best_move)
         self.board[best_move[0]][best_move[1]] = self.get_player_symbol(ai_player_code)
         self.increment_total_move_count()
@@ -254,6 +291,15 @@ class Tictactoe:
             return outcome * CONCLUSIVE_RESULT_MULTIPLIER
 
 
+    # Looks very much like the above method but this one is to adjust for Z score to
+    # be used in the NN. In this context, for the model to work, it requires 1,0,-1 to be
+    # win, draw, loss for the person making the move. The steup increments count by 1
+    # each time a move is made. Once a winning/losing move is made the counter increments and
+    # would make it show that it is the turn of the opposite person
+    def generate_win_loss_metrics_wrt_NN(self, outcome):
+        # Always interpret from the perspective of the player about to move
+        return -outcome if outcome is not None else None
+
     # Show game result
     def fetch_result_map(self):
         return self.result_map
@@ -298,25 +344,58 @@ class Tictactoe:
     #                 game_ongoing = False
     #                 print(result_map[result])
 
+    def tweak_temp_control_based_on_move_count(self):
+         move_count = self.get_total_move_count()
+         size = self.get_board_size()
+         # We flip the temperature control after a certain number of games for optimized move selection
+         if (size * 2)- move_count < MAX_MOVE_COUNT_WITH_INITIAL_TEMPERATURE_CONTROL:
+             self.set_temperature_control(TEMPERATURE_CONTROL_FOR_MIN_RANDOMNESS)
+
+
     #  to run the game and link above methods together
     def run_game(self):
         simulation_mode = self.get_game_mode()
+        mcts_random_run_mode = self.get_mcts_random_run_mode()
+        # end_result of the game - 1, 0 and -1 indicating
+        # victory for x, draw and defeat for x respectively
+        result = None
+        # AI vs AI
         if simulation_mode:
-            # AI plays both moves here so we can simulate that by just alternating the
-            # symbol usage
-            game_ongoing = True
-            while game_ongoing:
-                self.make_ai_move()
-                result = self.detect_win_loss()
-                result_map = self.fetch_result_map()
-                self.alternate_AI_player_code()
-                if result is not None:
-                    game_ongoing = False
-                    print(result_map[result])
+            # AI vs AI - random moves- MCTS
+            if mcts_random_run_mode:
+                # AI plays both moves here so we can simulate that by just alternating the
+                # symbol usage
+                game_ongoing = True
+                while game_ongoing:
+                    # commented for testing purposes
+                    self.make_random_move()
+                    result = self.detect_win_loss()
+                    result_map = self.fetch_result_map()
+                    self.alternate_AI_player_code()
+                    if result is not None:
+                        game_ongoing = False
+                        print(result_map[result])
+            # AI vs AI - Alpha Beta Pruning
+            else:
+                # AI plays both moves here so we can simulate that by just alternating the
+                # symbol usage
+                game_ongoing = True
+                while game_ongoing:
+                    # commented for testing purposes
+                    # self.tweak_temp_control_based_on_move_count()
+                    self.make_ai_move()
+                    result = self.detect_win_loss()
+                    result_map = self.fetch_result_map()
+                    self.alternate_AI_player_code()
+                    if result is not None:
+                        game_ongoing = False
+                        print(result_map[result])
+
         else:
             print("Game has now begun")
             self.display_board()
             game_ongoing = True
+            # Human vs Human
             if self.ai_player_code is None:
                 while game_ongoing:
                     self.make_move()
@@ -325,6 +404,7 @@ class Tictactoe:
                     if result is not None:
                         game_ongoing = False
                         print(result_map[result])
+            # Human vs AI
             else:
                 # would indicate the order
                 ai_player_order = self.get_AI_player_code()
@@ -338,6 +418,8 @@ class Tictactoe:
                     if result is not None:
                         game_ongoing = False
                         print(result_map[result])
+        self.match_result = result
+        return result
 
     # method to get a numerical metric for the next possible move
     def minimax(self, isMax):
@@ -521,7 +603,7 @@ class Tictactoe:
     #     print(f"Evaluation Score of Position is {best_score}")
     #     return best_follow_up_move
 
-    # basically using the softmax function to create a bunch of probabilities
+    # basically using the softmax function to create a bunch of probabilities for the given move_score list
     def generate_probability_distribution_with_temperature(self,move_score_list, temperature_control ):
         score_list = np.array([score for move,score in move_score_list], dtype=np.float64)
         # probability_distribution = np.exp(score_list/temperature_control)
@@ -530,6 +612,21 @@ class Tictactoe:
         probability_distribution = softmax(score_list/temperature_control)
         return probability_distribution
 
+
+    # this method allows us to create a policy board map which is gen
+    # in a flattened format for each move,which is needed for the Neural net
+    def generate_policy_board_map_for_neural_net(self, move_score_list,probability_distribution):
+        current_board_size = self.get_board_size()
+        policy_full = np.zeros(current_board_size * current_board_size, dtype=np.float32)
+        # Fill in the probability for each legal move
+        # basically we have move_score_list with available moves in the (x,y), score format
+        # then we have probabilities which is just a list of probabilities for
+        # each of the available moves
+        for (relevant_move, relevant_score), p in zip(move_score_list, probability_distribution):
+            # logic to get index of a 2d board flattened in 1d
+            flat_idx = relevant_move[0] * current_board_size + relevant_move[1]  # Convert 2D move to 1D index
+            policy_full[flat_idx] = p
+        return policy_full
 
     # basically using the move evaluation found in the previous step to choose an optimal move by evaluating
     # for each move possible given current empty spaces
@@ -542,6 +639,7 @@ class Tictactoe:
         # choosing the lowest abs value possible initially
         best_score = -math.inf
         best_follow_up_move = None
+        search_depth = self.search_depth
         move_score_list = []
         for next_move in possible_moves:
             # trying each of the list of possible empty space given the current board state
@@ -565,7 +663,7 @@ class Tictactoe:
                     # the depth_to_result being set to 1 here is because when u first call this method
                     # it is checking the board states exactly 1 move away from now
                     # which in turn would update the values and do it 1 move from them and so on
-                    score = self.heuristic_minimax_with_alpha_beta_pruning(False,9-current_board_size, 1, -math.inf, math.inf)
+                    score = self.heuristic_minimax_with_alpha_beta_pruning(False,search_depth, 1, -math.inf, math.inf)
             # it was only for trial so need to go back to previous state after trying
             self.undo_last_move(next_move)
             # if score > best_score:
@@ -579,7 +677,8 @@ class Tictactoe:
         best_follow_up_move = move_score_list[probability_based_idx][0]
         best_score = move_score_list[probability_based_idx][1]
         print(f"Evaluation Score of Position is {best_score}")
-        return best_follow_up_move
+        policy_map = self.generate_policy_board_map_for_neural_net(move_score_list=move_score_list, probability_distribution=probability_distribution)
+        return best_follow_up_move, policy_map
 
 
     # To be used to prevent our alpha beta minimax from going till the end
