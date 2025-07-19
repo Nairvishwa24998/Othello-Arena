@@ -1,12 +1,11 @@
 import numpy as np
 
-from constant_strings import MAX_MOVE_COUNT_WITH_INITIAL_TEMPERATURE_CONTROL, TEMPERATURE_CONTROL_FOR_MIN_RANDOMNESS, \
-    TEMPERATURE_CONTROL_FOR_MAX_RANDOMNESS
-from tictactoe_variant import Tictactoe
-import json
+from constant_strings import ALPHA_BETA_PRUNING
+from utility_methods import setup_tictactoe_instance_for_simulations
 
+# self-play bot would be in charge of invoking simulations
+# for MCTS, alpha-beta, MCTS+NN
 class SelfPlayBot:
-
 
     def __init__(self):
         # trying to keep records of game runs for each board size
@@ -19,14 +18,6 @@ class SelfPlayBot:
             7 : 0
         }
         self.training_data = []
-
-    def setup_tictactoe_instance_for_simulations(self, size):
-        tictactoe = Tictactoe(size=size, vs_human=False)
-        tictactoe.set_temperature_control(TEMPERATURE_CONTROL_FOR_MAX_RANDOMNESS)
-        # simulation mode so AI starts with the first move
-        tictactoe.ai_player_code = 0
-        tictactoe.set_to_simulation_mode()
-        return tictactoe
 
     def save_training_data(self, filename):
         states = []
@@ -50,14 +41,13 @@ class SelfPlayBot:
         base_filename =  "game_data_board_size"
         return base_filename + str(size)
 
-
-    def run_simulations(self, size):
+    def run_simulations(self, size, ai_type):
         count = 0
         win_X = 0
         win_O = 0
         draws = 0
         while count < 1000:
-            tictactoe = self.setup_tictactoe_instance_for_simulations(size)
+            tictactoe = setup_tictactoe_instance_for_simulations(size = size,ai_type = ai_type)
             result = tictactoe.run_game()  # This sets tictactoe.match_result
             if result == 1:
                 win_X += 1
@@ -90,7 +80,8 @@ class SelfPlayBot:
 
 
 bot = SelfPlayBot()
-bot.run_simulations(5)
+# we should add a method to prompt the user for the type of bot they wanna see
+bot.run_simulations(5, ALPHA_BETA_PRUNING)
 
 
 

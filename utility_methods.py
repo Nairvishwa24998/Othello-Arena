@@ -1,5 +1,6 @@
 import math
 
+from constant_strings import TEMPERATURE_CONTROL_FOR_MAX_RANDOMNESS, ALPHA_BETA_PRUNING, MCTS, MCTS_NN
 from tictactoe_variant import Tictactoe
 
 
@@ -21,8 +22,6 @@ def prompt_user_fresh_game_or_custom_position():
         else:
             launch_game_from_pre_defined_position()
 
-
-
 def obtain_desired_board_size():
     board_size = 0
     invalid_board_size = True
@@ -37,6 +36,7 @@ def obtain_desired_board_size():
             print("Please ensure the provided value is a natural number in the range 2 to 7!")
     return board_size
 
+# whether human opponent or AI
 def choose_opponent_type():
     invalid_opponent_type = True
     response = ""
@@ -61,35 +61,47 @@ def choose_play_order():
             print("Please enter either 0 or 1!")
     return response
 
+def choose_and_map_ai_type():
+    invalid_ai_type = True
+    response = ""
+    ai_type_map = {
+        0 : ALPHA_BETA_PRUNING,
+        1: MCTS,
+        2 : MCTS_NN
+    }
+    while invalid_ai_type:
+        try:
+            print("0 - Alpha-Beta Pruning AI")
+            print("1 - Pure MCTS AI")
+            print("2 - MCTS + Neural Network (if available)")
+            response = int(input("Please choose a number from 0,1 and 2"))
+            if response in [0, 1,2]:
+                invalid_ai_type = False
+        except ValueError:
+            print("Please enter either 0,1,2!")
+    return ai_type_map[response]
+
+
+
 # method to get user requirements
 # we can use it for both start new game and set custom position
-# Also add flag to choose level of AI agent- Alpha Beta, MCTS, MCTS with Neural Net
+# Also add flag to choose level of AI agent - Alpha Beta, MCTS, MCTS with Neural Net
 def get_user_requirements():
     user_requirements = {
         "vs_human" : True,
         "ai_player_code": -1,
         "opponent": choose_opponent_type(),
         "board_size": -1,
+        # mcts/mcts+nn/alpha-bet
+        "ai_type": -1
     }
     # AI opponent case
     if user_requirements["opponent"] == 1:
         user_requirements["vs_human"] = False
         user_requirements["ai_player_code"] = choose_play_order()
+        # we only add this when the user is intending to play with AI
+        user_requirements["ai_type"] = choose_and_map_ai_type()
     return user_requirements
-
-# to get total moves count by board state
-# needed since our game order logic is reliant on total moves played
-def get_move_count_from_position(board_positions):
-    move_count_by_piece = {
-        "X": 0,
-        "O": 0
-    }
-    for row in range(len(board_positions)):
-        for column in range(len(board_positions)):
-            current_move = board_positions[row][column]
-            if current_move in ["X", "O"]:
-                move_count_by_piece[current_move] += 1
-    return sum(move_count_by_piece.values())
 
 
 
@@ -97,7 +109,7 @@ def launch_game_from_pre_defined_position():
     user_req = get_user_requirements()
     ai_player_code = user_req["ai_player_code"]
     vs_human = user_req["vs_human"]
-    grid = None
+    input_grid = None
     nx = None
     no = None
     while True:
@@ -115,7 +127,7 @@ def launch_game_from_pre_defined_position():
             print("Only X, O or . are allowed")
             continue
 
-        grid = [pieces[i:i + root] for i in range(0, n, root)]
+        input_grid = [pieces[i:i + root] for i in range(0, n, root)]
         nx = sum(p == "X" for p in pieces)
         no = sum(p == "O" for p in pieces)
         if abs(nx - no) > 1:
@@ -138,8 +150,8 @@ def launch_game_from_pre_defined_position():
         break  # input accepted
 
     tictactoe = Tictactoe(size=user_req["board_size"], win_length=user_req["board_size"], vs_human=vs_human, ai_player_code=ai_player_code)
-    tictactoe.board = grid
-    tictactoe.total_moves = get_move_count_from_position(grid)
+    tictactoe.board = input_grid
+    tictactoe.total_moves = tictactoe.get_move_count_from_position(input_grid)
     if tictactoe.detect_win_loss() is not None:
         print("That position is already a finished game – please enter another.")
         return
@@ -153,9 +165,25 @@ def launch_fresh_game_with_user_config():
     user_requirements["board_size"] = board_size
     vs_human = user_requirements["vs_human"]
     ai_player_code = user_requirements["ai_player_code"]
+    ai_type = user_requirements["ai_type"]
     # In human case, play order doesn't really matter since current implementation makes sure the signs alternate
-    tictactoe = Tictactoe(size=board_size, win_length=board_size, vs_human=vs_human, ai_player_code=ai_player_code)
+    tictactoe = Tictactoe(size=board_size, win_length=board_size, vs_human=vs_human, ai_player_code=ai_player_code,ai_type=ai_type)
     tictactoe.run_game()
+
+def setup_tictactoe_instance_for_simulations(size,ai_type):
+    tictactoe = Tictactoe(size=size, vs_human=False)
+    # setting the preferred AI type. Will dictate the type of AI used in simulations
+    tictactoe.set_AI_type(ai_type)
+    # we only need it for alpha beta pruning
+    if ai_type == ALPHA_BETA_PRUNING:
+        tictactoe.set_temperature_control(TEMPERATURE_CONTROL_FOR_MAX_RANDOMNESS)
+    # simulation mode so AI starts with the first move
+    tictactoe.ai_player_code = 0
+    tictactoe.set_to_simulation_mode()
+    return tictactoe
+
 
 
 prompt_user_fresh_game_or_custom_position()
+
+

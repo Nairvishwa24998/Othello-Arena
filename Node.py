@@ -31,7 +31,7 @@ class Node:
         return self.state
 
     # we can potentially replace with PUCT1 when we add the Neural Net
-    # mathematical formula for reference UCB = (w / n) + c * sqrt(log(N) / n)
+    # mathematical formula for reference UCB1 = (w / n) + c * sqrt(log(N) / n)
     def ucb1(self):
         wins = self.get_wins()
         visits = self.get_visits()
@@ -42,4 +42,5 @@ class Node:
             return math.inf
         # to prevent edge case where parent visit is 0 and causes error in log
         parent_visits = max(parent.get_visits(), 1) if parent else 1
+        # applied formula for UCB1
         return (wins/visits) + UPPER_BOUND_CONFIDENCE_1_CONSTANT*math.sqrt(math.log(parent_visits)/visits)
