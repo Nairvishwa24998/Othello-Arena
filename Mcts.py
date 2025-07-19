@@ -23,10 +23,6 @@ class Mcts:
                 break
             if not current_node.children:
                 break
-            unvisited = [c for c in current_node.children.values() if c.visits == 0]
-            if unvisited:
-                current_node = random.choice(unvisited)
-                continue
             # if none of the above case, we can do our UCB1 and choose the best one
             # we can use list. But dictionaries would allow us to use calculated ucb1 values
             ucb_values = {child: child.ucb1()  # compute once per child
@@ -71,11 +67,6 @@ class Mcts:
 
     # can also be called simulation
     def exploitation(self, current_node):
-        terminal = current_node.state.detect_win_loss()  # +1 / 0 / –1
-        if terminal is not None:
-            # convert to "player-to-move at this node" perspective
-            refined_outcome = current_node.state.generate_win_loss_metrics_wrt_NN(terminal)
-            return refined_outcome
         input_game_instance = current_node.state
         simulation_instance = input_game_instance.clone_instance()
         # make it AI-vs-AI
@@ -86,7 +77,8 @@ class Mcts:
             simulation_instance.set_AI_type(MCTS)
         # outcome = simulation_instance.run_game()
         outcome = simulation_instance.rollout_pseudo_random()
-        refined_outcome = simulation_instance.generate_win_loss_metrics_wrt_NN(outcome)
+        # refined_outcome = simulation_instance.generate_win_loss_metrics_wrt_NN(outcome)
+        refined_outcome = -outcome
         return refined_outcome
 
     def backtracking(self, current_node, refined_outcome):
@@ -100,48 +92,8 @@ class Mcts:
     # MIN_GAME_SIM_BENCHMARK_MCTS used for simulations runs
     # MIN_GAME_SIM_VS_HUMAN_BENCHMARK_MCTS used for vs human play
     def commence_mcts_for_selfplay(self, max_runs):
-        # ── expand every legal move at the root exactly once ────────────
-        if not self.root.children:  # first call this turn
-            for mv in self.root.state.get_possible_moves():
-                # expansion() already skips moves that are in children,
-                # so one call per move is enough.
-                self.expansion(self.root)  # add child node
         for number in range(max_runs):
             parent = self.selection()
             child = self.expansion(parent) or parent
             value = self.exploitation(child)
             self.backtracking(child, value)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -281,7 +281,18 @@ class Tictactoe:
         if ai_type == ALPHA_BETA_PRUNING:
             best_move, policy_map = self.select_optimal_ai_move_with_temperature_control()
         if ai_type == MCTS:
-            best_move, policy_map = self.select_optimal_ai_move_mcts()
+            # this check is very very very important and has been added to prevent
+            # missing immediate wins and losses
+            conclusive_result = self.check_immediate_result(self.get_possible_moves())
+            if conclusive_result is not None:
+                best_move = conclusive_result
+                # possibly useful for neural net training
+                policy_map = np.zeros(self.size * self.size, dtype=np.float32)
+                r, c = best_move
+                # flattened board indexing
+                policy_map[r * self.size + c] = 1.0
+            else:
+                best_move, policy_map = self.select_optimal_ai_move_mcts()
         self.move_list.append((pre_move_flattened_state_2d, policy_map))
         self.selective_print(best_move)
         self.board[best_move[0]][best_move[1]] = self.get_player_symbol(ai_player_code)
@@ -378,8 +389,14 @@ class Tictactoe:
     # each time a move is made. Once a winning/losing move is made the counter increments and
     # would make it show that it is the turn of the opposite person
     def generate_win_loss_metrics_wrt_NN(self, outcome):
-        # Always interpret from the perspective of the player about to move
-        return -outcome if outcome is not None else None
+        if outcome is None:
+            return None
+        if outcome == 0:
+            return 0  # draw
+
+        player_to_move = self.current_player()  # 0 = X, 1 = O
+        winner = 0 if outcome == 1 else 1  # 1 → X wins ; -1 → O wins
+        return 1 if player_to_move == winner else -1
 
     # Show game result
     def fetch_result_map(self):
@@ -765,9 +782,28 @@ class Tictactoe:
         mcts.commence_mcts_for_selfplay(max_runs=max_runs)
         parent_node = mcts.get_root()
         children = parent_node.get_children()
-        move_score_list= [(move,children[move].get_visits()) for move in children]
-        # basically getting max based on move visit counts
-        best_move = max(move_score_list, key=lambda x: x[1])[0]
+        # ───────── DEBUG PRINT: show root statistics once per AI move ─────────
+        print("\n=== ROOT AFTER SEARCH FINISHED ===")
+        for mv, node in children.items():
+            print("[root] move", mv,
+                  "visits =", node.get_visits(),
+                  "wins   =", node.get_wins())
+        print("==================================\n")
+        # ───────────────────────────────────────────────────────────────────────
+
+        # move_score_list= [(move,children[move].get_visits()) for move in children]
+        # # basically getting max based on move visit counts
+        # best_move = max(move_score_list, key=lambda x: x[1])[0]
+        # ── choose best_move ────────────────────────────────────────────────
+        for mv, node in children.items():  # proven-win guard
+            if node.get_visits() > 0 and node.get_wins() == node.get_visits():
+                best_move = mv
+                break
+        else:  # fall back to visits
+            move_score_list = [(m, c.get_visits()) for m, c in children.items()]
+            best_move = max(move_score_list, key=lambda x: x[1])[0]
+        # ────────────────────────────────────────────────────────────────────
+
         total_visits = sum(score for move, score in move_score_list)
         prob_distribution = [score / total_visits for move, score in move_score_list]
         policy_map = self.generate_policy_board_map_for_neural_net(move_score_list, prob_distribution)
