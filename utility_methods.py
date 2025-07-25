@@ -182,8 +182,8 @@ def setup_tictactoe_instance_for_simulations(size,ai_type):
     tictactoe.set_to_simulation_mode()
     return tictactoe
 
-
-
-prompt_user_fresh_game_or_custom_position()
+# Note this is needed otherwise self-play bot won't run
+if __name__ == "__main__":
+    prompt_user_fresh_game_or_custom_position()
 
 

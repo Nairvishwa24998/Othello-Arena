@@ -24,12 +24,13 @@ class SelfPlayBot:
         policies = []
         values = []
         for entry in self.training_data:
-            states.append([ord(c) for c in entry["state"]])  # Convert string to int list
+            # mapping to ASCII values since it is memory efficient
+            states.append([c for c in entry["state"]])  # Convert string to int list
             policies.append(entry["policy"])
             values.append(entry["value"])
 
         np.savez_compressed(filename + ".npz",
-                            states=np.array(states, dtype=np.uint8),
+                            states=np.array(states),
                             policies=np.array(policies, dtype=np.float32),
                             values=np.array(values, dtype=np.int8))
 
@@ -46,7 +47,7 @@ class SelfPlayBot:
         win_X = 0
         win_O = 0
         draws = 0
-        while count < 1000:
+        while count < 10000:
             tictactoe = setup_tictactoe_instance_for_simulations(size = size,ai_type = ai_type)
             result = tictactoe.run_game()  # This sets tictactoe.match_result
             if result == 1:
@@ -79,11 +80,10 @@ class SelfPlayBot:
         print(f" Training data stored in file: {generated_file_name}")
 
 
-bot = SelfPlayBot()
-# we should add a method to prompt the user for the type of bot they wanna see
-bot.run_simulations(5, ALPHA_BETA_PRUNING)
 
-
+if __name__ == "__main__":
+    bot = SelfPlayBot()
+    bot.run_simulations(4, ALPHA_BETA_PRUNING)
 
 
 
