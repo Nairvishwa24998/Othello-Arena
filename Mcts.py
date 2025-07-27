@@ -8,7 +8,7 @@ from constant_strings import MIN_GAME_SIM_BENCHMARK_MCTS, MCTS, MCTS_NN, GAME_TI
 class Mcts:
     def __init__(self,root, tictactoe_instance):
         self.root = Node(state=tictactoe_instance)
-        self.neural_net = prepare_neural_net_instance(game=GAME_TICTACTOE, size = tictactoe_instance.get_board_size())
+        self.neural_net = prepare_neural_net_instance(game=GAME_TICTACTOE, size = tictactoe_instance.get_board_size(), ai_type = tictactoe_instance.get_AI_type())
 
     def get_root(self):
         return self.root

@@ -5,7 +5,7 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 
 from Neural_Net import Neural_Net
-from constant_strings import GAME_OTHELLO, GAME_TICTACTOE
+from constant_strings import GAME_OTHELLO, GAME_TICTACTOE, MCTS_NN, MCTS
 
 # this allows us to get all the
 npz_files = glob.glob("game_data_board_size*.npz")
@@ -140,7 +140,10 @@ def commence_neural_net_pipeline(game_name, game_size):
     neural_net.save("final_model_ttt_4x4.keras")
 
 # can be used to set instance to the model class with prepared weights file
-def prepare_neural_net_instance(game, size):
+def prepare_neural_net_instance(game, size, ai_type):
+    # we don't need a neural net for pure MCTS
+    if ai_type == MCTS:
+        return None
     neural_net = Neural_Net(game=game, size = size)
     file_name = os.path.join("weights_ttt_4", f"{game}-{size}.keras")
     neural_net.load(file_name)

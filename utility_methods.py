@@ -1,6 +1,7 @@
 import math
 
-from constant_strings import TEMPERATURE_CONTROL_FOR_MAX_RANDOMNESS, ALPHA_BETA_PRUNING, MCTS, MCTS_NN
+from constant_strings import TEMPERATURE_CONTROL_FOR_MAX_RANDOMNESS, ALPHA_BETA_PRUNING, MCTS, MCTS_NN, \
+    TEMPERATURE_CONTROL_FOR_MIN_RANDOMNESS
 from tictactoe_variant import Tictactoe
 
 
@@ -170,7 +171,7 @@ def launch_fresh_game_with_user_config():
     tictactoe = Tictactoe(size=board_size, win_length=board_size, vs_human=vs_human, ai_player_code=ai_player_code,ai_type=ai_type)
     tictactoe.run_game()
 
-def setup_tictactoe_instance_for_simulations(size,ai_type):
+def setup_tictactoe_instance_for_training_simulations(size, ai_type):
     tictactoe = Tictactoe(size=size, vs_human=False)
     # setting the preferred AI type. Will dictate the type of AI used in simulations
     tictactoe.set_AI_type(ai_type)
@@ -182,6 +183,20 @@ def setup_tictactoe_instance_for_simulations(size,ai_type):
     tictactoe.set_to_simulation_mode()
     return tictactoe
 
+
+def setup_tictactoe_instance_for_bot_matches(size, first_player_ai_type):
+    tictactoe = Tictactoe(size=size, vs_human=False)
+    # setting the preferred AI type. Will dictate the type of AI used in simulations
+    tictactoe.set_AI_type(first_player_ai_type)
+    # this is to demo how well it performs so make it min_randomness
+    if first_player_ai_type == ALPHA_BETA_PRUNING:
+        tictactoe.set_temperature_control(TEMPERATURE_CONTROL_FOR_MIN_RANDOMNESS)
+    # simulation mode so the AI starts with the first move
+    tictactoe.ai_player_code = 0
+    tictactoe.set_to_simulation_mode()
+    # suppress board prints for speed/clarity
+    tictactoe.logging_mode = False
+    return tictactoe
 
 # Note this is needed otherwise self-play bot won't run
 if __name__ == "__main__":

@@ -1,7 +1,9 @@
 import numpy as np
 
-from constant_strings import ALPHA_BETA_PRUNING
-from utility_methods import setup_tictactoe_instance_for_simulations
+from common_utils import validate_bot_play_inp_config
+from constant_strings import ALPHA_BETA_PRUNING, MCTS, MCTS_NN
+from utility_methods import setup_tictactoe_instance_for_training_simulations, setup_tictactoe_instance_for_bot_matches
+
 
 # self-play bot would be in charge of invoking simulations
 # for MCTS, alpha-beta, MCTS+NN
@@ -18,6 +20,7 @@ class SelfPlayBot:
             7 : 0
         }
         self.training_data = []
+        self.bot_contest_data = []
 
     def save_training_data(self, filename):
         states = []
@@ -38,6 +41,10 @@ class SelfPlayBot:
     def reset_training_data(self):
         self.training_data = []
 
+    # just in case we wish to clear the data
+    def reset_bot_contest_data(self):
+        self.bot_contest_data = []
+
     def generate_file_names(self, size):
         base_filename =  "game_data_board_size"
         return base_filename + str(size)
@@ -48,7 +55,7 @@ class SelfPlayBot:
         win_O = 0
         draws = 0
         while count < 10000:
-            tictactoe = setup_tictactoe_instance_for_simulations(size = size,ai_type = ai_type)
+            tictactoe = setup_tictactoe_instance_for_training_simulations(size = size, ai_type = ai_type)
             result = tictactoe.run_game()  # This sets tictactoe.match_result
             if result == 1:
                 win_X += 1
@@ -80,10 +87,61 @@ class SelfPlayBot:
         print(f" Training data stored in file: {generated_file_name}")
 
 
+    def run_bot_v_bot_matches(
+            self,
+            ai_player_1: str,
+            ai_player_2: str,
+            rounds: int = 100,
+            board_size: int = 3,
+    ):
+        validate_bot_play_inp_config(ai_player_1, ai_player_2, rounds, board_size)
+        # clear any previous contest records
+        self.reset_bot_contest_data()
+        wins_p1 = wins_p2 = draws = 0
+        for game_number in range(1, rounds + 1):
+            game = setup_tictactoe_instance_for_bot_matches(board_size, ai_player_1)
+            while True:
+                turn = game.determine_player_turn()
+                # player 1 plays
+                if turn == 0:
+                    game.ai_player_code = 0
+                    game.set_AI_type(ai_player_1)
+                    game.make_ai_move(ai_player_1)
+                # player_2 plays
+                else:
+                    game.ai_player_code = 1
+                    game.set_AI_type(ai_player_2)
+                    game.make_ai_move(ai_player_2)
+
+                outcome = game.detect_win_loss()
+                if outcome is not None:
+                    break
+            # printing outcomes from player 1's perspective
+            if outcome == 1:
+                wins_p1 += 1
+                result_str = f"{ai_player_1} wins"
+            elif outcome == -1:
+                wins_p2 += 1
+                result_str = f"{ai_player_2} wins"
+            else:
+                draws += 1
+                result_str = "Draw"
+
+            # storing into a potential log file
+            self.bot_contest_data.append(f"Round Number - {game_number}: {result_str}")
+
+        print(f"total_rounds = {rounds}")
+        print(f"{ai_player_1}-wins = {wins_p1}")
+        print(f"{ai_player_2}-wins = {wins_p2}")
+        print(f"draws = {draws}")
+
+
 
 if __name__ == "__main__":
     bot = SelfPlayBot()
-    bot.run_simulations(4, ALPHA_BETA_PRUNING)
+    # commented out for testing purposes
+    # bot.run_simulations(4, ALPHA_BETA_PRUNING)
+    bot.run_bot_v_bot_matches(ai_player_1=MCTS_NN, ai_player_2=ALPHA_BETA_PRUNING, rounds=1, board_size=4)
 
 
 
