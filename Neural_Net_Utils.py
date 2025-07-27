@@ -139,6 +139,13 @@ def commence_neural_net_pipeline(game_name, game_size):
     # only added to support saving drive on colab
     neural_net.save("final_model_ttt_4x4.keras")
 
+# can be used to set instance to the model class with prepared weights file
+def prepare_neural_net_instance(game, size):
+    neural_net = Neural_Net(game=game, size = size)
+    file_name = os.path.join("weights_ttt_4", f"{game}-{size}.keras")
+    neural_net.load(file_name)
+    return neural_net
+
 if __name__ == "__main__":
     commence_neural_net_pipeline(game_name=GAME_TICTACTOE, game_size=4)
 

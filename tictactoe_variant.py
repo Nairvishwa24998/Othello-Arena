@@ -8,7 +8,8 @@ from scipy.special import softmax
 from Mcts import Mcts
 from constant_strings import CONCLUSIVE_RESULT_MULTIPLIER, TEMPERATURE_CONTROL_FOR_MIN_RANDOMNESS, \
     MAX_MOVE_COUNT_WITH_INITIAL_TEMPERATURE_CONTROL, MOVE_X, MOVE_O, MCTS, ALPHA_BETA_PRUNING, \
-    MIN_GAME_SIM_VS_HUMAN_BENCHMARK_MCTS, MIN_GAME_SIM_BENCHMARK_MCTS
+    MIN_GAME_SIM_VS_HUMAN_BENCHMARK_MCTS, MIN_GAME_SIM_BENCHMARK_MCTS, MCTS_NN
+from common_utils import clamp
 
 
 # Let us represent players with player 1 by 0 and player 2 by 1
@@ -210,11 +211,15 @@ class Tictactoe:
     # Note to be used to make move by humans
     def make_move(self):
         invalid_move_check = True
+        board_size = self.get_board_size()
         current_board_state = self.get_current_board_state()
         player_to_move = self.determine_player_turn()
         move_coordinates = ""
         while invalid_move_check:
             move_coordinates = self.get_input_position()
+            if min(move_coordinates[0], move_coordinates[1]) < 0 or max(move_coordinates[0], move_coordinates[1]) > board_size-1:
+                print("The provided move co-ordinates are out of the range of values for this board size!. Please enter something within that range! ")
+                continue
             if not self.is_occupied(move_coordinates):
                 invalid_move_check = False
             else:
@@ -239,6 +244,11 @@ class Tictactoe:
         # increment total move counter by 1
         self.increment_total_move_count()
         return move
+
+    # modifications to be done
+    def make_best_nn_based_move(self):
+        pass
+
 
 
     # checking for moves which can lead to immediate wins or lead to immediate losse
@@ -280,7 +290,7 @@ class Tictactoe:
         policy_map = None
         if ai_type == ALPHA_BETA_PRUNING:
             best_move, policy_map = self.select_optimal_ai_move_with_temperature_control()
-        if ai_type == MCTS:
+        if ai_type in [MCTS, MCTS_NN]:
             # this check is very very very important and has been added to prevent
             # missing immediate wins and losses
             conclusive_result = self.check_immediate_result(self.get_possible_moves())
@@ -402,6 +412,7 @@ class Tictactoe:
     def fetch_result_map(self):
         return self.result_map
 
+    # methods to reduce the temperature control after a few moves. Helps to reduce the randomness after the intial moves
     def tweak_temp_control_based_on_move_count(self):
          move_count = self.get_total_move_count()
          size = self.get_board_size()
@@ -419,7 +430,7 @@ class Tictactoe:
         result = None
         # AI vs AI
         if simulation_mode:
-            # AI vs AI - random moves- MCTS
+            # AI vs AI - no nn- MCTS
             if ai_type == MCTS:
                 # AI plays both moves here so we can simulate that by just alternating the
                 # symbol usage
@@ -442,7 +453,7 @@ class Tictactoe:
                 # symbol usage
                 game_ongoing = True
                 while game_ongoing:
-                    # commented for testing purposes
+                    # commented for testing purposes. Don't forget to uncomment before using
                     # self.tweak_temp_control_based_on_move_count()
                     self.make_ai_move(ai_type)
                     result = self.detect_win_loss()
@@ -791,19 +802,18 @@ class Tictactoe:
         print("==================================\n")
         # ───────────────────────────────────────────────────────────────────────
 
-        # move_score_list= [(move,children[move].get_visits()) for move in children]
-        # # basically getting max based on move visit counts
-        # best_move = max(move_score_list, key=lambda x: x[1])[0]
-        # ── choose best_move ────────────────────────────────────────────────
-        for mv, node in children.items():  # proven-win guard
-            if node.get_visits() > 0 and node.get_wins() == node.get_visits():
-                best_move = mv
-                break
-        else:  # fall back to visits
-            move_score_list = [(m, c.get_visits()) for m, c in children.items()]
-            best_move = max(move_score_list, key=lambda x: x[1])[0]
-        # ────────────────────────────────────────────────────────────────────
-
+        move_score_list= [(move,children[move].get_visits()) for move in children]
+        # basically getting max based on move visit counts
+        best_move = max(move_score_list, key=lambda x: x[1])[0]
+        # # ── choose best_move ────────────────────────────────────────────────
+        # for mv, node in children.items():  # proven-win guard
+        #     if node.get_visits() > 0 and node.get_wins() == node.get_visits():
+        #         best_move = mv
+        #         break
+        # else:  # fall back to visits
+        #     move_score_list = [(m, c.get_visits()) for m, c in children.items()]
+        #     best_move = max(move_score_list, key=lambda x: x[1])[0]
+        # # ────────────────────────────────────────────────────────────────────
         total_visits = sum(score for move, score in move_score_list)
         prob_distribution = [score / total_visits for move, score in move_score_list]
         policy_map = self.generate_policy_board_map_for_neural_net(move_score_list, prob_distribution)
@@ -818,11 +828,11 @@ class Tictactoe:
     def heuristically_evaluate_board(self):
         multiplier = 0.18
         fork_multiplier = 0.28
-        heuristic_value_diagonals = self.clamp(self.calculate_heuristic_value_diagonals())
-        heuristic_value_rows = self.clamp(self.calculate_heuristic_value_rows())
-        heuristic_value_columns = self.clamp(self.calculate_heuristic_value_columns())
-        heuristic_value_central_dominance = self.clamp(self.calculate_heuristic_value_central_dominance())
-        heuristic_value_fork = self.clamp(self.calculate_heuristic_value_fork())
+        heuristic_value_diagonals = clamp(self.calculate_heuristic_value_diagonals())
+        heuristic_value_rows = clamp(self.calculate_heuristic_value_rows())
+        heuristic_value_columns = clamp(self.calculate_heuristic_value_columns())
+        heuristic_value_central_dominance = clamp(self.calculate_heuristic_value_central_dominance())
+        heuristic_value_fork = clamp(self.calculate_heuristic_value_fork())
         return multiplier*(heuristic_value_central_dominance + heuristic_value_columns + heuristic_value_rows + heuristic_value_diagonals) + (fork_multiplier* heuristic_value_fork)
 
 
@@ -873,14 +883,6 @@ class Tictactoe:
         result = result/current_board_size
         return result
 
-    # to keep values in range [-1,1]
-    def clamp(self, value):
-        if value == 0.0:
-            return value
-        elif value > 0.0:
-            return min(1.0, value)
-        else:
-            return max(-1.0, value)
 
     def calculate_heuristic_value_columns(self):
         current_board_state = self.get_current_board_state()
