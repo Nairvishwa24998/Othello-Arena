@@ -6,6 +6,7 @@ import numpy as np
 from scipy.special import softmax
 
 from Mcts import Mcts
+from boardgame import BoardGame
 from constant_strings import CONCLUSIVE_RESULT_MULTIPLIER, TEMPERATURE_CONTROL_FOR_MIN_RANDOMNESS, \
     MAX_MOVE_COUNT_WITH_INITIAL_TEMPERATURE_CONTROL, MOVE_X, MOVE_O, MCTS, ALPHA_BETA_PRUNING, \
     MIN_GAME_SIM_VS_HUMAN_BENCHMARK_MCTS, MIN_GAME_SIM_BENCHMARK_MCTS, MCTS_NN
@@ -14,24 +15,18 @@ from common_utils import clamp
 
 # Let us represent players with player 1 by 0 and player 2 by 1
 # default setting to be against human player, and size and win_length to conventional 3*3
-class Tictactoe:
+class Tictactoe(BoardGame) :
     def __init__(self, size=3, win_length=3, temperature_control = TEMPERATURE_CONTROL_FOR_MIN_RANDOMNESS,vs_human = True, ai_player_code = None, simulation_mode = False, ai_type = None):
-        self.size = size
+        super().__init__(size=size, vs_human=vs_human, ai_player_code=ai_player_code, ai_type=ai_type,
+                         simulation_mode=simulation_mode)
         self.win_length = win_length
-        self.temperature_control = temperature_control
         self.board = [['.']*size for _ in range(size)]
-        self.total_moves = 0
-        # we can use this to store game_states and moves played
-        self.move_list  = []
         # Note this has been set for simulation purposes
         self.search_depth = 2
-        # this is for AI vs AI
-        self.simulation_mode = simulation_mode
-        # to select the type of AI bot to play against
-        self.ai_type = ai_type
+        self.temperature_control = temperature_control
         self.logging_mode = True
         # to indicate which player moves X and which moves 0
-        # currently the player who goes first gets X and the one who goes second gets 0
+        # The player who goes first gets X and the one who goes second gets 0
         self.assigned_move = {
             0 : MOVE_X,
             1 : MOVE_O
@@ -41,8 +36,6 @@ class Tictactoe:
             1 : "Win for Player 1",
             -1 : "Win for Player 2"
         }
-        self.vs_human = vs_human
-        self.ai_player_code = ai_player_code
         # Ran into error first
         # Accidentally called the score_template_map setter method here first
         # lead to issues. Much safer to set it later on
@@ -78,10 +71,6 @@ class Tictactoe:
     def current_player(self):
         return self.total_moves % 2
 
-    # To get board_dimensions/size
-    def get_board_size(self):
-        return self.size
-
     def get_temperature_control(self):
         return self.temperature_control
 
@@ -102,10 +91,6 @@ class Tictactoe:
     def set_to_simulation_mode(self):
         self.simulation_mode = True
         return self.simulation_mode
-
-    # To get the current board_state
-    def get_current_board_state(self):
-        return self.board
 
     # to get the provided player's symbol
     def get_player_symbol(self, player_code):
@@ -133,15 +118,6 @@ class Tictactoe:
     def get_total_move_count(self):
         return self.total_moves
 
-    # to increment move counter by 1
-    def increment_total_move_count(self):
-        self.total_moves += 1
-        return self.total_moves
-
-    # to decrease move counter by 1
-    def decrement_total_move_count(self):
-        self.total_moves -= 1
-        return self.total_moves
 
     # to get total moves count by board state
     # needed since our game order logic is reliant on total moves played
@@ -155,7 +131,7 @@ class Tictactoe:
         for row in range(len(board_positions)):
             for column in range(len(board_positions)):
                 current_move = board_positions[row][column]
-                if current_move in ["X", "O"]:
+                if current_move in [MOVE_X, MOVE_O]:
                     move_count_by_piece[current_move] += 1
         return sum(move_count_by_piece.values())
 
@@ -164,23 +140,6 @@ class Tictactoe:
         self.decrement_total_move_count()
         self.board[last_move[0]][last_move[1]] = "."
 
-
-    # To display the board to the user
-    def display_board(self):
-        current_board_state = self.get_current_board_state()
-        self.selective_print("\nCurrent board:")
-        for row in current_board_state:
-            self.selective_print(" | ".join(cell if cell != '' else ' ' for cell in row))
-
-
-    # check if attempted position is occupied or not
-    def is_occupied(self,move_coordinates):
-        current_board_state = self.get_current_board_state()
-        # attempted position is not empty, so we shouldn't allow the move
-        if current_board_state[move_coordinates[0]][move_coordinates[1]] != ".":
-            self.selective_print("The position is occupied try a different position!")
-            return True
-        return False
 
     # determine which player goes next based on move order
     def determine_player_turn(self):
@@ -192,24 +151,10 @@ class Tictactoe:
             self.selective_print(f"Player {result + 1}'s turn to make a move")
         return result % 2
 
-    # just cleaned up user input for co-ordinates
-    def get_input_position(self):
-        invalid_inputs_provided = True
-        result = None
-        while invalid_inputs_provided:
-            try:
-                result = list(map(int, input().split()))
-                if len(result) != 2:
-                    raise ValueError
-                invalid_inputs_provided = False
-            except ValueError:
-                self.selective_print("Please provide only and exactly 2 co-ordinates, indexed from 0 indicating where u want ur move to be placed")
-        return result
-
     # to use input position from above and update board
     # if the given input position is not filled
     # Note to be used to make move by humans
-    def make_move(self):
+    def human_make_move(self):
         invalid_move_check = True
         board_size = self.get_board_size()
         current_board_state = self.get_current_board_state()
@@ -228,22 +173,6 @@ class Tictactoe:
         self.display_board()
         # increment total move counter by 1
         self.increment_total_move_count()
-
-    # just for MCTS purposes. Light-weight with an added minimal check to avoid
-    # immediate losses
-    def make_pseudo_random_move(self):
-        possible_moves = self.get_possible_moves()
-        # a bit unclear one exact role. More like an additional safety check
-        if not possible_moves:
-            return None
-        player_to_move = self.current_player()
-        immediate_result_move = self.check_immediate_result(possible_moves)
-        # no move which leads to an immediate result so choose a random one
-        move = immediate_result_move if immediate_result_move is not None else random.choice(possible_moves)
-        self.get_current_board_state()[move[0]][move[1]] = self.get_player_symbol(player_to_move)
-        # increment total move counter by 1
-        self.increment_total_move_count()
-        return move
 
     # modifications to be done
     def make_best_nn_based_move(self):
@@ -375,39 +304,6 @@ class Tictactoe:
         # Basically a move which doesn't lead to a win, draw or a loss
         return None
 
-    # Our detect win loss returns 1, -1 and 0 when player 1 wins,player 2 wins and draw respectively
-    # using it directly in minimax can cause issues since when AI is player 2 it would want to maximize its score
-    # but doing it based on the detect_win_loss function would give wrong results
-    def generate_win_loss_metrics_wrt_AI(self, outcome):
-        ai_player_code = self.get_AI_player_code()
-        if outcome is None:
-            return None
-        if outcome == 0:
-            return 0
-        if ai_player_code == 1:
-            if outcome in [-1,1]:
-                return -1 * outcome * CONCLUSIVE_RESULT_MULTIPLIER
-            else:
-                return outcome * CONCLUSIVE_RESULT_MULTIPLIER
-        else:
-            return outcome * CONCLUSIVE_RESULT_MULTIPLIER
-
-
-    # Looks very much like the above method but this one is to adjust for Z score to
-    # be used in the NN. In this context, for the model to work, it requires 1,0,-1 to be
-    # win, draw, loss for the person making the move. The setup increments count by 1
-    # each time a move is made. Once a winning/losing move is made the counter increments and
-    # would make it show that it is the turn of the opposite person
-    def generate_win_loss_metrics_wrt_NN(self, outcome):
-        if outcome is None:
-            return None
-        if outcome == 0:
-            return 0  # draw
-
-        player_to_move = self.current_player()  # 0 = X, 1 = O
-        winner = 0 if outcome == 1 else 1  # 1 → X wins ; -1 → O wins
-        return 1 if player_to_move == winner else -1
-
     # Show game result
     def fetch_result_map(self):
         return self.result_map
@@ -419,6 +315,23 @@ class Tictactoe:
          # We flip the temperature control after a certain number of games for optimized move selection
          if (size * 2)- move_count < MAX_MOVE_COUNT_WITH_INITIAL_TEMPERATURE_CONTROL:
              self.set_temperature_control(TEMPERATURE_CONTROL_FOR_MIN_RANDOMNESS)
+
+
+    # just for MCTS purposes. Light-weight with an added minimal check to avoid
+    # immediate losses
+    def make_pseudo_random_move(self):
+        possible_moves = self.get_possible_moves()
+        # a bit unclear one exact role. More like an additional safety check
+        if not possible_moves:
+            return None
+        player_to_move = self.current_player()
+        immediate_result_move = self.check_immediate_result(possible_moves)
+        # no move which leads to an immediate result so choose a random one
+        move = immediate_result_move if immediate_result_move is not None else random.choice(possible_moves)
+        self.get_current_board_state()[move[0]][move[1]] = self.get_player_symbol(player_to_move)
+        # increment total move counter by 1
+        self.increment_total_move_count()
+        return move
 
 
     #  to run the game and link above methods together
@@ -475,7 +388,7 @@ class Tictactoe:
             if self.ai_player_code is None:
                 self.selective_print("Human vs Human mode")
                 while game_ongoing:
-                    self.make_move()
+                    self.human_make_move()
                     result = self.detect_win_loss()
                     result_map = self.fetch_result_map()
                     if result is not None:
@@ -490,7 +403,7 @@ class Tictactoe:
                     if self.get_total_move_count() % 2 == ai_player_order:
                         self.make_ai_move(ai_type)
                     else:
-                        self.make_move()
+                        self.human_make_move()
                     result = self.detect_win_loss()
                     result_map = self.fetch_result_map()
                     if result is not None:
@@ -947,11 +860,6 @@ class Tictactoe:
             result.append([current_board_state[a][(current_board_size -1) - a] for a in range(current_board_size)])
         return result
 
-    # to prevent unnecessary prints by simulation instance
-    def selective_print(self, *args, **kwargs):
-            if not getattr(self, "logging_mode", True):
-                return
-            print(*args, **kwargs)
 
     #for heuristic offence and defence
     def calculate_heuristic_value_fork(self):

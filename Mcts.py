@@ -130,12 +130,25 @@ class Mcts:
         child_node = Node(cloned_instance, parent=current_node, move=move)
         if ai_type == MCTS_NN:
             # method after this takes a flattened board only
-            pre_move_flattened_state_2d = "".join(str(cell) for row in parent_board for cell in row)
-            inp = flattened_board_to_tensor(pre_move_flattened_state_2d, game_name=GAME_TICTACTOE)[None, ...]  # helper you already have
-            neural_net = self.get_neural_net()
-            policy_prediction, value_prediction = neural_net.model.predict(inp, verbose=0)
+            # commented out for testing since too time consuming
+            # pre_move_flattened_state_2d = "".join(str(cell) for row in parent_board for cell in row)
+            # inp = flattened_board_to_tensor(pre_move_flattened_state_2d, game_name=GAME_TICTACTOE)[None, ...]  # helper you already have
+            # neural_net = self.get_neural_net()
+            # policy_prediction, value_prediction = neural_net.model.predict(inp, verbose=0)
+            # flat = move[0] * cloned_instance.size + move[1]
+            # child_node.policy_prior = float(policy_prediction[0][flat])
+            # cache the policy+value prediction on the current node to avoid recomputation
+            if not hasattr(current_node, "_cached_policy_value"):
+                pre_move_flattened_state_2d = "".join(str(cell) for row in parent_board for cell in row)
+                inp = flattened_board_to_tensor(pre_move_flattened_state_2d, game_name=GAME_TICTACTOE)[None, ...]
+                neural_net = self.get_neural_net()
+                policy_prediction, value_prediction = neural_net.model.predict(inp, verbose=0)
+                current_node._cached_policy_value = (policy_prediction[0], value_prediction)
+
+            # reuse cached prediction
+            policy_prediction, _ = current_node._cached_policy_value
             flat = move[0] * cloned_instance.size + move[1]
-            child_node.policy_prior = float(policy_prediction[0][flat])
+            child_node.policy_prior = float(policy_prediction[flat])
         else:  # pure MCTS or no model yet
             # pretty useless as of now. Purely to avoid issues. Most cases should not even touch this line
             child_node.policy_prior = 1.0 / len(possible_moves)

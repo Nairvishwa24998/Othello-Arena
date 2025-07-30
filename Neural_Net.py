@@ -96,6 +96,8 @@ class Neural_Net:
         # logits are more stable and use activation function later when checking losses
         return policy_logits
 
+    # might be a bit too shallow
+    # perhaps add two versions for convenience
     # establish link between prior layer(usually convolutional body and the value head
     def setup_value_head_link(self, prior_layer):
         value_layer_output_units = 1
