@@ -1,7 +1,7 @@
 import math
 from copy import deepcopy
 import random
-
+import time
 import numpy as np
 from scipy.special import softmax
 
@@ -10,7 +10,7 @@ from boardgame import BoardGame
 from constant_strings import CONCLUSIVE_RESULT_MULTIPLIER, TEMPERATURE_CONTROL_FOR_MIN_RANDOMNESS, \
     MAX_MOVE_COUNT_WITH_INITIAL_TEMPERATURE_CONTROL, MOVE_X, MOVE_O, MCTS, ALPHA_BETA_PRUNING, \
     MIN_GAME_SIM_VS_HUMAN_BENCHMARK_MCTS, MIN_GAME_SIM_BENCHMARK_MCTS, MCTS_NN
-from common_utils import clamp
+from common_utils import clamp, board_hash
 
 
 # Let us represent players with player 1 by 0 and player 2 by 1
@@ -22,7 +22,7 @@ class Tictactoe(BoardGame) :
         self.win_length = win_length
         self.board = [['.']*size for _ in range(size)]
         # Note this has been set for simulation purposes
-        self.search_depth = 2
+        self.search_depth = 10
         self.temperature_control = temperature_control
         self.logging_mode = True
         # to indicate which player moves X and which moves 0
@@ -466,24 +466,72 @@ class Tictactoe(BoardGame) :
 
         return best_score
 
+    # # method to get a numerical metric for the next possible move with alpha beta pruning
+    # # aim to prune branches where alpha >= beta to diminish search space
+    # # we add a depth_to_result parameter to allow for setting of search depths
+    # def minimax_with_alpha_beta_pruning(self, isMax, depth_to_result, alpha = -math.inf, beta = math.inf):
+    #     # doesn't return anything if game is going on, so only return
+    #     # if it actually has an outcome
+    #     # Basically, if the last move leads to a draw, loss or win, the result value(1,-1 or 0) itself is the value
+    #     # the challenge is only when we have to build up recursively when there is no immediate final result
+    #     outcome = self.detect_win_loss()
+    #     # this second layer explanation can be understood from documentation of the method
+    #     ai_adjusted_outcome = self.generate_win_loss_metrics_wrt_AI(outcome)
+    #     if ai_adjusted_outcome is not None:
+    #         if ai_adjusted_outcome > 0:
+    #             return ai_adjusted_outcome - depth_to_result
+    #         if ai_adjusted_outcome < 0:
+    #             # basically, if we are losing, we prolong the result
+    #             return ai_adjusted_outcome + depth_to_result
+    #         return ai_adjusted_outcome
+    #     # min player is trying to minimize this score for max and max player is trying to maximize this score for themselves
+    #     best_score =-math.inf if isMax else math.inf
+    #     # get the current turn player's symbol
+    #     current_player = self.ai_player_code if isMax else 1 - self.ai_player_code
+    #     current_symbol = self.get_player_symbol(current_player)
+    #     possible_moves = self.get_possible_moves()
+    #
+    #     for move in possible_moves:
+    #         self.board[move[0]][move[1]] = current_symbol
+    #         self.increment_total_move_count()
+    #
+    #         # Recursively call minimax for the next player's turn
+    #         score = self.minimax_with_alpha_beta_pruning(not isMax, depth_to_result + 1, alpha, beta)
+    #
+    #         # Undo the move
+    #         self.undo_last_move(move)
+    #
+    #         # Step 6: Update best score
+    #         if isMax:
+    #             best_score = max(best_score, score)
+    #             alpha = max(best_score, alpha)
+    #         else:
+    #             best_score = min(best_score, score)
+    #             beta = min(best_score, beta)
+    #
+    #         if alpha >= beta:
+    #             break
+    #
+    #     return best_score
+
+
+    # WITH TT table
+
     # method to get a numerical metric for the next possible move with alpha beta pruning
     # aim to prune branches where alpha >= beta to diminish search space
     # we add a depth_to_result parameter to allow for setting of search depths
     def minimax_with_alpha_beta_pruning(self, isMax, depth_to_result, alpha = -math.inf, beta = math.inf):
-        # doesn't return anything if game is going on, so only return
-        # if it actually has an outcome
-        # Basically, if the last move leads to a draw, loss or win, the result value(1,-1 or 0) itself is the value
-        # the challenge is only when we have to build up recursively when there is no immediate final result
+        # first check cache for matches
+        cached_score = self.fetch_existing_hash(depth_to_result)
+        if cached_score is not None:
+            return cached_score
         outcome = self.detect_win_loss()
-        # this second layer explanation can be understood from documentation of the method
-        ai_adjusted_outcome = self.generate_win_loss_metrics_wrt_AI(outcome)
-        if ai_adjusted_outcome is not None:
-            if ai_adjusted_outcome > 0:
-                return ai_adjusted_outcome - depth_to_result
-            if ai_adjusted_outcome < 0:
-                # basically, if we are losing, we prolong the result
-                return ai_adjusted_outcome + depth_to_result
-            return ai_adjusted_outcome
+        terminal_score = self.fit_to_ai_metrics(outcome, depth_to_result)
+        if terminal_score is not None:
+            # store terminal evaluation in TT table
+            self.store_in_transposition_table(terminal_score, depth_to_result)
+            return terminal_score
+
         # min player is trying to minimize this score for max and max player is trying to maximize this score for themselves
         best_score =-math.inf if isMax else math.inf
         # get the current turn player's symbol
@@ -512,7 +560,11 @@ class Tictactoe(BoardGame) :
             if alpha >= beta:
                 break
 
+        self.store_in_transposition_table(best_score, depth_to_result)
         return best_score
+
+
+    # KEPT FOR TESTING AND DEMO ONLY
 
     # heuristic aid added to evaluate scores for positions and prevent searching till terminal positions
     # method to get a numerical metric for the next possible move with alpha beta pruning
@@ -571,6 +623,123 @@ class Tictactoe(BoardGame) :
             return best_score
 
 
+
+    # TT table added
+
+    # heuristic aid added to evaluate scores for positions and prevent searching till terminal positions
+    # method to get a numerical metric for the next possible move with alpha beta pruning
+    # aim to prune branches where alpha >= beta to diminish search space
+    # we add a depth_to_result parameter to allow for setting of search depths
+    def heuristic_minimax_with_alpha_beta_pruning_with_iterative_deepening(self, isMax, max_ply, depth_to_result, alpha=-math.inf, beta=math.inf):
+            # first check cache for matches
+            cached_score = self.fetch_existing_hash(depth_to_result)
+            if cached_score is not None:
+                return cached_score
+            outcome = self.detect_win_loss()
+            terminal_score = self.fit_to_ai_metrics(outcome, depth_to_result)
+            if terminal_score is not None:
+                # store terminal evaluation in TT
+                self.store_in_transposition_table(terminal_score, depth_to_result)
+                return terminal_score
+
+            if max_ply == 0:
+                # horizon reached – evaluate statically
+                static_score = self.heuristically_evaluate_board()
+                # store horizon evaluation in TT
+                self.store_in_transposition_table(static_score, depth_to_result)
+                return static_score
+
+            # we reach here means no immediate win
+            best_score = -math.inf if isMax else math.inf
+            ordered_moves = []
+            for depth in range(1, max_ply + 1):
+                # removing this line greatly increases speed but reduces search width
+                # alpha, beta = -math.inf, math.inf
+                current_move_scores = []
+                curr_best_score = -math.inf if isMax else math.inf
+                current_player = self.ai_player_code if isMax else 1 - self.ai_player_code
+                current_symbol = self.get_player_symbol(current_player)
+                possible_moves = self.get_possible_moves() if len(ordered_moves) == 0 else [move for move,score in ordered_moves]
+                for move in possible_moves:
+                    self.board[move[0]][move[1]] = current_symbol
+                    self.increment_total_move_count()
+                    # Recursively call minimax for the next player's turn
+                    score = self.heuristic_minimax_with_alpha_beta_pruning_with_iterative_deepening(not isMax, depth - 1, depth_to_result + 1, alpha, beta)
+                    # Undo the move
+                    self.undo_last_move(move)
+                    current_move_scores.append((move, score))
+                    # Step 6: Update best score
+                    if isMax:
+                        curr_best_score = max(curr_best_score, score)
+                        alpha = max(curr_best_score, alpha)
+                    else:
+                        curr_best_score = min(curr_best_score, score)
+                        beta = min(curr_best_score, beta)
+
+                    if alpha >= beta:
+                        break
+                ordered_moves = sorted(current_move_scores, key=lambda x: x[1], reverse=isMax)
+                best_score = curr_best_score
+
+            # --- TT: store internal node evaluation after all depths ---
+            self.store_in_transposition_table(best_score, depth_to_result)
+            return best_score
+
+    # # heuristic aid added to evaluate scores for positions and prevent searching till terminal positions
+    # # method to get a numerical metric for the next possible move with alpha beta pruning
+    # # aim to prune branches where alpha >= beta to diminish search space
+    # # we add a depth_to_result parameter to allow for setting of search depths
+    # def heuristic_minimax_with_alpha_beta_pruning_with_iterative_deepening(self, isMax, max_ply, depth_to_result, alpha=-math.inf, beta=math.inf):
+    #         # no need for anything at all if there is an immediate win
+    #         outcome = self.detect_win_loss()
+    #         ai_adjusted_outcome = self.generate_win_loss_metrics_wrt_AI(outcome)
+    #         if ai_adjusted_outcome is not None:
+    #             if ai_adjusted_outcome > 0:
+    #                 return ai_adjusted_outcome - depth_to_result
+    #             if ai_adjusted_outcome < 0:
+    #                 return ai_adjusted_outcome + depth_to_result
+    #             return ai_adjusted_outcome
+    #
+    #         if max_ply == 0:
+    #             # horizon reached – evaluate statically
+    #             return self.heuristically_evaluate_board()
+    #
+    #         # we reach here means no immediate win
+    #         best_score = -math.inf if isMax else math.inf
+    #         ordered_moves = []
+    #         for depth in range(1, max_ply + 1):
+    #             # removing this line greatly increases speed but reduces search width
+    #             # alpha, beta = -math.inf, math.inf
+    #             current_move_scores = []
+    #             curr_best_move = None
+    #             curr_best_score = -math.inf if isMax else math.inf
+    #             current_player = self.ai_player_code if isMax else 1 - self.ai_player_code
+    #             current_symbol = self.get_player_symbol(current_player)
+    #             possible_moves = self.get_possible_moves() if len(ordered_moves) == 0 else [move for move,score in ordered_moves]
+    #             for move in possible_moves:
+    #                 self.board[move[0]][move[1]] = current_symbol
+    #                 self.increment_total_move_count()
+    #                 # Recursively call minimax for the next player's turn
+    #                 score = self.heuristic_minimax_with_alpha_beta_pruning_with_iterative_deepening(not isMax, depth - 1, depth_to_result + 1, alpha, beta)
+    #                 # Undo the move
+    #                 self.undo_last_move(move)
+    #                 current_move_scores.append((move, score))
+    #                 # Step 6: Update best score
+    #                 if isMax:
+    #                     curr_best_score = max(curr_best_score, score)
+    #                     alpha = max(curr_best_score, alpha)
+    #                 else:
+    #                     curr_best_score = min(curr_best_score, score)
+    #                     beta = min(curr_best_score, beta)
+    #
+    #                 if alpha >= beta:
+    #                     break
+    #             ordered_moves = sorted(current_move_scores, key=lambda x: x[1], reverse=isMax)
+    #             best_score = curr_best_score
+    #         return best_score
+
+
+
     # # basically using the move evaluation found in the previous step to choose an optimal move by evaluating
     # # for each move possible given current empty spaces
     # def select_optimal_ai_move(self):
@@ -624,7 +793,7 @@ class Tictactoe(BoardGame) :
 
     # this method allows us to create a policy board map which is gen
     # in a flattened format for each move,which is needed for the Neural net
-    def generate_policy_board_map_for_neural_net(self, move_score_list,probability_distribution):
+    def generate_flattened_policy_board_map_for_neural_net(self, move_score_list, probability_distribution):
         current_board_size = self.get_board_size()
         policy_full = np.zeros(current_board_size * current_board_size, dtype=np.float32)
         # Fill in the probability for each legal move
@@ -640,6 +809,7 @@ class Tictactoe(BoardGame) :
     # basically using the move evaluation found in the previous step to choose an optimal move by evaluating
     # for each move possible given current empty spaces
     def select_optimal_ai_move_with_temperature_control(self):
+        start_time = time.time()
         temperature_control = self.get_temperature_control()
         current_board_size = self.get_board_size()
         current_player = self.ai_player_code
@@ -672,7 +842,16 @@ class Tictactoe(BoardGame) :
                     # the depth_to_result being set to 1 here is because when u first call this method
                     # it is checking the board states exactly 1 move away from now
                     # which in turn would update the values and do it 1 move from them and so on
-                    score = self.heuristic_minimax_with_alpha_beta_pruning(False,search_depth, 1, -math.inf, math.inf)
+
+                    # without iterative deepening
+                    # score = self.heuristic_minimax_with_alpha_beta_pruning(False,search_depth, 1, -math.inf, math.inf)
+
+                    # with iterative deepening
+                    score = self.heuristic_minimax_with_alpha_beta_pruning_with_iterative_deepening(
+                        isMax=False,  # if you're simulating the opponent's move
+                        max_ply=10,  # depth limit — can tweak based on board size/time
+                        depth_to_result=1  # always starts from 1
+                    )
             # it was only for trial so need to go back to previous state after trying
             self.undo_last_move(next_move)
             # if score > best_score:
@@ -686,7 +865,9 @@ class Tictactoe(BoardGame) :
         best_follow_up_move = move_score_list[probability_based_idx][0]
         best_score = move_score_list[probability_based_idx][1]
         self.selective_print(f"Evaluation Score of Position is {best_score}")
-        policy_map = self.generate_policy_board_map_for_neural_net(move_score_list=move_score_list, probability_distribution=probability_distribution)
+        policy_map = self.generate_flattened_policy_board_map_for_neural_net(move_score_list=move_score_list, probability_distribution=probability_distribution)
+        end_time = time.time()
+        print(f"AI move computation took {end_time - start_time:.3f} seconds.")
         return best_follow_up_move, policy_map
 
     # Formula used in the Alpha Go paper prioritizing visit count as the most viable metric πₐ ∝ N(s, a)¹/τ
@@ -729,7 +910,7 @@ class Tictactoe(BoardGame) :
         # # ────────────────────────────────────────────────────────────────────
         total_visits = sum(score for move, score in move_score_list)
         prob_distribution = [score / total_visits for move, score in move_score_list]
-        policy_map = self.generate_policy_board_map_for_neural_net(move_score_list, prob_distribution)
+        policy_map = self.generate_flattened_policy_board_map_for_neural_net(move_score_list, prob_distribution)
         print("id(self) =", id(self))
         print("id(root.state) =", id(mcts.root.state))
         return best_move, policy_map

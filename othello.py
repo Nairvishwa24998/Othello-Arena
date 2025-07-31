@@ -1,9 +1,10 @@
 # Let us represent players with player 1 by 0 and player 2 by 1
 # default setting to be against human player, and size and win_length to conventional 3*3
+import math
 from copy import deepcopy
 
 from boardgame import BoardGame
-from common_utils import set_starting_othello_board
+from common_utils import set_starting_othello_board, clamp
 from constant_strings import TEMPERATURE_CONTROL_FOR_MIN_RANDOMNESS, MOVE_B, MOVE_W, OTHELLO_BOARD_SIZE, DIRECTIONS
 
 
@@ -53,6 +54,10 @@ class Othello(BoardGame) :
         cloned.logging_mode = False
         return cloned
 
+    # method added coz undo is hard in Othello. Can be used in Alpha Beta Search
+    def clone_board(self):
+        return deepcopy(self.board)
+
     # get the amount of temperature control needed. Comes into picture during alpha beta pruning based engine
     def get_temperature_control(self):
         return self.temperature_control
@@ -65,6 +70,10 @@ class Othello(BoardGame) :
 
     def set_last_player(self, player_code):
         return self.last_moved
+
+    # to get the provided player's symbol
+    def get_player_symbol(self, player_code):
+        return self.assigned_move[player_code]
 
     # basically helps to get count of number of pieces of a given color on the board
     def get_player_piece_count(self, player_piece):
@@ -165,7 +174,7 @@ class Othello(BoardGame) :
             self.display_board()
             # increment total move counter by 1
             self.increment_total_move_count()
-            self.implement_flip(current_board_state, move_coordinates[0], move_coordinates[1], player_symbol, opponent_symbol)
+            self.implement_flips(current_board_state, move_coordinates[0], move_coordinates[1], player_symbol, opponent_symbol)
 
 
 
@@ -198,7 +207,7 @@ class Othello(BoardGame) :
         return flips
 
 
-    def implement_flip(self,board, x, y, player_symbol, opponent_symbol):
+    def implement_flips(self, board, x, y, player_symbol, opponent_symbol):
         # now that move is made we need to check for flips and modify board
         flip_candidates = self.get_flip_candidates(board, x, y, player_symbol, opponent_symbol)
         if len(flip_candidates) == 0:
@@ -245,5 +254,177 @@ class Othello(BoardGame) :
     #     return move
 
 
+    # method to get a numerical metric for the next possible move
+    def minimax(self, isMax):
+        # doesn't return anything if game is going on, so only return
+        # if it actually has an outcome
+        # Basically, if the last move leads to a draw, loss or win, the result value(1,-1 or 0) itself is the value
+        # the challenge is only when we have to build up recursively when there is no immediate final result
+        outcome = self.detect_win_loss()
+        # this second layer explanation can be understood from documentation of the method
+        ai_adjusted_outcome = self.generate_win_loss_metrics_wrt_AI(outcome)
+        if ai_adjusted_outcome is not None:
+            return ai_adjusted_outcome
+        # min player is trying to minimize this score for max and max player is trying to maximize this score for themselves
+        best_score =-math.inf if isMax else math.inf
+        # get the current turn player's symbol
+        current_player = self.ai_player_code if isMax else 1 - self.ai_player_code
+        opponent_player = 1 - current_player
+        current_symbol = self.get_player_symbol(current_player)
+        opponent_symbol = self.get_player_symbol(opponent_player)
+        possible_moves = self.get_possible_moves(current_player)
+
+        for move in possible_moves:
+            clone_game_instance = self.clone_instance()
+            clone_game_instance.board[move[0]][move[1]] = current_symbol
+            clone_game_instance.increment_total_move_count()
+            # we need the flip in Othello
+            clone_game_instance.implement_flips(clone_game_instance.board, move[0], move[1], current_symbol, opponent_symbol)
+
+            # Recursively call minimax for the next player's turn
+            score = clone_game_instance.minimax(not isMax)
+            # Step 6: Update best score
+            if isMax:
+                best_score = max(best_score, score)
+            else:
+                best_score = min(best_score, score)
+
+        return best_score
+
+
+    # method to get a numerical metric for the next possible move with alpha beta pruning
+    # aim to prune branches where alpha >= beta to diminish search space
+    # we add a depth_to_result parameter to allow for setting of search depths
+    def minimax_with_alpha_beta_pruning(self, isMax, depth_to_result, alpha = -math.inf, beta = math.inf):
+        # doesn't return anything if game is going on, so only return
+        # if it actually has an outcome
+        # Basically, if the last move leads to a draw, loss or win, the result value(1,-1 or 0) itself is the value
+        # the challenge is only when we have to build up recursively when there is no immediate final result
+        outcome = self.detect_win_loss()
+        # this second layer explanation can be understood from documentation of the method
+        ai_adjusted_outcome = self.generate_win_loss_metrics_wrt_AI(outcome)
+        if ai_adjusted_outcome is not None:
+            # depth subtraction/addition to favour quicker wins/slower losing positions
+            if ai_adjusted_outcome > 0:
+                return ai_adjusted_outcome - depth_to_result
+            if ai_adjusted_outcome < 0:
+                # basically, if we are losing, we prolong the result
+                return ai_adjusted_outcome + depth_to_result
+            return ai_adjusted_outcome
+        # min player is trying to minimize this score for max and max player is trying to maximize this score for themselves
+        best_score =-math.inf if isMax else math.inf
+        # get the current turn player's symbol
+        current_player = self.ai_player_code if isMax else 1 - self.ai_player_code
+        opponent_player = 1 - current_player
+        current_symbol = self.get_player_symbol(current_player)
+        opponent_symbol = self.get_player_symbol(opponent_player)
+        possible_moves = self.get_possible_moves(current_player)
+        for move in possible_moves:
+            clone_game_instance = self.clone_instance()
+            clone_game_instance.board[move[0]][move[1]] = current_symbol
+            clone_game_instance.increment_total_move_count()
+            # we need the flip in Othello
+            clone_game_instance.implement_flips(clone_game_instance.board, move[0], move[1], current_symbol,
+                                                opponent_symbol)
+            # Recursively call minimax for the next player's turn
+            score = clone_game_instance.minimax_with_alpha_beta_pruning(not isMax, depth_to_result + 1, alpha, beta)
+
+            # Step 6: Update best score
+            if isMax:
+                best_score = max(best_score, score)
+                alpha = max(best_score, alpha)
+            else:
+                best_score = min(best_score, score)
+                beta = min(best_score, beta)
+
+            if alpha >= beta:
+                break
+
+        return best_score
+
+        # To be used to prevent our alpha beta minimax from going till the end
+        # and get slowed down instead we can try and use a heuristic function to look for what seems like a better position
+        # only needed when game size is greater than 3 otherwise exhaustive search does the trick
+
+    def calculate_coin_parity_heuristics(self):
+        return None
+    def calculate_mobility_heuristics(self):
+        return None
+    def calculate_stability_heuristics(self):
+        return None
+    def calculate_corner_capture_heuristics(self):
+        return None
+
+
+    def heuristically_evaluate_board(self):
+        coin_parity_heuristic_multiplier = 0.8
+        mobility_heuristic_multiplier = 0.07
+        stability_heuristic_multiplier = .01
+        corner_capture_heuristic_multiplier = .5
+        coin_parity_heuristics = clamp(self.calculate_coin_parity_heuristics())
+        mobility_heuristics = clamp(self.calculate_mobility_heuristics())
+        stability_heuristics = clamp(self.calculate_stability_heuristics())
+        corner_capture_heuristics = clamp(self.calculate_corner_capture_heuristics())
+        return (coin_parity_heuristic_multiplier * coin_parity_heuristics) + (mobility_heuristic_multiplier * mobility_heuristics) + (stability_heuristic_multiplier * stability_heuristics) + (corner_capture_heuristic_multiplier * corner_capture_heuristics)
+
+
+    # heuristic aid added to evaluate scores for positions and prevent searching till terminal positions
+    # method to get a numerical metric for the next possible move with alpha beta pruning
+    # aim to prune branches where alpha >= beta to diminish search space
+    # we add a depth_to_result parameter to allow for setting of search depths
+    def heuristic_minimax_with_alpha_beta_pruning(self, isMax, max_ai_search_depth, depth_to_result, alpha=-math.inf, beta=math.inf):
+            # doesn't return anything if game is going on, so only return
+            # if it actually has an outcome
+            # Basically, if the last move leads to a draw, loss or win, the result value(1,-1 or 0) itself is the value
+            # the challenge is only when we have to build up recursively when there is no immediate final result
+            outcome = self.detect_win_loss()
+            # this second layer explanation can be understood from documentation of the method
+            ai_adjusted_outcome = self.generate_win_loss_metrics_wrt_AI(outcome)
+            if ai_adjusted_outcome is not None:
+                # alpha beta pruning/minimax doesn't differentiate between quicker and longer wins,
+                # if we can reduce the heuristic value according to how many moves before win
+                if ai_adjusted_outcome > 0:
+                    return ai_adjusted_outcome - depth_to_result
+                # basically, if we are losing, we prolong the result
+                if ai_adjusted_outcome < 0:
+                    return ai_adjusted_outcome + depth_to_result
+                return ai_adjusted_outcome
+
+            # reached the max depth we set so we can just return the heuristic evaluation of the board
+            if max_ai_search_depth == 0:
+                return self.heuristically_evaluate_board()
+
+            # min player is trying to minimize this score for max and max player is trying to maximize this score for themselves
+            best_score = -math.inf if isMax else math.inf
+            # get the current turn player's symbol
+            current_player = self.ai_player_code if isMax else 1 - self.ai_player_code
+            opponent_player = 1 - current_player
+            current_symbol = self.get_player_symbol(current_player)
+            opponent_symbol = self.get_player_symbol(opponent_player)
+            possible_moves = self.get_possible_moves(current_player)
+
+            for move in possible_moves:
+                clone_game_instance = self.clone_instance()
+                clone_game_instance.board[move[0]][move[1]] = current_symbol
+                clone_game_instance.increment_total_move_count()
+                # we need the flip in Othello
+                clone_game_instance.implement_flips(clone_game_instance.board, move[0], move[1], current_symbol,
+                                                    opponent_symbol)
+                # Recursively call minimax for the next player's turn
+                score = clone_game_instance.heuristic_minimax_with_alpha_beta_pruning(not isMax, max_ai_search_depth - 1,
+                                                                       depth_to_result + 1, alpha, beta)
+
+                # Step 6: Update best score
+                if isMax:
+                    best_score = max(best_score, score)
+                    alpha = max(best_score, alpha)
+                else:
+                    best_score = min(best_score, score)
+                    beta = min(best_score, beta)
+
+                if alpha >= beta:
+                    break
+
+            return best_score
 
 

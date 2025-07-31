@@ -21,10 +21,6 @@ def validate_bot_play_inp_config(ai_player_1, ai_player_2, rounds, board_size):
     # only happens if none of the validations are broken
     return True
 
-
-
-
-
 def set_starting_othello_board():
     result =  [['.']*OTHELLO_BOARD_SIZE for row in range(OTHELLO_BOARD_SIZE)]
     # placing 4 pieces in the conventional Othello starting position
@@ -33,5 +29,25 @@ def set_starting_othello_board():
     result[3][4] = MOVE_B
     result[4][3] = MOVE_B
     return result
+
+
+# to be used to generate hash for transposition table
+def board_hash(board):
+    return tuple(cell for row in board for cell in row)
+
+
+def check_existing_hash(self, depth_to_result):
+    current_board_state = self.get_current_board_state()
+    # compute hash key
+    key = board_hash(current_board_state)
+    # --- TRANSPOSE TABLE: check for cached score ---
+    cached = self.transposition_table.get(key)
+    if cached is not None:
+        # basically we only need to use it if the cached evaluation
+        # was done at a depth greater than the current one or equal to it
+        # otherwise it is not trust worthy
+        if cached["depth"] >= depth_to_result:
+            return cached["score"]
+    return None
 
 

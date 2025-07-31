@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+from common_utils import board_hash
 from constant_strings import CONCLUSIVE_RESULT_MULTIPLIER
 
 
@@ -16,6 +17,8 @@ class BoardGame(ABC):
         # we can use this to store game_states and moves played
         self.move_list  = []
         self.simulation_mode = simulation_mode
+        # --- TRANSPOSE TABLE: common attribute ---
+        self.transposition_table = {}
 
     def get_board_size(self):
         return self.size
@@ -88,6 +91,48 @@ class BoardGame(ABC):
                 return outcome * CONCLUSIVE_RESULT_MULTIPLIER
         else:
             return outcome * CONCLUSIVE_RESULT_MULTIPLIER
+
+    # lookup for current position for the current_depth in the transposition table
+    def fetch_existing_hash(self, depth_to_result):
+        current_board_state = self.get_current_board_state()
+        # compute hash key
+        key = board_hash(current_board_state)
+        # --- TRANSPOSE TABLE: check for cached score ---
+        cached = self.transposition_table.get(key)
+        if cached is not None:
+            # basically we only need to use it if the cached evaluation
+            # was done at a depth greater than the current one or equal to it
+            # otherwise it is not trust worthy
+            if cached["depth"] >= depth_to_result:
+                return cached["score"]
+        return None
+
+    # store the current game info in transposition table
+    def store_in_transposition_table(self, score, depth_to_result):
+        cached = self.fetch_existing_hash(depth_to_result)
+        key = board_hash(self.get_current_board_state())
+        # Only store if no entry exists OR current depth is deeper/equal
+        if cached is None:
+            self.transposition_table[key] = {
+                "depth": depth_to_result,
+                "score": score
+            }
+
+    def fit_to_ai_metrics(self, outcome,depth_to_result):
+        ai_adjusted_outcome = self.generate_win_loss_metrics_wrt_AI(outcome)
+        if ai_adjusted_outcome is not None:
+            # Prefer faster win / slower loss
+            if ai_adjusted_outcome > 0:
+                score = ai_adjusted_outcome - depth_to_result
+            elif ai_adjusted_outcome < 0:
+                score = ai_adjusted_outcome + depth_to_result
+            else:
+                score = ai_adjusted_outcome
+            return score
+
+    # clear the transposition table for the current game instance
+    def clear_transposition_table(self):
+        self.transposition_table.clear()
 
     @abstractmethod
     def current_player(self):
