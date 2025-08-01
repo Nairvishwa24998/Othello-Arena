@@ -110,6 +110,7 @@ def launch_game_from_pre_defined_position():
     user_req = get_user_requirements()
     ai_player_code = user_req["ai_player_code"]
     vs_human = user_req["vs_human"]
+    ai_type = user_req["ai_type"]
     input_grid = None
     nx = None
     no = None
@@ -150,7 +151,7 @@ def launch_game_from_pre_defined_position():
         user_req["board_size"] = root
         break  # input accepted
 
-    tictactoe = Tictactoe(size=user_req["board_size"], win_length=user_req["board_size"], vs_human=vs_human, ai_player_code=ai_player_code)
+    tictactoe = Tictactoe(size=user_req["board_size"], win_length=user_req["board_size"], vs_human=vs_human, ai_player_code=ai_player_code,ai_type = ai_type)
     tictactoe.board = input_grid
     tictactoe.total_moves = tictactoe.get_move_count_from_position(input_grid)
     if tictactoe.detect_win_loss() is not None:

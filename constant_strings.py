@@ -29,3 +29,11 @@ OTHELLO_BOARD_SIZE = 8
 DIRECTIONS = [(-1, -1), (-1, 0), (-1, 1),
               ( 0, -1),          ( 0, 1),
               ( 1, -1), ( 1, 0), ( 1, 1)]
+
+ASPIRATION_WINDOW_MULTIPLIER = 2
+# basically a value after which we just increase the search window size to full
+ASPIRATION_WINDOW_FAILURE_UPPER_LIMIT = 50
+# XLA Performance Optimization Settings
+ENABLE_XLA_COMPILATION = True
+XLA_BATCH_SIZE = 32
+MCTS_PREDICTION_CACHE_SIZE = 1000

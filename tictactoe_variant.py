@@ -9,7 +9,8 @@ from Mcts import Mcts
 from boardgame import BoardGame
 from constant_strings import CONCLUSIVE_RESULT_MULTIPLIER, TEMPERATURE_CONTROL_FOR_MIN_RANDOMNESS, \
     MAX_MOVE_COUNT_WITH_INITIAL_TEMPERATURE_CONTROL, MOVE_X, MOVE_O, MCTS, ALPHA_BETA_PRUNING, \
-    MIN_GAME_SIM_VS_HUMAN_BENCHMARK_MCTS, MIN_GAME_SIM_BENCHMARK_MCTS, MCTS_NN
+    MIN_GAME_SIM_VS_HUMAN_BENCHMARK_MCTS, MIN_GAME_SIM_BENCHMARK_MCTS, MCTS_NN, ASPIRATION_WINDOW_MULTIPLIER, \
+    ASPIRATION_WINDOW_FAILURE_UPPER_LIMIT
 from common_utils import clamp, board_hash
 
 
@@ -623,8 +624,7 @@ class Tictactoe(BoardGame) :
             return best_score
 
 
-
-    # TT table added
+    # TT table added with aspiration window
 
     # heuristic aid added to evaluate scores for positions and prevent searching till terminal positions
     # method to get a numerical metric for the next possible move with alpha beta pruning
@@ -648,42 +648,140 @@ class Tictactoe(BoardGame) :
                 # store horizon evaluation in TT
                 self.store_in_transposition_table(static_score, depth_to_result)
                 return static_score
-
             # we reach here means no immediate win
+            prev_score = 0
+            initial_window = 1
             best_score = -math.inf if isMax else math.inf
             ordered_moves = []
             for depth in range(1, max_ply + 1):
                 # removing this line greatly increases speed but reduces search width
                 # alpha, beta = -math.inf, math.inf
-                current_move_scores = []
-                curr_best_score = -math.inf if isMax else math.inf
-                current_player = self.ai_player_code if isMax else 1 - self.ai_player_code
-                current_symbol = self.get_player_symbol(current_player)
-                possible_moves = self.get_possible_moves() if len(ordered_moves) == 0 else [move for move,score in ordered_moves]
-                for move in possible_moves:
-                    self.board[move[0]][move[1]] = current_symbol
-                    self.increment_total_move_count()
-                    # Recursively call minimax for the next player's turn
-                    score = self.heuristic_minimax_with_alpha_beta_pruning_with_iterative_deepening(not isMax, depth - 1, depth_to_result + 1, alpha, beta)
-                    # Undo the move
-                    self.undo_last_move(move)
-                    current_move_scores.append((move, score))
-                    # Step 6: Update best score
-                    if isMax:
-                        curr_best_score = max(curr_best_score, score)
-                        alpha = max(curr_best_score, alpha)
-                    else:
-                        curr_best_score = min(curr_best_score, score)
-                        beta = min(curr_best_score, beta)
+                window = initial_window
+                alpha = prev_score - window
+                beta = prev_score + window
 
-                    if alpha >= beta:
+                # we need to keep repeating alpha beta for the same depth again and again until the score
+                # falls in the acceptable range
+                # simply updating values for alpha beta in one pass and hoping it falls within the range from the next
+                # depth is a luck thing so inherently unreliable
+                while True:
+                    # NEW: remember the actual window we wanted to test against
+                    window_low = alpha
+                    window_high = beta
+                    current_move_scores = []
+                    curr_best_score = -math.inf if isMax else math.inf
+                    current_player = self.ai_player_code if isMax else 1 - self.ai_player_code
+                    current_symbol = self.get_player_symbol(current_player)
+                    possible_moves = self.get_possible_moves() if len(ordered_moves) == 0 else [move for move,score in ordered_moves]
+                    for move in possible_moves:
+                        self.board[move[0]][move[1]] = current_symbol
+                        self.increment_total_move_count()
+                        # Recursively call minimax for the next player's turn
+                        score = self.heuristic_minimax_with_alpha_beta_pruning_with_iterative_deepening(not isMax, depth - 1, depth_to_result + 1, alpha, beta)
+                        # Undo the move
+                        self.undo_last_move(move)
+                        current_move_scores.append((move, score))
+                        # Step 6: Update best score
+                        if isMax:
+                            curr_best_score = max(curr_best_score, score)
+                            alpha = max(curr_best_score, alpha)
+                        else:
+                            curr_best_score = min(curr_best_score, score)
+                            beta = min(curr_best_score, beta)
+
+                        if alpha >= beta:
+                            break
+                    ordered_moves = sorted(current_move_scores, key=lambda x: x[1], reverse=isMax)
+                    best_score = curr_best_score
+                    # Aspiration Window Check
+                    # this means values are in range, can go on to the next depth by breaking the while loop
+                    # NOTE DO NOT USE alpha beta directly instead of window_low and window_hi
+                    # reason is that alpha and beta are converging possibly and by the time you reach here
+                    # they have come very very close, Hence they become very different from the inital window size u wanted to compare to
+                    # so use window_lo and window_hi to store initial values of alpha and beta
+                    if window_low < curr_best_score < window_high:
+                        # Success: score fits inside window
+                        prev_score = curr_best_score
                         break
-                ordered_moves = sorted(current_move_scores, key=lambda x: x[1], reverse=isMax)
-                best_score = curr_best_score
+                    # Fail-High or Fail-Low → widen the window
+                    window *= ASPIRATION_WINDOW_MULTIPLIER
+                    # Have expanded the window quite a bit, perhaps most efficient
+                    # to search with the full width
+                    if window > ASPIRATION_WINDOW_FAILURE_UPPER_LIMIT:
+                        alpha, beta = -math.inf, math.inf
+                    else:
+                        alpha = prev_score - window
+                        beta = prev_score + window
 
             # --- TT: store internal node evaluation after all depths ---
             self.store_in_transposition_table(best_score, depth_to_result)
             return best_score
+
+
+    # # TT table added No aspiration window
+    #
+    # # heuristic aid added to evaluate scores for positions and prevent searching till terminal positions
+    # # method to get a numerical metric for the next possible move with alpha beta pruning
+    # # aim to prune branches where alpha >= beta to diminish search space
+    # # we add a depth_to_result parameter to allow for setting of search depths
+    # def heuristic_minimax_with_alpha_beta_pruning_with_iterative_deepening(self, isMax, max_ply, depth_to_result, alpha=-math.inf, beta=math.inf):
+    #         # first check cache for matches
+    #         cached_score = self.fetch_existing_hash(depth_to_result)
+    #         if cached_score is not None:
+    #             return cached_score
+    #         outcome = self.detect_win_loss()
+    #         terminal_score = self.fit_to_ai_metrics(outcome, depth_to_result)
+    #         if terminal_score is not None:
+    #             # store terminal evaluation in TT
+    #             self.store_in_transposition_table(terminal_score, depth_to_result)
+    #             return terminal_score
+    #
+    #         if max_ply == 0:
+    #             # horizon reached – evaluate statically
+    #             static_score = self.heuristically_evaluate_board()
+    #             # store horizon evaluation in TT
+    #             self.store_in_transposition_table(static_score, depth_to_result)
+    #             return static_score
+    #
+    #
+    #         # we reach here means no immediate win
+    #         best_score = -math.inf if isMax else math.inf
+    #         ordered_moves = []
+    #         for depth in range(1, max_ply + 1):
+    #             # removing this line greatly increases speed but reduces search width
+    #             # alpha, beta = -math.inf, math.inf
+    #             current_move_scores = []
+    #             curr_best_score = -math.inf if isMax else math.inf
+    #             current_player = self.ai_player_code if isMax else 1 - self.ai_player_code
+    #             current_symbol = self.get_player_symbol(current_player)
+    #             possible_moves = self.get_possible_moves() if len(ordered_moves) == 0 else [move for move,score in ordered_moves]
+    #             for move in possible_moves:
+    #                 self.board[move[0]][move[1]] = current_symbol
+    #                 self.increment_total_move_count()
+    #                 # Recursively call minimax for the next player's turn
+    #                 score = self.heuristic_minimax_with_alpha_beta_pruning_with_iterative_deepening(not isMax, depth - 1, depth_to_result + 1, alpha, beta)
+    #                 # Undo the move
+    #                 self.undo_last_move(move)
+    #                 current_move_scores.append((move, score))
+    #                 # Step 6: Update best score
+    #                 if isMax:
+    #                     curr_best_score = max(curr_best_score, score)
+    #                     alpha = max(curr_best_score, alpha)
+    #                 else:
+    #                     curr_best_score = min(curr_best_score, score)
+    #                     beta = min(curr_best_score, beta)
+    #
+    #                 if alpha >= beta:
+    #                     break
+    #             ordered_moves = sorted(current_move_scores, key=lambda x: x[1], reverse=isMax)
+    #             best_score = curr_best_score
+    #
+    #         # --- TT: store internal node evaluation after all depths ---
+    #         self.store_in_transposition_table(best_score, depth_to_result)
+    #         return best_score
+
+
+    # without TT Table
 
     # # heuristic aid added to evaluate scores for positions and prevent searching till terminal positions
     # # method to get a numerical metric for the next possible move with alpha beta pruning
@@ -849,7 +947,7 @@ class Tictactoe(BoardGame) :
                     # with iterative deepening
                     score = self.heuristic_minimax_with_alpha_beta_pruning_with_iterative_deepening(
                         isMax=False,  # if you're simulating the opponent's move
-                        max_ply=10,  # depth limit — can tweak based on board size/time
+                        max_ply=20,  # depth limit — can tweak based on board size/time
                         depth_to_result=1  # always starts from 1
                     )
             # it was only for trial so need to go back to previous state after trying

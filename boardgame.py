@@ -96,7 +96,7 @@ class BoardGame(ABC):
     def fetch_existing_hash(self, depth_to_result):
         current_board_state = self.get_current_board_state()
         # compute hash key
-        key = board_hash(current_board_state)
+        key = board_hash(current_board_state, self.current_player())
         # --- TRANSPOSE TABLE: check for cached score ---
         cached = self.transposition_table.get(key)
         if cached is not None:
@@ -110,7 +110,7 @@ class BoardGame(ABC):
     # store the current game info in transposition table
     def store_in_transposition_table(self, score, depth_to_result):
         cached = self.fetch_existing_hash(depth_to_result)
-        key = board_hash(self.get_current_board_state())
+        key = board_hash(self.get_current_board_state(), self.current_player())
         # Only store if no entry exists OR current depth is deeper/equal
         if cached is None:
             self.transposition_table[key] = {

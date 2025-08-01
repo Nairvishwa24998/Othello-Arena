@@ -32,14 +32,17 @@ def set_starting_othello_board():
 
 
 # to be used to generate hash for transposition table
-def board_hash(board):
-    return tuple(cell for row in board for cell in row)
+def board_hash(board,player_on_move=None):
+    # accidentally omitted te player to move since that has a key role to play in determining in the relevance of
+    # a board state to a player
+    flat = tuple(cell for row in board for cell in row)
+    return flat if player_on_move is None else flat + (player_on_move,)
 
 
 def check_existing_hash(self, depth_to_result):
     current_board_state = self.get_current_board_state()
     # compute hash key
-    key = board_hash(current_board_state)
+    key = board_hash(current_board_state, self.current_player())
     # --- TRANSPOSE TABLE: check for cached score ---
     cached = self.transposition_table.get(key)
     if cached is not None:
