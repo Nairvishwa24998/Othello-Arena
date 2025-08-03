@@ -38,9 +38,9 @@ class Neural_Net:
         self.secondary_kernel_size = secondary_kernel_size
         # the model of the Neural Net
         self.model = self.build_model()
-        # # XLA compiled prediction function for faster inference
-        # self._xla_predict_fn = None
-        # self._compile_xla_predict()
+        # XLA flag.
+        self._xla_predict_fn = None
+        self._compile_xla_predict()
 
     # Getter methods in line with encapsulation
     def get_game(self):
@@ -257,10 +257,10 @@ class Neural_Net:
         prediction = self.model.predict(board_tensor, verbose=0)
         return prediction[0].squeeze(), prediction[1].squeeze()
 
+    # used to compile the model's predict with XLA which is a library specialized for faster mathematical operations
     def _compile_xla_predict(self):
-        """Compile the model's predict function with XLA for faster inference."""
         if not ENABLE_XLA_COMPILATION:
-            print(f"ℹ️ XLA compilation disabled for {self.game} model")
+            print(f" XLA compilation disabled for {self.game} model")
             self._xla_predict_fn = None
             return
             
@@ -274,19 +274,16 @@ class Neural_Net:
                 return self.model(inputs, training=False)
             
             # Warm up the compiled function
-            _ = xla_predict(dummy_input)
-            
+            xla_predict(dummy_input)
+
             self._xla_predict_fn = xla_predict
-            print(f"✅ XLA compilation successful for {self.game} model")
+            print(f" XLA compilation successful for {self.game} model")
         except Exception as e:
-            print(f"⚠️ XLA compilation failed, falling back to regular predict: {e}")
+            print(f" XLA compilation failed, falling back to regular predict: {e}")
             self._xla_predict_fn = None
 
+    # Fast prediction using XLA compilation if available, otherwise falls back to regular predict. Optimized for repeated calls during MCTS simulations.
     def fast_predict(self, board_tensor):
-        """
-        Fast prediction using XLA compilation if available, otherwise falls back to regular predict.
-        Optimized for repeated calls during MCTS simulations.
-        """
         if self._xla_predict_fn is not None:
             # Use XLA compiled function for faster inference
             predictions = self._xla_predict_fn(board_tensor)
@@ -295,11 +292,9 @@ class Neural_Net:
             # Fallback to regular predict
             return self.predict(board_tensor)
 
+    # To be incorporated
+    # Batch prediction for multiple board states at once. Much more efficient than individual predictions.
     def batch_predict(self, board_tensors):
-        """
-        Batch prediction for multiple board states at once.
-        Much more efficient than individual predictions.
-        """
         if isinstance(board_tensors, list):
             board_tensors = np.array(board_tensors)
         

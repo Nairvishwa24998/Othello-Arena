@@ -11,7 +11,7 @@ from constant_strings import CONCLUSIVE_RESULT_MULTIPLIER, TEMPERATURE_CONTROL_F
     MAX_MOVE_COUNT_WITH_INITIAL_TEMPERATURE_CONTROL, MOVE_X, MOVE_O, MCTS, ALPHA_BETA_PRUNING, \
     MIN_GAME_SIM_VS_HUMAN_BENCHMARK_MCTS, MIN_GAME_SIM_BENCHMARK_MCTS, MCTS_NN, ASPIRATION_WINDOW_MULTIPLIER, \
     ASPIRATION_WINDOW_FAILURE_UPPER_LIMIT, MAX_PLY_DEPTH
-from common_utils import clamp, board_hash
+from common_utils import clamp
 
 
 # Let us represent players with player 1 by 0 and player 2 by 1
@@ -31,11 +31,6 @@ class Tictactoe(BoardGame) :
         self.assigned_move = {
             0 : MOVE_X,
             1 : MOVE_O
-        }
-        self.result_map = {
-            0 : "Draw",
-            1 : "Win for Player 1",
-            -1 : "Win for Player 2"
         }
         # Ran into error first
         # Accidentally called the score_template_map setter method here first
@@ -77,21 +72,6 @@ class Tictactoe(BoardGame) :
 
     def set_temperature_control(self, custom_temperature):
         self.temperature_control = custom_temperature
-
-    # to decide whether game is AI vs AI or not
-    def get_game_mode(self):
-        return self.simulation_mode
-    # to set the type of AI to be used
-    def get_AI_type(self):
-        return self.ai_type
-
-    def set_AI_type(self, ai_type):
-        self.ai_type = ai_type
-        return ai_type
-
-    def set_to_simulation_mode(self):
-        self.simulation_mode = True
-        return self.simulation_mode
 
     # to get the provided player's symbol
     def get_player_symbol(self, player_code):
@@ -304,10 +284,6 @@ class Tictactoe(BoardGame) :
             return 0
         # Basically a move which doesn't lead to a win, draw or a loss
         return None
-
-    # Show game result
-    def fetch_result_map(self):
-        return self.result_map
 
     # methods to reduce the temperature control after a few moves. Helps to reduce the randomness after the intial moves
     def tweak_temp_control_based_on_move_count(self):

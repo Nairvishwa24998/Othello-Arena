@@ -346,8 +346,13 @@ class Othello(BoardGame) :
         # and get slowed down instead we can try and use a heuristic function to look for what seems like a better position
         # only needed when game size is greater than 3 otherwise exhaustive search does the trick
 
-    def calculate_coin_parity_heuristics(self):
-        return None
+    def calculate_coin_parity_heuristics(self,curr_player):
+        player_piece= self.get_player_symbol(curr_player)
+        opp_piece = self.get_player_symbol(1 - curr_player)
+        curr_player_coins = self.get_player_piece_count(player_piece)
+        opp_coins = self.get_player_piece_count(opp_piece)
+        return (100 * (curr_player_coins - opp_coins))/(curr_player_coins + opp_coins)
+
     def calculate_mobility_heuristics(self):
         return None
     def calculate_stability_heuristics(self):
@@ -428,3 +433,25 @@ class Othello(BoardGame) :
             return best_score
 
 
+    #  to run the game and link above methods together
+    def run_game(self):
+        simulation_mode = self.get_game_mode()
+        ai_type = self.get_AI_type()
+        # end_result of the game - 1, 0 and -1 indicating
+        # victory for x, draw and defeat for x respectively
+        result = None
+        self.selective_print("Game has now begun")
+        self.display_board()
+        game_ongoing = True
+        # Human vs Human
+        if self.ai_player_code is None:
+            self.selective_print("Human vs Human mode")
+            while game_ongoing:
+                self.human_make_move()
+                result = self.detect_win_loss()
+                result_map = self.fetch_result_map()
+                if result is not None:
+                    game_ongoing = False
+                    self.selective_print(result_map[result])
+        self.match_result = result
+        return result

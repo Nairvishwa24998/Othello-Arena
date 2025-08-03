@@ -23,9 +23,18 @@ class BoardGame(ABC):
         self.transposition_table = {}
         # mcts
         self.mcts_transposition_table = {}
+        self.result_map = {
+            0 : "Draw",
+            1 : "Win for Player 1",
+            -1 : "Win for Player 2"
+        }
 
     def get_board_size(self):
         return self.size
+
+    # Show game result
+    def fetch_result_map(self):
+        return self.result_map
 
     # to get AI player code
     def get_AI_player_code(self):
@@ -42,6 +51,25 @@ class BoardGame(ABC):
     def decrement_total_move_count(self):
         self.total_moves -= 1
         return self.total_moves
+
+    # to decide whether game is AI vs AI or not
+    def get_game_mode(self):
+        return self.simulation_mode
+    # to set the type of AI to be used
+    def get_AI_type(self):
+        return self.ai_type
+
+    def set_AI_type(self, ai_type):
+        self.ai_type = ai_type
+        return ai_type
+
+    def set_to_simulation_mode(self):
+        self.simulation_mode = True
+        return self.simulation_mode
+
+
+
+
 
     # to prevent unnecessary prints by simulation instance
     def selective_print(self, *args, **kwargs):
@@ -102,7 +130,7 @@ class BoardGame(ABC):
         current_board_state = self.get_current_board_state()
         # compute hash key
         key = board_hash(current_board_state, self.current_player())
-        # --- TRANSPOSE TABLE: check for cached score ---
+        # check for cached score
         cached = self.transposition_table.get(key)
         if cached is not None:
             # basically we only need to use it if the cached evaluation

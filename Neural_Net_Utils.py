@@ -147,6 +147,9 @@ def prepare_neural_net_instance(game, size, ai_type):
     neural_net = Neural_Net(game=game, size = size)
     file_name = os.path.join("weights_ttt_4", f"{game}-{size}.keras")
     neural_net.load(file_name)
+    # added for testing with XLA
+    neural_net._compile_xla_predict()
+    print(f" XLA enabled for {game} {size}x{size} model")
     return neural_net
 
 if __name__ == "__main__":

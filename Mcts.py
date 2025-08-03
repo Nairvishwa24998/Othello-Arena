@@ -86,14 +86,16 @@ class Mcts:
         if ai_type == MCTS_NN:
             hashed_board_key = board_hash(parent_board, player_turn)
             tt_value = self.mcts_transposition_table.get(hashed_board_key)
-            # if tt_value is None:
-            pre_move_flattened_state_2d = "".join(str(cell) for row in parent_board for cell in row)
-            inp = flattened_board_to_tensor(pre_move_flattened_state_2d, game_name=GAME_TICTACTOE)[None, ...]
-            neural_net = self.get_neural_net()
-            policy_prediction, value_prediction = neural_net.model.predict(inp, verbose=0)
-            # predicting and storing in cache for future
-            tt_value = link_game_position_hash_to_pv(self.mcts_transposition_table, hashed_board_key, policy_prediction[0], value_prediction)
-
+            if tt_value is None:
+                pre_move_flattened_state_2d = "".join(str(cell) for row in parent_board for cell in row)
+                inp = flattened_board_to_tensor(pre_move_flattened_state_2d, game_name=GAME_TICTACTOE)[None, ...]
+                neural_net = self.get_neural_net()
+                # commented out for testing without XLA
+                # policy_prediction, value_prediction = neural_net.model.predict(inp, verbose=0)
+                # added for XLA
+                policy_prediction, value_prediction = self.neural_net.fast_predict(inp)
+                # predicting and storing in cache for future
+                tt_value = link_game_position_hash_to_pv(self.mcts_transposition_table, hashed_board_key, policy_prediction[0], value_prediction)
             flat = move[0] * cloned_instance.size + move[1]
             child_node.policy_prior = float(tt_value["policy"][flat])
         else:  # pure MCTS or no model yet
@@ -160,10 +162,14 @@ class Mcts:
         ai_type = input_game_instance.get_AI_type()
         if ai_type == MCTS_NN and self.neural_net:  # self.neural_net set in __init__
             board_str = "".join(str(c) for row in current_node.state.board for c in row)
-            v = self.neural_net.model.predict(
-                flattened_board_to_tensor(board_str, GAME_TICTACTOE)[None, ...],
-                verbose=0,
-            )[1][0]  # value scalar in [-1,1]
+            # commented out for testing - without XLA
+            # v = self.neural_net.model.predict(
+            #     flattened_board_to_tensor(board_str, GAME_TICTACTOE)[None, ...],
+            #     verbose=0,
+            # )[1][0]  # value scalar in [-1,1]
+            # added for XLA
+            v = self.neural_net.fast_predict(
+                flattened_board_to_tensor(board_str, GAME_TICTACTOE)[None, ...])[1][0]
             return -float(v)  # flip perspective once (backtracking will flip again)
         simulation_instance = input_game_instance.clone_instance()
         # make it AI-vs-AI

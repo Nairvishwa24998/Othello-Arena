@@ -5,7 +5,7 @@ from constant_strings import TEMPERATURE_CONTROL_FOR_MAX_RANDOMNESS, ALPHA_BETA_
 from tictactoe_variant import Tictactoe
 
 
-def prompt_user_fresh_game_or_custom_position():
+def ttt_prompt_user_fresh_game_or_custom_position():
     invalid_response = True
     response = None
     while invalid_response:
@@ -201,6 +201,6 @@ def setup_tictactoe_instance_for_bot_matches(size, first_player_ai_type):
 
 # Note this is needed otherwise self-play bot won't run
 if __name__ == "__main__":
-    prompt_user_fresh_game_or_custom_position()
+    ttt_prompt_user_fresh_game_or_custom_position()
 
 
