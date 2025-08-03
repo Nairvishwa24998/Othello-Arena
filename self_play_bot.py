@@ -54,7 +54,7 @@ class SelfPlayBot:
         win_X = 0
         win_O = 0
         draws = 0
-        while count < 10000:
+        while count < 10:
             tictactoe = setup_tictactoe_instance_for_training_simulations(size = size, ai_type = ai_type)
             result = tictactoe.run_game()  # This sets tictactoe.match_result
             if result == 1:
@@ -140,8 +140,8 @@ class SelfPlayBot:
 if __name__ == "__main__":
     bot = SelfPlayBot()
     # commented out for testing purposes
-    # bot.run_simulations(4, ALPHA_BETA_PRUNING)
-    bot.run_bot_v_bot_matches(ai_player_1=MCTS_NN, ai_player_2=ALPHA_BETA_PRUNING, rounds=5, board_size=4)
+    bot.run_simulations(6, ALPHA_BETA_PRUNING)
+    # bot.run_bot_v_bot_matches(ai_player_1=MCTS_NN, ai_player_2=ALPHA_BETA_PRUNING, rounds=5, board_size=4)
 
 
 

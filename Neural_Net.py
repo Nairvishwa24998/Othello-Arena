@@ -1,13 +1,14 @@
 import os
 
 import numpy as np
+import tensorflow as tf
 
 from keras import layers, models
 from keras.src.losses import CategoricalCrossentropy, MeanSquaredError
 from keras.src.callbacks import ModelCheckpoint,ReduceLROnPlateau, EarlyStopping
 from keras.src.optimizers import Adam
 
-from constant_strings import NUMBER_OF_NN_CHANNELS, ACTIVATION_TANH, NEURAL_NET_LEARNING_RATE
+from constant_strings import NUMBER_OF_NN_CHANNELS, ACTIVATION_TANH, NEURAL_NET_LEARNING_RATE, ENABLE_XLA_COMPILATION
 
 
 class Neural_Net:
@@ -37,6 +38,9 @@ class Neural_Net:
         self.secondary_kernel_size = secondary_kernel_size
         # the model of the Neural Net
         self.model = self.build_model()
+        # # XLA compiled prediction function for faster inference
+        # self._xla_predict_fn = None
+        # self._compile_xla_predict()
 
     # Getter methods in line with encapsulation
     def get_game(self):
@@ -196,7 +200,7 @@ class Neural_Net:
             # this part solely to keep saving good model snapshots
             os.makedirs(ckpt_dir, exist_ok=True)
             ckpt_path = os.path.join(
-                # could have named it anything reallt just chose this since the naming is somehwat descriptive
+                # could have named it anything really just chose this since the naming is somehwat descriptive
                 ckpt_dir, "epoch{epoch:02d}-val{val_loss:.4f}.keras"
             )
 
@@ -252,6 +256,60 @@ class Neural_Net:
         # batched_input = np.expand_dims(board_tensor, axis=0)
         prediction = self.model.predict(board_tensor, verbose=0)
         return prediction[0].squeeze(), prediction[1].squeeze()
+
+    def _compile_xla_predict(self):
+        """Compile the model's predict function with XLA for faster inference."""
+        if not ENABLE_XLA_COMPILATION:
+            print(f"ℹ️ XLA compilation disabled for {self.game} model")
+            self._xla_predict_fn = None
+            return
+            
+        try:
+            # Create a dummy input to trace the function
+            dummy_input = tf.zeros((1, self.size, self.size, 3), dtype=tf.float32)
+            
+            # Compile the predict function with XLA
+            @tf.function(jit_compile=True)
+            def xla_predict(inputs):
+                return self.model(inputs, training=False)
+            
+            # Warm up the compiled function
+            _ = xla_predict(dummy_input)
+            
+            self._xla_predict_fn = xla_predict
+            print(f"✅ XLA compilation successful for {self.game} model")
+        except Exception as e:
+            print(f"⚠️ XLA compilation failed, falling back to regular predict: {e}")
+            self._xla_predict_fn = None
+
+    def fast_predict(self, board_tensor):
+        """
+        Fast prediction using XLA compilation if available, otherwise falls back to regular predict.
+        Optimized for repeated calls during MCTS simulations.
+        """
+        if self._xla_predict_fn is not None:
+            # Use XLA compiled function for faster inference
+            predictions = self._xla_predict_fn(board_tensor)
+            return predictions[0].numpy(), predictions[1].numpy()
+        else:
+            # Fallback to regular predict
+            return self.predict(board_tensor)
+
+    def batch_predict(self, board_tensors):
+        """
+        Batch prediction for multiple board states at once.
+        Much more efficient than individual predictions.
+        """
+        if isinstance(board_tensors, list):
+            board_tensors = np.array(board_tensors)
+        
+        if self._xla_predict_fn is not None:
+            # Use XLA compiled function
+            predictions = self._xla_predict_fn(board_tensors)
+            return predictions[0].numpy(), predictions[1].numpy()
+        else:
+            # Fallback to regular predict
+            return self.model.predict(board_tensors, verbose=0)
 
     # helps us save the finished model weights to a file path
     def save(self, path):
