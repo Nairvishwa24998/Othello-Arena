@@ -173,7 +173,7 @@ def launch_fresh_game_with_user_config():
     tictactoe.run_game()
 
 def setup_tictactoe_instance_for_training_simulations(size, ai_type):
-    tictactoe = Tictactoe(size=size, vs_human=False)
+    tictactoe = Tictactoe(size=size, vs_human=False, temperature_control=TEMPERATURE_CONTROL_FOR_MAX_RANDOMNESS)
     # setting the preferred AI type. Will dictate the type of AI used in simulations
     tictactoe.set_AI_type(ai_type)
     # we only need it for alpha beta pruning

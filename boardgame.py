@@ -17,8 +17,12 @@ class BoardGame(ABC):
         # we can use this to store game_states and moves played
         self.move_list  = []
         self.simulation_mode = simulation_mode
-        # --- TRANSPOSE TABLE: common attribute ---
+        # transposition tables
+        # two different transposition tables set up purely for separation of concerns
+        # ab pruning
         self.transposition_table = {}
+        # mcts
+        self.mcts_transposition_table = {}
 
     def get_board_size(self):
         return self.size
@@ -92,6 +96,7 @@ class BoardGame(ABC):
         else:
             return outcome * CONCLUSIVE_RESULT_MULTIPLIER
 
+    # ab pruning
     # lookup for current position for the current_depth in the transposition table
     def fetch_existing_hash(self, depth_to_result):
         current_board_state = self.get_current_board_state()
@@ -107,6 +112,7 @@ class BoardGame(ABC):
                 return cached["score"]
         return None
 
+    # ab pruning only
     # store the current game info in transposition table
     def store_in_transposition_table(self, score, depth_to_result):
         cached = self.fetch_existing_hash(depth_to_result)
@@ -133,6 +139,7 @@ class BoardGame(ABC):
     # clear the transposition table for the current game instance
     def clear_transposition_table(self):
         self.transposition_table.clear()
+
 
     @abstractmethod
     def current_player(self):

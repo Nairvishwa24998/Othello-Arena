@@ -31,6 +31,7 @@ def set_starting_othello_board():
     return result
 
 
+# common to MCTS and ab pruning
 # to be used to generate hash for transposition table
 def board_hash(board,player_on_move=None):
     # accidentally omitted te player to move since that has a key role to play in determining in the relevance of
@@ -39,6 +40,7 @@ def board_hash(board,player_on_move=None):
     return flat if player_on_move is None else flat + (player_on_move,)
 
 
+# ab pruning only
 def check_existing_hash(self, depth_to_result):
     current_board_state = self.get_current_board_state()
     # compute hash key
@@ -52,5 +54,20 @@ def check_existing_hash(self, depth_to_result):
         if cached["depth"] >= depth_to_result:
             return cached["score"]
     return None
+
+
+# mcts only
+# if it is not there we don't add it. If it, we do
+def link_game_position_hash_to_pv(mcts_tt_table, hashed_current_board_state, policy, value):
+    if mcts_tt_table.get(hashed_current_board_state, None) is None:
+        mcts_tt_table[hashed_current_board_state] = {
+            "policy": policy,
+            "value": value
+        }
+    #     accidentally returned the whole table before now only returning key
+    return mcts_tt_table[hashed_current_board_state]
+
+
+
 
 

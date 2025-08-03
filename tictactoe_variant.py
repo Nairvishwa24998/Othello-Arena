@@ -10,7 +10,7 @@ from boardgame import BoardGame
 from constant_strings import CONCLUSIVE_RESULT_MULTIPLIER, TEMPERATURE_CONTROL_FOR_MIN_RANDOMNESS, \
     MAX_MOVE_COUNT_WITH_INITIAL_TEMPERATURE_CONTROL, MOVE_X, MOVE_O, MCTS, ALPHA_BETA_PRUNING, \
     MIN_GAME_SIM_VS_HUMAN_BENCHMARK_MCTS, MIN_GAME_SIM_BENCHMARK_MCTS, MCTS_NN, ASPIRATION_WINDOW_MULTIPLIER, \
-    ASPIRATION_WINDOW_FAILURE_UPPER_LIMIT
+    ASPIRATION_WINDOW_FAILURE_UPPER_LIMIT, MAX_PLY_DEPTH
 from common_utils import clamp, board_hash
 
 
@@ -947,7 +947,7 @@ class Tictactoe(BoardGame) :
                     # with iterative deepening
                     score = self.heuristic_minimax_with_alpha_beta_pruning_with_iterative_deepening(
                         isMax=False,  # if you're simulating the opponent's move
-                        max_ply=20,  # depth limit — can tweak based on board size/time
+                        max_ply=MAX_PLY_DEPTH,  # depth limit — can tweak based on board size/time
                         depth_to_result=1  # always starts from 1
                     )
             # it was only for trial so need to go back to previous state after trying
@@ -971,6 +971,7 @@ class Tictactoe(BoardGame) :
     # Formula used in the Alpha Go paper prioritizing visit count as the most viable metric πₐ ∝ N(s, a)¹/τ
     # Long story short, ove a decent number of simulations visit count is the best metric to look for
     def select_optimal_ai_move_mcts(self):
+        start_time = time.time()
         # this will help us not to use too much load in doing and undoing on the
         # original instance and just perform everything on a clone
         simulated_mode = self.get_game_mode()
@@ -979,7 +980,7 @@ class Tictactoe(BoardGame) :
         # choosing the lowest abs value possible initially
         best_score = -math.inf
         best_follow_up_move = None
-        mcts = Mcts(root=None, tictactoe_instance=cloned_instance)
+        mcts = Mcts(root=None, game_instance=cloned_instance)
         # variable which assigns different number of max runs based on self or vs human play
         max_runs = MIN_GAME_SIM_VS_HUMAN_BENCHMARK_MCTS if simulated_mode == False else MIN_GAME_SIM_BENCHMARK_MCTS
         mcts.commence_mcts_for_selfplay(max_runs=max_runs)
@@ -1011,6 +1012,8 @@ class Tictactoe(BoardGame) :
         policy_map = self.generate_flattened_policy_board_map_for_neural_net(move_score_list, prob_distribution)
         print("id(self) =", id(self))
         print("id(root.state) =", id(mcts.root.state))
+        end_time = time.time()
+        print(f"AI move computation took {end_time - start_time:.3f} seconds.")
         return best_move, policy_map
 
 
