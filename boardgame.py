@@ -1,8 +1,10 @@
 from abc import ABC, abstractmethod
 
+import numpy as np
+
 from common_utils import board_hash
 from constant_strings import CONCLUSIVE_RESULT_MULTIPLIER
-
+from scipy.special import softmax
 
 class BoardGame(ABC):
     def __init__(self, size, vs_human, ai_player_code, ai_type, simulation_mode = False):
@@ -82,7 +84,6 @@ class BoardGame(ABC):
         current_board_state = self.get_current_board_state()
         # attempted position is not empty, so we shouldn't allow the move
         if current_board_state[move_coordinates[0]][move_coordinates[1]] != ".":
-            self.selective_print("The position is occupied try a different position!")
             return True
         return False
 
@@ -168,6 +169,30 @@ class BoardGame(ABC):
     def clear_transposition_table(self):
         self.transposition_table.clear()
 
+        # this method allows us to create a policy board map which is gen
+        # in a flattened format for each move,which is needed for the Neural net
+
+    def generate_flattened_policy_board_map_for_neural_net(self, move_score_list, probability_distribution):
+        current_board_size = self.get_board_size()
+        policy_full = np.zeros(current_board_size * current_board_size, dtype=np.float32)
+        # Fill in the probability for each legal move
+        # basically we have move_score_list with available moves in the (x,y), score format
+        # then we have probabilities which is just a list of probabilities for
+        # each of the available moves
+        for (relevant_move, relevant_score), p in zip(move_score_list, probability_distribution):
+            # logic to get index of a 2d board flattened in 1d
+            flat_idx = relevant_move[0] * current_board_size + relevant_move[1]  # Convert 2D move to 1D index
+            policy_full[flat_idx] = p
+        return policy_full
+
+    # basically using the softmax function to create a bunch of probabilities for the given move_score list
+    def generate_probability_distribution_with_temperature(self,move_score_list, temperature_control ):
+        score_list = np.array([score for move,score in move_score_list], dtype=np.float64)
+        # probability_distribution = np.exp(score_list/temperature_control)
+        # probability_summation = sum(probability_distribution)
+        # probability_distribution = probability_distribution/probability_summation
+        probability_distribution = softmax(score_list/temperature_control)
+        return probability_distribution
 
     @abstractmethod
     def current_player(self):
@@ -183,6 +208,10 @@ class BoardGame(ABC):
 
     @abstractmethod
     def human_make_move(self):
+        pass
+
+    @abstractmethod
+    def check_immediate_result(self, possible_moves):
         pass
 
     @abstractmethod

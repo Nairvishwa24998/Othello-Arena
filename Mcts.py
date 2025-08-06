@@ -13,12 +13,11 @@ class Mcts:
         self.root = Node(state=game_instance)
         # just a hashed version of the current board state when MCTS is called
         self.hashed_root = board_hash(game_instance.get_current_board_state(), game_instance.current_player())
-        self.neural_net = prepare_neural_net_instance(game=GAME_TICTACTOE, size = game_instance.get_board_size(), ai_type = game_instance.get_AI_type())
+        # removed the hardcoded game name
+        self.neural_net = prepare_neural_net_instance(game=game_instance.game_name, size = game_instance.get_board_size(), ai_type = game_instance.get_AI_type())
         # # # Cache for batch predictions to avoid repeated tensor conversions
         # self._prediction_cache = {}
         self.mcts_transposition_table = game_instance.mcts_transposition_table
-
-        # link_game_position_hash_to_pv(game_instance.mcts_transposition_table, self.hashed_root, )
 
 
 
