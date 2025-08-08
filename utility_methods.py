@@ -1,6 +1,5 @@
 import math
 from constant_strings import MOVE_B, MOVE_W, OTHELLO_BOARD_SIZE
-from othello import Othello
 
 from constant_strings import TEMPERATURE_CONTROL_FOR_MAX_RANDOMNESS, ALPHA_BETA_PRUNING, MCTS, MCTS_NN, \
     TEMPERATURE_CONTROL_FOR_MIN_RANDOMNESS, GAME_TICTACTOE, GAME_OTHELLO
@@ -279,6 +278,21 @@ def setup_tictactoe_instance_for_bot_matches(size, first_player_ai_type):
     # suppress board prints for speed/clarity
     tictactoe.logging_mode = False
     return tictactoe
+
+
+def setup_othello_instance_for_bot_matches(first_player_ai_type):
+    othello = Othello(vs_human=False)
+    # setting the preferred AI type. Will dictate the type of AI used in simulations
+    othello.set_AI_type(first_player_ai_type)
+    # this is to demo how well it performs so make it min_randomness
+    if first_player_ai_type == ALPHA_BETA_PRUNING:
+        othello.set_temperature_control(TEMPERATURE_CONTROL_FOR_MIN_RANDOMNESS)
+    # simulation mode so the AI starts with the first move
+    othello.ai_player_code = 0
+    othello.set_to_simulation_mode()
+    # suppress board prints for speed/clarity
+    othello.logging_mode = False
+    return othello
 
 # method to choose a game
 def choose_game():

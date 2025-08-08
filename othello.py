@@ -8,6 +8,7 @@ from copy import deepcopy
 import numpy as np
 
 from Mcts import Mcts
+from MctsOthello import MctsOthello
 from boardgame import BoardGame
 from common_utils import set_starting_othello_board, clamp
 from constant_strings import TEMPERATURE_CONTROL_FOR_MIN_RANDOMNESS, MOVE_B, MOVE_W, OTHELLO_BOARD_SIZE, DIRECTIONS, \
@@ -16,7 +17,7 @@ from constant_strings import TEMPERATURE_CONTROL_FOR_MIN_RANDOMNESS, MOVE_B, MOV
     ALPHA_BETA_PRUNING, MCTS, MCTS_NN, MAX_PLY_DEPTH_TTT, MIN_GAME_SIM_VS_HUMAN_BENCHMARK_MCTS_TTT, \
     MIN_GAME_SIM_BENCHMARK_MCTS, \
     GAME_OTHELLO, MIN_GAME_SIM_VS_HUMAN_BENCHMARK_MCTS_OTHELLO, ASPIRATION_WINDOW_MULTIPLIER, \
-    ASPIRATION_WINDOW_FAILURE_UPPER_LIMIT, MAX_PLY_DEPTH_OTHELLO
+    ASPIRATION_WINDOW_FAILURE_UPPER_LIMIT, MAX_PLY_DEPTH_OTHELLO, INF
 
 
 class Othello(BoardGame) :
@@ -26,7 +27,7 @@ class Othello(BoardGame) :
         self.game_name = GAME_OTHELLO
         self.board = set_starting_othello_board()
         # Note this has been set for simulation purposes
-        self.search_depth = 2
+        self.max_iterative_depth = MAX_PLY_DEPTH_OTHELLO
         self.temperature_control = temperature_control
         self.logging_mode = True
         # attribute to control who made the last move
@@ -62,7 +63,7 @@ class Othello(BoardGame) :
         # Deepcopy only essential mutable attributes
         cloned.board = deepcopy(self.board)
         cloned.total_moves = self.total_moves
-        cloned.search_depth = self.search_depth
+        cloned.max_iterative_depth = self.max_iterative_depth
         cloned.central_heuristic_evaluation_map = deepcopy(self.central_heuristic_evaluation_map)
         # Note this is necessary since we only use cloning in othello
         # otherwise
@@ -302,7 +303,7 @@ class Othello(BoardGame) :
         if ai_adjusted_outcome is not None:
             return ai_adjusted_outcome
         # min player is trying to minimize this score for max and max player is trying to maximize this score for themselves
-        best_score =-math.inf if isMax else math.inf
+        best_score =-INF if isMax else INF
         # get the current turn player's symbol
         current_player = self.ai_player_code if isMax else 1 - self.ai_player_code
         opponent_player = 1 - current_player
@@ -330,7 +331,7 @@ class Othello(BoardGame) :
 
     def minimax_with_alpha_beta_pruning(
             self, isMax: bool, depth_to_result: int,
-            alpha: float = -math.inf, beta: float = math.inf):
+            alpha: float = -INF, beta: float = INF):
         # Transposition-table probe
         cached_score = self.fetch_existing_hash(depth_to_result)
         if cached_score is not None:
@@ -344,13 +345,15 @@ class Othello(BoardGame) :
             return terminal_score
 
         # Initialise best score
-        best_score = -math.inf if isMax else math.inf
+        best_score = -INF if isMax else INF
 
         # Identify the side to move and generate its legal moves
         current_player = self.ai_player_code if isMax else 1 - self.ai_player_code
         current_symbol = self.get_player_symbol(current_player)
         opponent_symbol = self.get_player_symbol(1 - current_player)
         possible_moves = self.get_possible_moves(current_player)
+
+
 
         # Loop through children
         for move in possible_moves:
@@ -517,7 +520,7 @@ class Othello(BoardGame) :
     # method to get a numerical metric for the next possible move with alpha beta pruning
     # aim to prune branches where alpha >= beta to diminish search space
     # we add a depth_to_result parameter to allow for setting of search depths
-    def heuristic_minimax_with_alpha_beta_pruning(self, isMax, max_ai_search_depth, depth_to_result, alpha=-math.inf, beta=math.inf):
+    def heuristic_minimax_with_alpha_beta_pruning(self, isMax, max_ai_search_depth, depth_to_result, alpha=-INF, beta=INF):
             # doesn't return anything if game is going on, so only return
             # if it actually has an outcome
             # Basically, if the last move leads to a draw, loss or win, the result value(1,-1 or 0) itself is the value
@@ -540,7 +543,7 @@ class Othello(BoardGame) :
                 return self.heuristically_evaluate_board()
 
             # min player is trying to minimize this score for max and max player is trying to maximize this score for themselves
-            best_score = -math.inf if isMax else math.inf
+            best_score = -INF if isMax else INF
             # get the current turn player's symbol
             current_player = self.ai_player_code if isMax else 1 - self.ai_player_code
             opponent_player = 1 - current_player
@@ -614,7 +617,28 @@ class Othello(BoardGame) :
                 return move
         return None
 
-    # to be implemented
+    def ai_skip_move_ab_flow_adjuster(self, cloned_child, current_player, isMax, depth_to_result, alpha, beta):
+        opponent_symbol = cloned_child.get_player_symbol(1 - current_player)
+        if len(cloned_child.get_possible_moves(opponent_symbol)) != 0:
+            cloned_child.last_moved = current_player
+            score = cloned_child.minimax_with_alpha_beta_pruning(
+                not isMax, depth_to_result + 1, alpha, beta)
+        else:
+            score = cloned_child.minimax_with_alpha_beta_pruning(
+                isMax, depth_to_result + 1, alpha, beta)
+        return score
+
+    def ai_skip_move_ab_heuristic_flow_adjuster(self, cloned_child, current_player, isMax, depth_to_result, alpha, beta):
+        opponent_symbol = cloned_child.get_player_symbol(1 - current_player)
+        if len(cloned_child.get_possible_moves(opponent_symbol)) != 0:
+            cloned_child.last_moved = current_player
+            score = cloned_child.heuristic_minimax_with_alpha_beta_pruning_with_iterative_deepening(
+                not isMax, depth_to_result + 1, alpha, beta)
+        else:
+            score = cloned_child.heuristic_minimax_with_alpha_beta_pruning_with_iterative_deepening(
+                isMax, depth_to_result + 1, alpha, beta)
+        return score
+
     # basically using the move evaluation found in the previous step to choose an optimal move by evaluating
     # for each move possible given current empty spaces
     def select_optimal_ai_move_with_temperature_control(self):
@@ -625,10 +649,12 @@ class Othello(BoardGame) :
         ai_symbol = self.get_player_symbol(ai_player_code)
         opponent_symbol = self.get_player_symbol(1 - ai_player_code)
         possible_moves = self.get_possible_moves(ai_player_code)
+        if not possible_moves:  # forced pass
+            zero_policy = np.zeros(self.size * self.size, np.float32)
+            return None, zero_policy
         # choosing the lowest abs value possible initially
-        best_score = -math.inf
+        best_score = -INF
         best_follow_up_move = None
-        search_depth = self.search_depth
         move_score_list = []
         max_possible_moves = current_board_size*current_board_size
         for next_move in possible_moves:
@@ -637,21 +663,28 @@ class Othello(BoardGame) :
             cloned_instance.board[next_move[0]][next_move[1]] = ai_symbol
             cloned_instance.implement_flips(next_move[0], next_move[1], ai_symbol, opponent_symbol)
             cloned_instance.increment_total_move_count()
+            opp_possible_moves = cloned_instance.get_possible_moves(1-ai_player_code)
+            ai_adjusted_player_assignment = None
+            if len(opp_possible_moves) != 0:
+                ai_adjusted_player_assignment = False
+            else:
+                ai_adjusted_player_assignment = True
             cloned_instance.last_moved = ai_player_code
             score = 0
             remaining = max_possible_moves - cloned_instance.total_moves
             # Slightly different logic than tictactoe possible moves might jump up and down and do not directly correspond
             # to the number of remaining pieces
             if current_board_size <= 4 or remaining <= 12:
-                score = cloned_instance.minimax_with_alpha_beta_pruning(False, 1, -math.inf, math.inf)
+                score = cloned_instance.minimax_with_alpha_beta_pruning(ai_adjusted_player_assignment, 1, -INF, INF)
+
             else:
                 # without iterative deepening
-                # score = self.heuristic_minimax_with_alpha_beta_pruning(False,search_depth, 1, -math.inf, math.inf)
+                # score = self.heuristic_minimax_with_alpha_beta_pruning(False,search_depth, 1, -INF, INF)
 
                 # with iterative deepening
                 score = cloned_instance.heuristic_minimax_with_alpha_beta_pruning_with_iterative_deepening(
-                    isMax=False,  # if you're simulating the opponent's move
-                    max_ply=MAX_PLY_DEPTH_OTHELLO,  # depth limit — can tweak based on board size/time
+                    isMax=ai_adjusted_player_assignment,  # if you're simulating the opponent's move
+                    max_ply=self.max_iterative_depth,  # depth limit — can tweak based on board size/time
                     depth_to_result=1  # always starts from 1
                 )
             move_score_list.append((next_move, score))
@@ -679,9 +712,9 @@ class Othello(BoardGame) :
         cloned_instance = self.clone_instance()
         current_player = cloned_instance.ai_player_code
         # choosing the lowest abs value possible initially
-        best_score = -math.inf
+        best_score = -INF
         best_follow_up_move = None
-        mcts = Mcts(root=None, game_instance=cloned_instance)
+        mcts = MctsOthello(root=None, game_instance=cloned_instance)
         # variable which assigns different number of max runs based on self or vs human play
         max_runs = MIN_GAME_SIM_VS_HUMAN_BENCHMARK_MCTS_OTHELLO if simulated_mode == False else MIN_GAME_SIM_BENCHMARK_MCTS
         mcts.commence_mcts_for_selfplay(max_runs=max_runs)
@@ -727,6 +760,10 @@ class Othello(BoardGame) :
         opponent_symbol = self.get_player_symbol(opponent_code)
         if ai_type == ALPHA_BETA_PRUNING:
             best_move, policy_map = self.select_optimal_ai_move_with_temperature_control()
+            if best_move is None:  # no legal moves → pass
+                self.last_moved = self.current_player()  # mark who just “moved”
+                return  # skip placement / flips
+            # -----------
         if ai_type in [MCTS, MCTS_NN]:
             # this check is very very very important and has been added to prevent
             # missing immediate wins and losses
@@ -832,7 +869,6 @@ class Othello(BoardGame) :
                     current_player = self.current_player()
                     self.selective_print(f"{self.get_player_symbol(current_player)} to move")
                     self.human_make_move()
-                    # setting the last moved player
                     result = self.detect_win_loss()
                     result_map = self.fetch_result_map()
                     if result is not None:
@@ -859,7 +895,7 @@ class Othello(BoardGame) :
 
     def heuristic_minimax_with_alpha_beta_pruning_with_iterative_deepening(
             self, isMax, max_ply, depth_to_result,
-            alpha=-math.inf, beta=math.inf):
+            alpha=-INF, beta=INF):
         cached_score = self.fetch_existing_hash(depth_to_result)
         if cached_score is not None:
             return cached_score
@@ -878,7 +914,7 @@ class Othello(BoardGame) :
         # Iterative deepening with aspiration-window
         prev_score = 0
         initial_window = 1
-        best_score = -math.inf if isMax else math.inf
+        best_score = -INF if isMax else INF
         ordered_moves = []
 
         for depth in range(1, max_ply + 1):
@@ -889,7 +925,7 @@ class Othello(BoardGame) :
             while True:
                 window_low, window_high = alpha, beta
                 current_move_scores = []
-                current_best_score = -math.inf if isMax else math.inf
+                current_best_score = -INF if isMax else INF
 
                 player_code = self.ai_player_code if isMax else 1 - self.ai_player_code
                 player_symbol = self.get_player_symbol(player_code)
@@ -936,7 +972,7 @@ class Othello(BoardGame) :
                 # Otherwise widen the window and repeat
                 window *= ASPIRATION_WINDOW_MULTIPLIER
                 if window > ASPIRATION_WINDOW_FAILURE_UPPER_LIMIT:
-                    alpha, beta = -math.inf, math.inf
+                    alpha, beta = -INF, INF
                 else:
                     alpha = prev_score - window
                     beta = prev_score + window

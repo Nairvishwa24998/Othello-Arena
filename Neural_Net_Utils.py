@@ -7,6 +7,7 @@ from sklearn.model_selection import train_test_split
 from Neural_Net import Neural_Net
 from constant_strings import GAME_OTHELLO, GAME_TICTACTOE, MCTS_NN, MCTS
 
+
 # this allows us to get all the
 npz_files = glob.glob("game_data_board_size*.npz")
 
@@ -137,7 +138,7 @@ def commence_neural_net_pipeline(game_name, game_size):
     test_loss = neural_net.model.evaluate(testing_X, testing_Y, verbose=1)
     print("Test Loss:", test_loss)
     # only added to support saving drive on colab
-    neural_net.save("final_model_ttt_4x4.keras")
+    neural_net.save(f"final_model_{game_name}_{game_size}x{game_size}.keras")
 
 # can be used to set instance to the model class with prepared weights file
 def prepare_neural_net_instance(game, size, ai_type):
@@ -145,7 +146,7 @@ def prepare_neural_net_instance(game, size, ai_type):
     if ai_type == MCTS:
         return None
     neural_net = Neural_Net(game=game, size = size)
-    file_name = os.path.join("weights_ttt_4", f"{game}-{size}.keras")
+    file_name = os.path.join(f"weights_{game}_{size}", f"{game}-{size}.keras")
     neural_net.load(file_name)
     # added for testing with XLA
     neural_net._compile_xla_predict()

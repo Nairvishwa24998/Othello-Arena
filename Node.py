@@ -5,7 +5,7 @@ from constant_strings import UPPER_BOUND_CONFIDENCE_1_CONSTANT, PUCT_CONSTANT
 
 # purely created for ease of traversal during the MCTS
 class Node:
-    def __init__(self, state, parent=None, move=None):
+    def __init__(self, state, parent=None, move=None, player_to_move = None):
         self.state = state
         self.parent = parent
         self.move = move
@@ -16,6 +16,8 @@ class Node:
         # these two would aid us with the Neural Network
         self.backtracked_value = 0
         self.policy_prior = 0.0
+        # only relevant in Othello
+        self.player_to_move = player_to_move
 
     def get_children(self):
         return self.children

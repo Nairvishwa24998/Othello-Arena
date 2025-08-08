@@ -55,6 +55,9 @@ class Tictactoe(BoardGame) :
 
         # Deepcopy only essential mutable attributes
         cloned.board = deepcopy(self.board)
+        # Note this is necessary to leverage transposition
+        # otherwise
+        cloned.transposition_table = self.transposition_table
         cloned.total_moves = self.total_moves
         cloned.search_depth = self.search_depth
         cloned.central_heuristic_evaluation_map = deepcopy(self.central_heuristic_evaluation_map)
