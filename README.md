@@ -29,7 +29,7 @@ Powered by a **deep residual CNN** for policy & value prediction, with **self-pl
 | Scenario                                     | Before Optimization | After Optimization | Speedup  |
 |---------------------------------------------|--------------------:|------------------:|--------:|
 | **5×5 Tic‑Tac‑Toe Alpha‑Beta (First Move)** | 23.4 s              | 44 ms             | **~500×** |
-| **4×4 Neural‑MCTS (1,500 sims)**            | 127 s               | 8 s               | **~16×**  |
+| **8×8 Othello Neural‑MCTS (3000 sims)**     | 127 s               | 8 s               | **~16×**  |
 
 **Key Optimizations**
 - Transposition tables for repeated state evaluation  
@@ -138,10 +138,10 @@ The CLI will prompt you to choose:
 - If AI: **engine**
   - `0 = ALPHA_BETA_PRUNING`
   - `1 = MCTS`
-  - `2 = MCTS + Neural Network` *(requires matching weights as above)*
+  - `2 = MCTS + Neural Network` *(requires matching weights as above)* 
 
 Extras:
-- **TicTacToe:** choose board size (2–7).  
+- **TicTacToe:** choose board size (2–7). MTCS + NN in tictactoe only suupported for size 4*4 as of now 
 - **Othello:** fixed 8×8; for custom positions, input 64 comma‑separated `B/W/.` entries.
 
 ---
