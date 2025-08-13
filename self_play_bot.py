@@ -1,7 +1,7 @@
 import numpy as np
 
 from common_utils import ttt_validate_bot_play_inp_config, othello_validate_bot_play_inp_config
-from constant_strings import ALPHA_BETA_PRUNING, MCTS, MCTS_NN, OTHELLO_BOARD_SIZE
+from constant_strings import ALPHA_BETA_PRUNING, MCTS, MCTS_NN, OTHELLO_BOARD_SIZE, MOVE_B, MOVE_W
 from utility_methods import setup_tictactoe_instance_for_training_simulations, setup_tictactoe_instance_for_bot_matches, \
     setup_othello_instance_for_bot_matches
 
@@ -128,6 +128,7 @@ class SelfPlayBot:
                 draws += 1
                 result_str = "Draw"
 
+
             # storing into a potential log file
             self.bot_contest_data.append(f"Round Number - {game_number}: {result_str}")
 
@@ -151,6 +152,7 @@ class SelfPlayBot:
         for game_number in range(1, rounds + 1):
             game = setup_othello_instance_for_bot_matches(ai_player_1)
 
+            game.display_board(display=True)
             while True:  # play one game
                 turn = game.current_player()  # 0 = Black, 1 = White
 
@@ -162,6 +164,7 @@ class SelfPlayBot:
                     game.ai_player_code = 1
                     game.set_AI_type(ai_player_2)
                     move = game.make_ai_move(ai_player_2)
+                game.display_board(display=True)
 
                 # (move is None when that side had to pass – loop simply continues)
 
@@ -179,8 +182,11 @@ class SelfPlayBot:
             else:
                 draws += 1
                 result_str = "Draw"
-
+            black_piece_count = game.get_player_piece_count(MOVE_B)
+            white_piece_count = game.get_player_piece_count(MOVE_W)
             self.bot_contest_data.append(f"Round {game_number}: {result_str}")
+            print(f"Black Pieces: {black_piece_count}")
+            print(f"White Pieces: {white_piece_count}")
 
         print(f"total_rounds = {rounds}")
         print(f"{ai_player_1}-wins = {wins_p1}")
@@ -193,7 +199,7 @@ if __name__ == "__main__":
     # commented out for testing purposes
     # bot.run_simulations(6, ALPHA_BETA_PRUNING)
     # bot.run_bot_v_bot_matches(ai_player_1=MCTS_NN, ai_player_2=ALPHA_BETA_PRUNING, rounds=5, board_size=4)
-    bot.othello_run_bot_v_bot_matches(ai_player_1=ALPHA_BETA_PRUNING, ai_player_2=ALPHA_BETA_PRUNING, rounds=5)
+    bot.othello_run_bot_v_bot_matches(ai_player_1=MCTS_NN, ai_player_2=ALPHA_BETA_PRUNING, rounds=5)
 
 
 

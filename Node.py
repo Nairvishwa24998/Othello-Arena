@@ -18,6 +18,8 @@ class Node:
         self.policy_prior = 0.0
         # only relevant in Othello
         self.player_to_move = player_to_move
+        # only needed for batch prediction
+        self.expanded_by_nn = False  # has this leaf been NN-evaluated?
 
     def get_children(self):
         return self.children
@@ -65,6 +67,8 @@ class Node:
         parent = self.get_parent()
         # to tackle the base case where we are touching the first node itself
         parent_visits = parent.get_visits() if parent is not None else 1
+        # to prevent parent visits 0 case
+        parent_visits = max(1, parent_visits)
         exploitation_bonus = -math.inf
         exploration_bonus = -math.inf
         # exploitation_bonus = nn_predicted_value/visits

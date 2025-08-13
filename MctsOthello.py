@@ -5,13 +5,14 @@ from MctsParent import MctsParent
 from Neural_Net_Utils import flattened_board_to_tensor, prepare_neural_net_instance
 from Node import Node
 from common_utils import board_hash, link_game_position_hash_to_pv
-from constant_strings import MIN_GAME_SIM_BENCHMARK_MCTS, MCTS, MCTS_NN, GAME_TICTACTOE
+from constant_strings import MIN_GAME_SIM_BENCHMARK_MCTS, MCTS, MCTS_NN, GAME_TICTACTOE, GAME_OTHELLO
 from testing import board
 
 
 class MctsOthello(MctsParent):
     def __init__(self, root, game_instance):
         super().__init__(root, game_instance)
+
 
     # new version
     def selection(self):
@@ -82,7 +83,7 @@ class MctsOthello(MctsParent):
             tt_value = self.mcts_transposition_table.get(hashed_board_key)
             if tt_value is None:
                 pre_move_flattened_state_2d = "".join(str(cell) for row in parent_board for cell in row)
-                inp = flattened_board_to_tensor(pre_move_flattened_state_2d, game_name=GAME_TICTACTOE)[None, ...]
+                inp = flattened_board_to_tensor(pre_move_flattened_state_2d, game_name=GAME_OTHELLO)[None, ...]
                 neural_net = self.get_neural_net()
                 # commented out for testing without XLA
                 # policy_prediction, value_prediction = neural_net.model.predict(inp, verbose=0)
@@ -163,7 +164,7 @@ class MctsOthello(MctsParent):
             # )[1][0]  # value scalar in [-1,1]
             # added for XLA
             v = self.neural_net.fast_predict(
-                flattened_board_to_tensor(board_str, GAME_TICTACTOE)[None, ...])[1][0]
+                flattened_board_to_tensor(board_str, GAME_OTHELLO)[None, ...])[1][0]
             return -float(v)  # flip perspective once (backtracking will flip again)
         simulation_instance = input_game_instance.clone_instance()
         # make it AI-vs-AI
@@ -175,6 +176,8 @@ class MctsOthello(MctsParent):
         # only two possible outcomes here MCTS or MCTS + NN. Alpha beta pruning doesn't even come here
         # this would be the no mcts case
         outcome = simulation_instance.rollout_pseudo_random()
+        # please remove befpre final submission
+        print("Shouldn't be going here!")
         refined_outcome = -outcome
         return refined_outcome
 

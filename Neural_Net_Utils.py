@@ -146,7 +146,8 @@ def prepare_neural_net_instance(game, size, ai_type):
     if ai_type == MCTS:
         return None
     neural_net = Neural_Net(game=game, size = size)
-    file_name = os.path.join(f"weights_{game}_{size}", f"{game}-{size}.keras")
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    file_name = os.path.join(script_dir, f"weights_{game}_{size}", f"{game}-{size}.keras")
     neural_net.load(file_name)
     # added for testing with XLA
     neural_net._compile_xla_predict()

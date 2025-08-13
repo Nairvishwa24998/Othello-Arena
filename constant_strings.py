@@ -6,7 +6,7 @@ MAX_MOVE_COUNT_WITH_INITIAL_TEMPERATURE_CONTROL = 5
 MIN_GAME_SIM_BENCHMARK = 1000
 MIN_GAME_SIM_BENCHMARK_MCTS = 1500
 MIN_GAME_SIM_VS_HUMAN_BENCHMARK_MCTS_TTT = 1500
-MIN_GAME_SIM_VS_HUMAN_BENCHMARK_MCTS_OTHELLO = 500
+MIN_GAME_SIM_VS_HUMAN_BENCHMARK_MCTS_OTHELLO = 3000
 UPPER_BOUND_CONFIDENCE_1_CONSTANT = 2
 # value has been chosen based on research papers where value is higher for games like go
 # due to incredibly high branching factor but lower for games like chess and so on
@@ -35,7 +35,7 @@ ASPIRATION_WINDOW_MULTIPLIER = 2
 # basically a value after which we just increase the search window size to full
 ASPIRATION_WINDOW_FAILURE_UPPER_LIMIT = 50
 MAX_PLY_DEPTH_TTT = 10
-MAX_PLY_DEPTH_OTHELLO = 40
+MAX_PLY_DEPTH_OTHELLO = 10
 # XLA Performance Optimization Settings
 ENABLE_XLA_COMPILATION = True
 XLA_BATCH_SIZE = 32

@@ -28,10 +28,10 @@ def prompt_user_fresh_game_or_custom_position(game_name):
                 launch_fresh_othello_game_with_user_config()
         else:
             if game_name == GAME_OTHELLO:
-                launch_tictactoe_game_from_pre_defined_position()
+                launch_othello_game_from_pre_defined_position()
             # method call prior to this ensures only two game_name options can be passed
             else:
-                launch_othello_game_from_pre_defined_position()
+                launch_tictactoe_game_from_pre_defined_position()
 
 def obtain_desired_board_size():
     board_size = 0

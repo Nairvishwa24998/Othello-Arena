@@ -88,11 +88,17 @@ class BoardGame(ABC):
         return False
 
     # To display the board to the user
-    def display_board(self):
+    def display_board(self, display = False):
         current_board_state = self.get_current_board_state()
-        self.selective_print("\nCurrent board:")
-        for row in current_board_state:
-            self.selective_print(" | ".join(cell if cell != '' else ' ' for cell in row))
+        if not display:
+            self.selective_print("\nCurrent board:")
+            for row in current_board_state:
+                self.selective_print(" | ".join(cell if cell != '' else ' ' for cell in row))
+        else:
+            print("\nCurrent board:")
+            for row in current_board_state:
+                print(" | ".join(cell if cell != '' else ' ' for cell in row))
+
 
     # just cleaned up user input for co-ordinates
     def get_input_position(self):

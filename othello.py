@@ -10,7 +10,7 @@ import numpy as np
 from Mcts import Mcts
 from MctsOthello import MctsOthello
 from boardgame import BoardGame
-from common_utils import set_starting_othello_board, clamp
+from common_utils import set_starting_othello_board, othello_camp
 from constant_strings import TEMPERATURE_CONTROL_FOR_MIN_RANDOMNESS, MOVE_B, MOVE_W, OTHELLO_BOARD_SIZE, DIRECTIONS, \
     COIN_PARITY_HEURISTIC_MULTIPLIER, MOBILITY_HEURISTIC_MULTIPLIER, STABILITY_HEURISTIC_MULTIPLIER, \
     CORNER_CAPTURE_HEURISTIC_MULTIPLIER, CAPTURED_CORNER_WEIGHT, POTENTIAL_CORNER_WEIGHT, UNLIKELY_CORNER_WEIGHT, \
@@ -70,6 +70,7 @@ class Othello(BoardGame) :
         cloned.transposition_table = self.transposition_table
         # Disable logging for simulation
         cloned.logging_mode = False
+        cloned.last_moved = self.last_moved
         return cloned
 
     # method added coz undo is hard in Othello. Can be used in Alpha Beta Search
@@ -509,10 +510,10 @@ class Othello(BoardGame) :
 
     def heuristically_evaluate_board(self):
         current_player = self.current_player()
-        coin_parity_heuristics = clamp(self.calculate_coin_parity_heuristics(current_player))
-        mobility_heuristics = clamp(self.calculate_mobility_heuristics(current_player))
-        stability_heuristics = clamp(self.calculate_stability_heuristics(current_player))
-        corner_capture_heuristics = clamp(self.calculate_corner_capture_heuristics(current_player))
+        coin_parity_heuristics = othello_camp(self.calculate_coin_parity_heuristics(current_player))
+        mobility_heuristics = othello_camp(self.calculate_mobility_heuristics(current_player))
+        stability_heuristics = othello_camp(self.calculate_stability_heuristics(current_player))
+        corner_capture_heuristics = othello_camp(self.calculate_corner_capture_heuristics(current_player))
         return (COIN_PARITY_HEURISTIC_MULTIPLIER * coin_parity_heuristics) + (MOBILITY_HEURISTIC_MULTIPLIER * mobility_heuristics) + (STABILITY_HEURISTIC_MULTIPLIER * stability_heuristics) + (CORNER_CAPTURE_HEURISTIC_MULTIPLIER * corner_capture_heuristics)
 
 
@@ -617,6 +618,7 @@ class Othello(BoardGame) :
                 return move
         return None
 
+    # this method decides whether to call minimax/ab pruning or
     def ai_skip_move_ab_flow_adjuster(self, cloned_child, current_player, isMax, depth_to_result, alpha, beta):
         opponent_symbol = cloned_child.get_player_symbol(1 - current_player)
         if len(cloned_child.get_possible_moves(opponent_symbol)) != 0:
@@ -815,6 +817,21 @@ class Othello(BoardGame) :
         self.last_moved = current_player
 
         return chosen_move
+
+
+    # lighter function to be used for simulations
+    def rollout_pseudo_random(self) -> int:
+        while True:
+            result = self.detect_win_loss()
+            if result is not None:
+                return result  # terminal
+
+            # ε-greedy: win-in-1, block-in-1, else random
+            self.make_pseudo_random_move()
+
+            result = self.detect_win_loss()
+            if result is not None:
+                return result
 
     #  to run the game and link above methods together
     def run_game(self):

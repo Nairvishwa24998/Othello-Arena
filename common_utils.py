@@ -10,6 +10,11 @@ def clamp(value):
     else:
         return max(-1.0, value)
 
+# clamp method for othello
+def othello_camp(value):
+    v = value / 100.0      # scale percentage → [-1,1]
+    return 1.0 if v > 1.0 else (-1.0 if v < -1.0 else v)
+
 def ttt_validate_bot_play_inp_config(ai_player_1, ai_player_2, rounds, board_size):
     valid_ai = {ALPHA_BETA_PRUNING, MCTS, MCTS_NN}
     if ai_player_1 not in valid_ai or ai_player_2 not in valid_ai:
