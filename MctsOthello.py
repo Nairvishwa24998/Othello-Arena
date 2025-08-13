@@ -1,42 +1,30 @@
 import random
 import numpy as np
 
+from MctsParent import MctsParent
 from Neural_Net_Utils import flattened_board_to_tensor, prepare_neural_net_instance
 from Node import Node
 from common_utils import board_hash, link_game_position_hash_to_pv
-from constant_strings import MIN_GAME_SIM_BENCHMARK_MCTS, MCTS, MCTS_NN, GAME_TICTACTOE
+from constant_strings import MIN_GAME_SIM_BENCHMARK_MCTS, MCTS, MCTS_NN, GAME_TICTACTOE, GAME_OTHELLO
 
 
-class Mcts:
+class MctsOthello(MctsParent):
     def __init__(self, root, game_instance):
-        self.root = Node(state=game_instance)
-        # just a hashed version of the current board state when MCTS is called
-        self.hashed_root = board_hash(game_instance.get_current_board_state(), game_instance.current_player())
-        # removed the hardcoded game name
-        self.neural_net = prepare_neural_net_instance(game=game_instance.game_name, size = game_instance.get_board_size(), ai_type = game_instance.get_AI_type())
-        # # # Cache for batch predictions to avoid repeated tensor conversions
-        # self._prediction_cache = {}
-        self.mcts_transposition_table = game_instance.mcts_transposition_table
+        super().__init__(root, game_instance)
 
-
-
-    def get_root(self):
-        return self.root
-
-    def get_neural_net(self):
-        return self.neural_net
 
     # new version
     def selection(self):
         current_node = self.root
         ai_type = current_node.state.ai_type
         while True:
+            player_turn = current_node.state.current_player()
             # If it is not None. Game is over, can't do selection. Perhaps should do backtracking
             if current_node.state.detect_win_loss() is not None:
                 break
             # some possible moves from current position yet to be considered or given node is not fully expanded
             # so selection has to break for now for this node
-            if len(current_node.children) < len(current_node.state.get_possible_moves()):
+            if len(current_node.children) < len(current_node.state.get_possible_moves(player_turn)):
                 break
             if not current_node.children:
                 break
@@ -67,8 +55,10 @@ class Mcts:
         ai_type = current_node.state.ai_type
         cloned_instance = current_node.state.clone_instance()
         children = current_node.get_children()
-        possible_moves = current_node.state.get_possible_moves()
-        player_turn = cloned_instance.determine_player_turn()
+        player_turn = cloned_instance.current_player()
+        if player_turn == -1:  # terminal child – no further expansion
+            return None
+        possible_moves = current_node.state.get_possible_moves(player_turn)
         contender_moves = []
         for move in possible_moves:
             if move not in children:
@@ -79,14 +69,20 @@ class Mcts:
             return None
         move = random.choice(contender_moves)
         cloned_instance.board[move[0]][move[1]] = cloned_instance.get_player_symbol(player_turn)
+        # Added now
+        cloned_instance.implement_flips(move[0], move[1],
+                                        cloned_instance.get_player_symbol(player_turn),
+                                        cloned_instance.get_player_symbol(1 - player_turn))
         cloned_instance.increment_total_move_count()
-        child_node = Node(cloned_instance, parent=current_node, move=move)
+        cloned_instance.last_moved = player_turn
+        next_player = cloned_instance.current_player()
+        child_node = Node(cloned_instance, parent=current_node, move=move,player_to_move=next_player)
         if ai_type == MCTS_NN:
             hashed_board_key = board_hash(parent_board, player_turn)
             tt_value = self.mcts_transposition_table.get(hashed_board_key)
             if tt_value is None:
                 pre_move_flattened_state_2d = "".join(str(cell) for row in parent_board for cell in row)
-                inp = flattened_board_to_tensor(pre_move_flattened_state_2d, game_name=GAME_TICTACTOE)[None, ...]
+                inp = flattened_board_to_tensor(pre_move_flattened_state_2d, game_name=GAME_OTHELLO)[None, ...]
                 neural_net = self.get_neural_net()
                 # commented out for testing without XLA
                 # policy_prediction, value_prediction = neural_net.model.predict(inp, verbose=0)
@@ -167,7 +163,7 @@ class Mcts:
             # )[1][0]  # value scalar in [-1,1]
             # added for XLA
             v = self.neural_net.fast_predict(
-                flattened_board_to_tensor(board_str, GAME_TICTACTOE)[None, ...])[1][0]
+                flattened_board_to_tensor(board_str, GAME_OTHELLO)[None, ...])[1][0]
             return -float(v)  # flip perspective once (backtracking will flip again)
         simulation_instance = input_game_instance.clone_instance()
         # make it AI-vs-AI
@@ -179,28 +175,30 @@ class Mcts:
         # only two possible outcomes here MCTS or MCTS + NN. Alpha beta pruning doesn't even come here
         # this would be the no mcts case
         outcome = simulation_instance.rollout_pseudo_random()
+        # please remove befpre final submission
+        print("Shouldn't be going here!")
         refined_outcome = -outcome
         return refined_outcome
 
     # new_version
     def backtracking(self, current_node, refined_outcome):
         ai_type = current_node.state.get_AI_type()
+
         while current_node is not None:
             current_node.visits += 1
-            # for pure mcts case
+
             if ai_type == MCTS:
                 current_node.wins += refined_outcome
-            else:  # for neural net case
+            else:
                 current_node.backtracked_value += refined_outcome
-            current_node = current_node.parent
-            # what is win for a current node would be a loss for the parent node since turns flip
-            refined_outcome = -refined_outcome
 
-    # MIN_GAME_SIM_BENCHMARK_MCTS used for simulations runs
-    # MIN_GAME_SIM_VS_HUMAN_BENCHMARK_MCTS used for vs human play
-    def commence_mcts_for_selfplay(self, max_runs):
-        for number in range(max_runs):
-            parent = self.selection()
-            child = self.expansion(parent) or parent
-            value = self.exploitation(child)
-            self.backtracking(child, value)
+            parent = current_node.parent
+            if parent is None:  # reached the root
+                break
+
+            # Flip sign only if the side to move changes between parent and child
+            if parent.player_to_move != current_node.player_to_move:
+                refined_outcome = -refined_outcome  # opponent’s perspective
+            # else: same mover again (pass) → keep sign
+
+            current_node = parent

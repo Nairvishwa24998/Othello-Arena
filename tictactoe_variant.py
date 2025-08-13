@@ -9,8 +9,8 @@ from Mcts import Mcts
 from boardgame import BoardGame
 from constant_strings import CONCLUSIVE_RESULT_MULTIPLIER, TEMPERATURE_CONTROL_FOR_MIN_RANDOMNESS, \
     MAX_MOVE_COUNT_WITH_INITIAL_TEMPERATURE_CONTROL, MOVE_X, MOVE_O, MCTS, ALPHA_BETA_PRUNING, \
-    MIN_GAME_SIM_VS_HUMAN_BENCHMARK_MCTS, MIN_GAME_SIM_BENCHMARK_MCTS, MCTS_NN, ASPIRATION_WINDOW_MULTIPLIER, \
-    ASPIRATION_WINDOW_FAILURE_UPPER_LIMIT, MAX_PLY_DEPTH
+    MIN_GAME_SIM_VS_HUMAN_BENCHMARK_MCTS_TTT, MIN_GAME_SIM_BENCHMARK_MCTS, MCTS_NN, ASPIRATION_WINDOW_MULTIPLIER, \
+    ASPIRATION_WINDOW_FAILURE_UPPER_LIMIT, MAX_PLY_DEPTH_TTT, GAME_TICTACTOE
 from common_utils import clamp
 
 
@@ -20,6 +20,7 @@ class Tictactoe(BoardGame) :
     def __init__(self, size=3, win_length=3, temperature_control = TEMPERATURE_CONTROL_FOR_MIN_RANDOMNESS,vs_human = True, ai_player_code = None, simulation_mode = False, ai_type = None):
         super().__init__(size=size, vs_human=vs_human, ai_player_code=ai_player_code, ai_type=ai_type,
                          simulation_mode=simulation_mode)
+        self.game_name = GAME_TICTACTOE
         self.win_length = win_length
         self.board = [['.']*size for _ in range(size)]
         # Note this has been set for simulation purposes
@@ -54,6 +55,9 @@ class Tictactoe(BoardGame) :
 
         # Deepcopy only essential mutable attributes
         cloned.board = deepcopy(self.board)
+        # Note this is necessary to leverage transposition
+        # otherwise
+        cloned.transposition_table = self.transposition_table
         cloned.total_moves = self.total_moves
         cloned.search_depth = self.search_depth
         cloned.central_heuristic_evaluation_map = deepcopy(self.central_heuristic_evaluation_map)
@@ -855,30 +859,6 @@ class Tictactoe(BoardGame) :
     #     self.selective_print(f"Evaluation Score of Position is {best_score}")
     #     return best_follow_up_move
 
-    # basically using the softmax function to create a bunch of probabilities for the given move_score list
-    def generate_probability_distribution_with_temperature(self,move_score_list, temperature_control ):
-        score_list = np.array([score for move,score in move_score_list], dtype=np.float64)
-        # probability_distribution = np.exp(score_list/temperature_control)
-        # probability_summation = sum(probability_distribution)
-        # probability_distribution = probability_distribution/probability_summation
-        probability_distribution = softmax(score_list/temperature_control)
-        return probability_distribution
-
-
-    # this method allows us to create a policy board map which is gen
-    # in a flattened format for each move,which is needed for the Neural net
-    def generate_flattened_policy_board_map_for_neural_net(self, move_score_list, probability_distribution):
-        current_board_size = self.get_board_size()
-        policy_full = np.zeros(current_board_size * current_board_size, dtype=np.float32)
-        # Fill in the probability for each legal move
-        # basically we have move_score_list with available moves in the (x,y), score format
-        # then we have probabilities which is just a list of probabilities for
-        # each of the available moves
-        for (relevant_move, relevant_score), p in zip(move_score_list, probability_distribution):
-            # logic to get index of a 2d board flattened in 1d
-            flat_idx = relevant_move[0] * current_board_size + relevant_move[1]  # Convert 2D move to 1D index
-            policy_full[flat_idx] = p
-        return policy_full
 
     # basically using the move evaluation found in the previous step to choose an optimal move by evaluating
     # for each move possible given current empty spaces
@@ -923,7 +903,7 @@ class Tictactoe(BoardGame) :
                     # with iterative deepening
                     score = self.heuristic_minimax_with_alpha_beta_pruning_with_iterative_deepening(
                         isMax=False,  # if you're simulating the opponent's move
-                        max_ply=MAX_PLY_DEPTH,  # depth limit — can tweak based on board size/time
+                        max_ply=MAX_PLY_DEPTH_TTT,  # depth limit — can tweak based on board size/time
                         depth_to_result=1  # always starts from 1
                     )
             # it was only for trial so need to go back to previous state after trying
@@ -952,13 +932,9 @@ class Tictactoe(BoardGame) :
         # original instance and just perform everything on a clone
         simulated_mode = self.get_game_mode()
         cloned_instance = self.clone_instance()
-        current_player = cloned_instance.ai_player_code
-        # choosing the lowest abs value possible initially
-        best_score = -math.inf
-        best_follow_up_move = None
         mcts = Mcts(root=None, game_instance=cloned_instance)
         # variable which assigns different number of max runs based on self or vs human play
-        max_runs = MIN_GAME_SIM_VS_HUMAN_BENCHMARK_MCTS if simulated_mode == False else MIN_GAME_SIM_BENCHMARK_MCTS
+        max_runs = MIN_GAME_SIM_VS_HUMAN_BENCHMARK_MCTS_TTT if simulated_mode == False else MIN_GAME_SIM_BENCHMARK_MCTS
         mcts.commence_mcts_for_selfplay(max_runs=max_runs)
         parent_node = mcts.get_root()
         children = parent_node.get_children()
