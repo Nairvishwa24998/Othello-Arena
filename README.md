@@ -73,20 +73,7 @@ Othello-AI-Arena/
 ## Setup & Usage
 
 ```bash
-# Clone the repo
-git clone https://github.com/Nairvishwa24998/Othello-AI-Arena.git
-cd Othello-AI-Arena
-
-# (Optional) Create a virtual environment
-python -m venv venv
-source venv/bin/activate   # macOS/Linux
-venv\Scripts\activate      # Windows
-
-# Install requirements
-pip install -r requirements.txt
-
-# Run self-play or AI match simulation
-python self_play_bot.py
+In Progress
 ```
 
 ---
