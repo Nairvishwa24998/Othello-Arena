@@ -6,7 +6,6 @@ from Neural_Net_Utils import flattened_board_to_tensor, prepare_neural_net_insta
 from Node import Node
 from common_utils import board_hash, link_game_position_hash_to_pv
 from constant_strings import MIN_GAME_SIM_BENCHMARK_MCTS, MCTS, MCTS_NN, GAME_TICTACTOE, GAME_OTHELLO
-from testing import board
 
 
 class MctsOthello(MctsParent):
