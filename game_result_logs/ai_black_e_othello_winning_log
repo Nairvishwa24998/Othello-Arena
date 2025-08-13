@@ -1,0 +1,1429 @@
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | W | B | . | . | .
+. | . | . | B | W | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+Human vs AI mode - ALPHA_BETA_PRUNING
+Probability distribution is - [0.25 0.25 0.25 0.25]
+Evaluation Score of Position is -0.07
+AI move computation took 0.025 seconds.
+(3, 2)
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | B | W | B | . | . | .
+. | . | . | B | W | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | B | B | B | . | . | .
+. | . | . | B | W | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+AI played (3, 2)
+2 4
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | W | . | . | .
+. | . | B | B | B | . | . | .
+. | . | . | B | W | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | W | . | . | .
+. | . | B | B | W | . | . | .
+. | . | . | B | W | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+Human played (2, 4)
+Probability distribution is - [0. 0. 0. 0. 1.]
+Evaluation Score of Position is -0.73
+AI move computation took 0.040 seconds.
+(5, 5)
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | W | . | . | .
+. | . | B | B | W | . | . | .
+. | . | . | B | W | . | . | .
+. | . | . | . | . | B | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | W | . | . | .
+. | . | B | B | W | . | . | .
+. | . | . | B | B | . | . | .
+. | . | . | . | . | B | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+AI played (5, 5)
+4 2
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | W | . | . | .
+. | . | B | B | W | . | . | .
+. | . | W | B | B | . | . | .
+. | . | . | . | . | B | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | W | . | . | .
+. | . | B | W | W | . | . | .
+. | . | W | B | B | . | . | .
+. | . | . | . | . | B | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+Human played (4, 2)
+Probability distribution is - [0. 0. 0. 0. 1. 0. 0.]
+Evaluation Score of Position is 0.0
+AI move computation took 0.082 seconds.
+(3, 5)
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | W | . | . | .
+. | . | B | W | W | B | . | .
+. | . | W | B | B | . | . | .
+. | . | . | . | . | B | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | W | . | . | .
+. | . | B | B | B | B | . | .
+. | . | W | B | B | . | . | .
+. | . | . | . | . | B | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+AI played (3, 5)
+5 4
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | W | . | . | .
+. | . | B | B | B | B | . | .
+. | . | W | B | B | . | . | .
+. | . | . | . | W | B | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | W | . | . | .
+. | . | B | B | W | B | . | .
+. | . | W | B | W | . | . | .
+. | . | . | . | W | B | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+Human played (5, 4)
+Probability distribution is - [0.         0.         0.33333333 0.         0.         0.
+ 0.         0.33333333 0.33333333]
+Evaluation Score of Position is -0.73
+AI move computation took 0.147 seconds.
+(6, 5)
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | W | . | . | .
+. | . | B | B | W | B | . | .
+. | . | W | B | W | . | . | .
+. | . | . | . | W | B | . | .
+. | . | . | . | . | B | . | .
+. | . | . | . | . | . | . | .
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | W | . | . | .
+. | . | B | B | W | B | . | .
+. | . | W | B | W | . | . | .
+. | . | . | . | B | B | . | .
+. | . | . | . | . | B | . | .
+. | . | . | . | . | . | . | .
+AI played (6, 5)
+6 6
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | W | . | . | .
+. | . | B | B | W | B | . | .
+. | . | W | B | W | . | . | .
+. | . | . | . | B | B | . | .
+. | . | . | . | . | B | W | .
+. | . | . | . | . | . | . | .
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | W | . | . | .
+. | . | B | B | W | B | . | .
+. | . | W | B | W | . | . | .
+. | . | . | . | B | W | . | .
+. | . | . | . | . | B | W | .
+. | . | . | . | . | . | . | .
+Human played (6, 6)
+Probability distribution is - [0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 1.]
+Evaluation Score of Position is 1.24
+AI move computation took 0.170 seconds.
+(7, 7)
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | W | . | . | .
+. | . | B | B | W | B | . | .
+. | . | W | B | W | . | . | .
+. | . | . | . | B | W | . | .
+. | . | . | . | . | B | W | .
+. | . | . | . | . | . | . | B
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | W | . | . | .
+. | . | B | B | W | B | . | .
+. | . | W | B | B | . | . | .
+. | . | . | . | B | B | . | .
+. | . | . | . | . | B | B | .
+. | . | . | . | . | . | . | B
+AI played (7, 7)
+4 6
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | W | . | . | .
+. | . | B | B | W | B | . | .
+. | . | W | B | B | . | W | .
+. | . | . | . | B | B | . | .
+. | . | . | . | . | B | B | .
+. | . | . | . | . | . | . | B
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | W | . | . | .
+. | . | B | B | W | W | . | .
+. | . | W | B | B | . | W | .
+. | . | . | . | B | B | . | .
+. | . | . | . | . | B | B | .
+. | . | . | . | . | . | . | B
+Human played (4, 6)
+Probability distribution is - [0.5 0.  0.  0.  0.  0.5 0.  0.  0. ]
+Evaluation Score of Position is 1.24
+AI move computation took 0.098 seconds.
+(1, 4)
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | B | . | . | .
+. | . | . | . | W | . | . | .
+. | . | B | B | W | W | . | .
+. | . | W | B | B | . | W | .
+. | . | . | . | B | B | . | .
+. | . | . | . | . | B | B | .
+. | . | . | . | . | . | . | B
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | B | . | . | .
+. | . | . | . | B | . | . | .
+. | . | B | B | B | W | . | .
+. | . | W | B | B | . | W | .
+. | . | . | . | B | B | . | .
+. | . | . | . | . | B | B | .
+. | . | . | . | . | . | . | B
+AI played (1, 4)
+6 4
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | B | . | . | .
+. | . | . | . | B | . | . | .
+. | . | B | B | B | W | . | .
+. | . | W | B | B | . | W | .
+. | . | . | . | B | B | . | .
+. | . | . | . | W | B | B | .
+. | . | . | . | . | . | . | B
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | B | . | . | .
+. | . | . | . | B | . | . | .
+. | . | B | B | B | W | . | .
+. | . | W | B | B | . | W | .
+. | . | . | . | B | W | . | .
+. | . | . | . | W | B | B | .
+. | . | . | . | . | . | . | B
+Human played (6, 4)
+Probability distribution is - [0.  0.  0.  0.  0.  0.  0.  0.  0.5 0.5]
+Evaluation Score of Position is 1.24
+AI move computation took 0.134 seconds.
+(7, 4)
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | B | . | . | .
+. | . | . | . | B | . | . | .
+. | . | B | B | B | W | . | .
+. | . | W | B | B | . | W | .
+. | . | . | . | B | W | . | .
+. | . | . | . | W | B | B | .
+. | . | . | . | B | . | . | B
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | B | . | . | .
+. | . | . | . | B | . | . | .
+. | . | B | B | B | W | . | .
+. | . | W | B | B | . | W | .
+. | . | . | . | B | W | . | .
+. | . | . | . | B | B | B | .
+. | . | . | . | B | . | . | B
+AI played (7, 4)
+4 5
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | B | . | . | .
+. | . | . | . | B | . | . | .
+. | . | B | B | B | W | . | .
+. | . | W | B | B | W | W | .
+. | . | . | . | B | W | . | .
+. | . | . | . | B | B | B | .
+. | . | . | . | B | . | . | B
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | B | . | . | .
+. | . | . | . | B | . | . | .
+. | . | B | B | B | W | . | .
+. | . | W | W | W | W | W | .
+. | . | . | . | B | W | . | .
+. | . | . | . | B | B | B | .
+. | . | . | . | B | . | . | B
+Human played (4, 5)
+Probability distribution is - [0.2 0.2 0.2 0.  0.2 0.  0.  0.2]
+Evaluation Score of Position is 1.24
+AI move computation took 0.158 seconds.
+(2, 5)
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | B | . | . | .
+. | . | . | . | B | B | . | .
+. | . | B | B | B | W | . | .
+. | . | W | W | W | W | W | .
+. | . | . | . | B | W | . | .
+. | . | . | . | B | B | B | .
+. | . | . | . | B | . | . | B
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | B | . | . | .
+. | . | . | . | B | B | . | .
+. | . | B | B | B | B | . | .
+. | . | W | W | W | B | W | .
+. | . | . | . | B | B | . | .
+. | . | . | . | B | B | B | .
+. | . | . | . | B | . | . | B
+AI played (2, 5)
+2 6
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | B | . | . | .
+. | . | . | . | B | B | W | .
+. | . | B | B | B | B | . | .
+. | . | W | W | W | B | W | .
+. | . | . | . | B | B | . | .
+. | . | . | . | B | B | B | .
+. | . | . | . | B | . | . | B
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | B | . | . | .
+. | . | . | . | B | B | W | .
+. | . | B | B | B | W | . | .
+. | . | W | W | W | B | W | .
+. | . | . | . | B | B | . | .
+. | . | . | . | B | B | B | .
+. | . | . | . | B | . | . | B
+Human played (2, 6)
+Probability distribution is - [0.125 0.125 0.125 0.125 0.125 0.125 0.125 0.    0.125]
+Evaluation Score of Position is 1.24
+AI move computation took 0.153 seconds.
+(4, 1)
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | B | . | . | .
+. | . | . | . | B | B | W | .
+. | . | B | B | B | W | . | .
+. | B | W | W | W | B | W | .
+. | . | . | . | B | B | . | .
+. | . | . | . | B | B | B | .
+. | . | . | . | B | . | . | B
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | B | . | . | .
+. | . | . | . | B | B | W | .
+. | . | B | B | B | W | . | .
+. | B | B | B | B | B | W | .
+. | . | . | . | B | B | . | .
+. | . | . | . | B | B | B | .
+. | . | . | . | B | . | . | B
+AI played (4, 1)
+4 0
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | B | . | . | .
+. | . | . | . | B | B | W | .
+. | . | B | B | B | W | . | .
+W | B | B | B | B | B | W | .
+. | . | . | . | B | B | . | .
+. | . | . | . | B | B | B | .
+. | . | . | . | B | . | . | B
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | B | . | . | .
+. | . | . | . | B | B | W | .
+. | . | B | B | B | W | . | .
+W | W | W | W | W | W | W | .
+. | . | . | . | B | B | . | .
+. | . | . | . | B | B | B | .
+. | . | . | . | B | . | . | B
+Human played (4, 0)
+Probability distribution is - [0. 1. 0. 0. 0. 0. 0. 0. 0.]
+Evaluation Score of Position is 0.58
+AI move computation took 0.153 seconds.
+(3, 6)
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | B | . | . | .
+. | . | . | . | B | B | W | .
+. | . | B | B | B | W | B | .
+W | W | W | W | W | W | W | .
+. | . | . | . | B | B | . | .
+. | . | . | . | B | B | B | .
+. | . | . | . | B | . | . | B
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | B | . | . | .
+. | . | . | . | B | B | W | .
+. | . | B | B | B | B | B | .
+W | W | W | W | W | B | W | .
+. | . | . | . | B | B | . | .
+. | . | . | . | B | B | B | .
+. | . | . | . | B | . | . | B
+AI played (3, 6)
+1 3
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | W | B | . | . | .
+. | . | . | . | B | B | W | .
+. | . | B | B | B | B | B | .
+W | W | W | W | W | B | W | .
+. | . | . | . | B | B | . | .
+. | . | . | . | B | B | B | .
+. | . | . | . | B | . | . | B
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | W | B | . | . | .
+. | . | . | . | W | B | W | .
+. | . | B | B | B | W | B | .
+W | W | W | W | W | B | W | .
+. | . | . | . | B | B | . | .
+. | . | . | . | B | B | B | .
+. | . | . | . | B | . | . | B
+Human played (1, 3)
+Probability distribution is - [0. 0. 0. 0. 0. 0. 0. 0. 0. 1. 0. 0.]
+Evaluation Score of Position is 1.24
+AI move computation took 0.215 seconds.
+(5, 2)
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | W | B | . | . | .
+. | . | . | . | W | B | W | .
+. | . | B | B | B | W | B | .
+W | W | W | W | W | B | W | .
+. | . | B | . | B | B | . | .
+. | . | . | . | B | B | B | .
+. | . | . | . | B | . | . | B
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | W | B | . | . | .
+. | . | . | . | W | B | W | .
+. | . | B | B | B | W | B | .
+W | W | B | B | W | B | W | .
+. | . | B | . | B | B | . | .
+. | . | . | . | B | B | B | .
+. | . | . | . | B | . | . | B
+AI played (5, 2)
+0 4
+
+Current board:
+. | . | . | . | W | . | . | .
+. | . | . | W | B | . | . | .
+. | . | . | . | W | B | W | .
+. | . | B | B | B | W | B | .
+W | W | B | B | W | B | W | .
+. | . | B | . | B | B | . | .
+. | . | . | . | B | B | B | .
+. | . | . | . | B | . | . | B
+
+Current board:
+. | . | . | . | W | . | . | .
+. | . | . | W | W | . | . | .
+. | . | . | . | W | B | W | .
+. | . | B | B | B | W | B | .
+W | W | B | B | W | B | W | .
+. | . | B | . | B | B | . | .
+. | . | . | . | B | B | B | .
+. | . | . | . | B | . | . | B
+Human played (0, 4)
+Probability distribution is - [0.14285714 0.14285714 0.14285714 0.         0.14285714 0.14285714
+ 0.         0.14285714 0.14285714 0.        ]
+Evaluation Score of Position is 1.24
+AI move computation took 0.159 seconds.
+(0, 3)
+
+Current board:
+. | . | . | B | W | . | . | .
+. | . | . | W | W | . | . | .
+. | . | . | . | W | B | W | .
+. | . | B | B | B | W | B | .
+W | W | B | B | W | B | W | .
+. | . | B | . | B | B | . | .
+. | . | . | . | B | B | B | .
+. | . | . | . | B | . | . | B
+
+Current board:
+. | . | . | B | W | . | . | .
+. | . | . | W | B | . | . | .
+. | . | . | . | W | B | W | .
+. | . | B | B | B | W | B | .
+W | W | B | B | W | B | W | .
+. | . | B | . | B | B | . | .
+. | . | . | . | B | B | B | .
+. | . | . | . | B | . | . | B
+AI played (0, 3)
+6 3
+
+Current board:
+. | . | . | B | W | . | . | .
+. | . | . | W | B | . | . | .
+. | . | . | . | W | B | W | .
+. | . | B | B | B | W | B | .
+W | W | B | B | W | B | W | .
+. | . | B | . | B | B | . | .
+. | . | . | W | B | B | B | .
+. | . | . | . | B | . | . | B
+
+Current board:
+. | . | . | B | W | . | . | .
+. | . | . | W | B | . | . | .
+. | . | . | . | W | B | W | .
+. | . | B | B | B | W | B | .
+W | W | B | B | W | B | W | .
+. | . | W | . | B | B | . | .
+. | . | . | W | B | B | B | .
+. | . | . | . | B | . | . | B
+Human played (6, 3)
+Probability distribution is - [1. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Evaluation Score of Position is 1.31
+AI move computation took 0.239 seconds.
+(0, 5)
+
+Current board:
+. | . | . | B | W | B | . | .
+. | . | . | W | B | . | . | .
+. | . | . | . | W | B | W | .
+. | . | B | B | B | W | B | .
+W | W | B | B | W | B | W | .
+. | . | W | . | B | B | . | .
+. | . | . | W | B | B | B | .
+. | . | . | . | B | . | . | B
+
+Current board:
+. | . | . | B | B | B | . | .
+. | . | . | W | B | . | . | .
+. | . | . | . | W | B | W | .
+. | . | B | B | B | W | B | .
+W | W | B | B | W | B | W | .
+. | . | W | . | B | B | . | .
+. | . | . | W | B | B | B | .
+. | . | . | . | B | . | . | B
+AI played (0, 5)
+3 1
+
+Current board:
+. | . | . | B | B | B | . | .
+. | . | . | W | B | . | . | .
+. | . | . | . | W | B | W | .
+. | W | B | B | B | W | B | .
+W | W | B | B | W | B | W | .
+. | . | W | . | B | B | . | .
+. | . | . | W | B | B | B | .
+. | . | . | . | B | . | . | B
+
+Current board:
+. | . | . | B | B | B | . | .
+. | . | . | W | B | . | . | .
+. | . | . | . | W | B | W | .
+. | W | W | W | W | W | B | .
+W | W | B | B | W | B | W | .
+. | . | W | . | B | B | . | .
+. | . | . | W | B | B | B | .
+. | . | . | . | B | . | . | B
+Human played (3, 1)
+Probability distribution is - [0.  0.  0.  0.  0.  0.  0.5 0.  0.5 0.  0.  0.  0.  0.  0. ]
+Evaluation Score of Position is 1.3800000000000001
+AI move computation took 0.233 seconds.
+(2, 3)
+
+Current board:
+. | . | . | B | B | B | . | .
+. | . | . | W | B | . | . | .
+. | . | . | B | W | B | W | .
+. | W | W | W | W | W | B | .
+W | W | B | B | W | B | W | .
+. | . | W | . | B | B | . | .
+. | . | . | W | B | B | B | .
+. | . | . | . | B | . | . | B
+
+Current board:
+. | . | . | B | B | B | . | .
+. | . | . | B | B | . | . | .
+. | . | . | B | B | B | W | .
+. | W | W | B | B | W | B | .
+W | W | B | B | W | B | W | .
+. | . | W | . | B | B | . | .
+. | . | . | W | B | B | B | .
+. | . | . | . | B | . | . | B
+AI played (2, 3)
+0 2
+
+Current board:
+. | . | W | B | B | B | . | .
+. | . | . | B | B | . | . | .
+. | . | . | B | B | B | W | .
+. | W | W | B | B | W | B | .
+W | W | B | B | W | B | W | .
+. | . | W | . | B | B | . | .
+. | . | . | W | B | B | B | .
+. | . | . | . | B | . | . | B
+
+Current board:
+. | . | W | B | B | B | . | .
+. | . | . | W | B | . | . | .
+. | . | . | B | W | B | W | .
+. | W | W | B | B | W | B | .
+W | W | B | B | W | B | W | .
+. | . | W | . | B | B | . | .
+. | . | . | W | B | B | B | .
+. | . | . | . | B | . | . | B
+Human played (0, 2)
+Probability distribution is - [0.  0.5 0.  0.  0.  0.  0.  0.  0.  0.  0.  0.  0.  0.  0.5 0. ]
+Evaluation Score of Position is 1.3800000000000001
+AI move computation took 0.250 seconds.
+(6, 2)
+
+Current board:
+. | . | W | B | B | B | . | .
+. | . | . | W | B | . | . | .
+. | . | . | B | W | B | W | .
+. | W | W | B | B | W | B | .
+W | W | B | B | W | B | W | .
+. | . | W | . | B | B | . | .
+. | . | B | W | B | B | B | .
+. | . | . | . | B | . | . | B
+
+Current board:
+. | . | W | B | B | B | . | .
+. | . | . | W | B | . | . | .
+. | . | . | B | W | B | W | .
+. | W | W | B | B | W | B | .
+W | W | B | B | W | B | W | .
+. | . | B | . | B | B | . | .
+. | . | B | B | B | B | B | .
+. | . | . | . | B | . | . | B
+AI played (6, 2)
+2 2
+
+Current board:
+. | . | W | B | B | B | . | .
+. | . | . | W | B | . | . | .
+. | . | W | B | W | B | W | .
+. | W | W | B | B | W | B | .
+W | W | B | B | W | B | W | .
+. | . | B | . | B | B | . | .
+. | . | B | B | B | B | B | .
+. | . | . | . | B | . | . | B
+
+Current board:
+. | . | W | B | B | B | . | .
+. | . | . | W | B | . | . | .
+. | . | W | W | W | B | W | .
+. | W | W | W | B | W | B | .
+W | W | B | B | W | B | W | .
+. | . | B | . | B | B | . | .
+. | . | B | B | B | B | B | .
+. | . | . | . | B | . | . | B
+Human played (2, 2)
+Probability distribution is - [0.5 0.  0.  0.5 0.  0.  0.  0.  0.  0.  0.  0.  0. ]
+Evaluation Score of Position is 1.3800000000000001
+AI move computation took 0.187 seconds.
+(0, 1)
+
+Current board:
+. | B | W | B | B | B | . | .
+. | . | . | W | B | . | . | .
+. | . | W | W | W | B | W | .
+. | W | W | W | B | W | B | .
+W | W | B | B | W | B | W | .
+. | . | B | . | B | B | . | .
+. | . | B | B | B | B | B | .
+. | . | . | . | B | . | . | B
+
+Current board:
+. | B | B | B | B | B | . | .
+. | . | . | W | B | . | . | .
+. | . | W | W | W | B | W | .
+. | W | W | W | B | W | B | .
+W | W | B | B | W | B | W | .
+. | . | B | . | B | B | . | .
+. | . | B | B | B | B | B | .
+. | . | . | . | B | . | . | B
+AI played (0, 1)
+3 7
+
+Current board:
+. | B | B | B | B | B | . | .
+. | . | . | W | B | . | . | .
+. | . | W | W | W | B | W | .
+. | W | W | W | B | W | B | W
+W | W | B | B | W | B | W | .
+. | . | B | . | B | B | . | .
+. | . | B | B | B | B | B | .
+. | . | . | . | B | . | . | B
+
+Current board:
+. | B | B | B | B | B | . | .
+. | . | . | W | B | . | . | .
+. | . | W | W | W | B | W | .
+. | W | W | W | B | W | W | W
+W | W | B | B | W | B | W | .
+. | . | B | . | B | B | . | .
+. | . | B | B | B | B | B | .
+. | . | . | . | B | . | . | B
+Human played (3, 7)
+Probability distribution is - [0. 0. 0. 0. 0. 0. 0. 0. 0. 1.]
+Evaluation Score of Position is 1.31
+AI move computation took 0.113 seconds.
+(5, 7)
+
+Current board:
+. | B | B | B | B | B | . | .
+. | . | . | W | B | . | . | .
+. | . | W | W | W | B | W | .
+. | W | W | W | B | W | W | W
+W | W | B | B | W | B | W | .
+. | . | B | . | B | B | . | B
+. | . | B | B | B | B | B | .
+. | . | . | . | B | . | . | B
+
+Current board:
+. | B | B | B | B | B | . | .
+. | . | . | B | B | . | . | .
+. | . | W | W | B | B | W | .
+. | W | W | W | B | B | W | W
+W | W | B | B | W | B | B | .
+. | . | B | . | B | B | . | B
+. | . | B | B | B | B | B | .
+. | . | . | . | B | . | . | B
+AI played (5, 7)
+1 5
+
+Current board:
+. | B | B | B | B | B | . | .
+. | . | . | B | B | W | . | .
+. | . | W | W | B | B | W | .
+. | W | W | W | B | B | W | W
+W | W | B | B | W | B | B | .
+. | . | B | . | B | B | . | B
+. | . | B | B | B | B | B | .
+. | . | . | . | B | . | . | B
+
+Current board:
+. | B | B | B | B | B | . | .
+. | . | . | B | B | W | . | .
+. | . | W | W | W | B | W | .
+. | W | W | W | B | B | W | W
+W | W | B | B | W | B | B | .
+. | . | B | . | B | B | . | B
+. | . | B | B | B | B | B | .
+. | . | . | . | B | . | . | B
+Human played (1, 5)
+Probability distribution is - [1. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+Evaluation Score of Position is 1.3800000000000001
+AI move computation took 0.145 seconds.
+(0, 6)
+
+Current board:
+. | B | B | B | B | B | B | .
+. | . | . | B | B | W | . | .
+. | . | W | W | W | B | W | .
+. | W | W | W | B | B | W | W
+W | W | B | B | W | B | B | .
+. | . | B | . | B | B | . | B
+. | . | B | B | B | B | B | .
+. | . | . | . | B | . | . | B
+
+Current board:
+. | B | B | B | B | B | B | .
+. | . | . | B | B | B | . | .
+. | . | W | W | B | B | W | .
+. | W | W | B | B | B | W | W
+W | W | B | B | W | B | B | .
+. | . | B | . | B | B | . | B
+. | . | B | B | B | B | B | .
+. | . | . | . | B | . | . | B
+AI played (0, 6)
+5 3
+
+Current board:
+. | B | B | B | B | B | B | .
+. | . | . | B | B | B | . | .
+. | . | W | W | B | B | W | .
+. | W | W | B | B | B | W | W
+W | W | B | B | W | B | B | .
+. | . | B | W | B | B | . | B
+. | . | B | B | B | B | B | .
+. | . | . | . | B | . | . | B
+
+Current board:
+. | B | B | B | B | B | B | .
+. | . | . | B | B | B | . | .
+. | . | W | W | B | B | W | .
+. | W | W | W | B | B | W | W
+W | W | W | W | W | B | B | .
+. | . | B | W | B | B | . | B
+. | . | B | B | B | B | B | .
+. | . | . | . | B | . | . | B
+Human played (5, 3)
+Probability distribution is - [0. 0. 0. 0. 0. 0. 0. 0. 1. 0. 0.]
+Evaluation Score of Position is 1.31
+AI move computation took 0.149 seconds.
+(4, 7)
+
+Current board:
+. | B | B | B | B | B | B | .
+. | . | . | B | B | B | . | .
+. | . | W | W | B | B | W | .
+. | W | W | W | B | B | W | W
+W | W | W | W | W | B | B | B
+. | . | B | W | B | B | . | B
+. | . | B | B | B | B | B | .
+. | . | . | . | B | . | . | B
+
+Current board:
+. | B | B | B | B | B | B | .
+. | . | . | B | B | B | . | .
+. | . | W | W | B | B | W | .
+. | W | W | W | B | B | B | W
+W | W | W | W | W | B | B | B
+. | . | B | W | B | B | . | B
+. | . | B | B | B | B | B | .
+. | . | . | . | B | . | . | B
+AI played (4, 7)
+7 5
+
+Current board:
+. | B | B | B | B | B | B | .
+. | . | . | B | B | B | . | .
+. | . | W | W | B | B | W | .
+. | W | W | W | B | B | B | W
+W | W | W | W | W | B | B | B
+. | . | B | W | B | B | . | B
+. | . | B | B | B | B | B | .
+. | . | . | . | B | W | . | B
+
+Current board:
+. | B | B | B | B | B | B | .
+. | . | . | B | B | B | . | .
+. | . | W | W | B | B | W | .
+. | W | W | W | B | B | B | W
+W | W | W | W | W | B | B | B
+. | . | B | W | B | B | . | B
+. | . | B | B | W | B | B | .
+. | . | . | . | B | W | . | B
+Human played (7, 5)
+Probability distribution is - [0.         0.         0.         0.         0.         0.
+ 0.         0.         0.33333333 0.33333333 0.33333333]
+Evaluation Score of Position is 1.3800000000000001
+AI move computation took 0.129 seconds.
+(7, 6)
+
+Current board:
+. | B | B | B | B | B | B | .
+. | . | . | B | B | B | . | .
+. | . | W | W | B | B | W | .
+. | W | W | W | B | B | B | W
+W | W | W | W | W | B | B | B
+. | . | B | W | B | B | . | B
+. | . | B | B | W | B | B | .
+. | . | . | . | B | W | B | B
+
+Current board:
+. | B | B | B | B | B | B | .
+. | . | . | B | B | B | . | .
+. | . | W | W | B | B | W | .
+. | W | W | W | B | B | B | W
+W | W | W | W | W | B | B | B
+. | . | B | W | B | B | . | B
+. | . | B | B | W | B | B | .
+. | . | . | . | B | B | B | B
+AI played (7, 6)
+1 6
+
+Current board:
+. | B | B | B | B | B | B | .
+. | . | . | B | B | B | W | .
+. | . | W | W | B | B | W | .
+. | W | W | W | B | B | B | W
+W | W | W | W | W | B | B | B
+. | . | B | W | B | B | . | B
+. | . | B | B | W | B | B | .
+. | . | . | . | B | B | B | B
+
+Current board:
+. | B | B | B | B | B | B | .
+. | . | . | B | B | B | W | .
+. | . | W | W | B | W | W | .
+. | W | W | W | W | B | B | W
+W | W | W | W | W | B | B | B
+. | . | B | W | B | B | . | B
+. | . | B | B | W | B | B | .
+. | . | . | . | B | B | B | B
+Human played (1, 6)
+Probability distribution is - [0.33333333 0.         0.         0.         0.         0.
+ 0.         0.         0.         0.33333333 0.33333333]
+Evaluation Score of Position is 1.3800000000000001
+AI move computation took 0.113 seconds.
+(0, 7)
+
+Current board:
+. | B | B | B | B | B | B | B
+. | . | . | B | B | B | W | .
+. | . | W | W | B | W | W | .
+. | W | W | W | W | B | B | W
+W | W | W | W | W | B | B | B
+. | . | B | W | B | B | . | B
+. | . | B | B | W | B | B | .
+. | . | . | . | B | B | B | B
+
+Current board:
+. | B | B | B | B | B | B | B
+. | . | . | B | B | B | B | .
+. | . | W | W | B | B | W | .
+. | W | W | W | B | B | B | W
+W | W | W | B | W | B | B | B
+. | . | B | W | B | B | . | B
+. | . | B | B | W | B | B | .
+. | . | . | . | B | B | B | B
+AI played (0, 7)
+6 1
+
+Current board:
+. | B | B | B | B | B | B | B
+. | . | . | B | B | B | B | .
+. | . | W | W | B | B | W | .
+. | W | W | W | B | B | B | W
+W | W | W | B | W | B | B | B
+. | . | B | W | B | B | . | B
+. | W | B | B | W | B | B | .
+. | . | . | . | B | B | B | B
+
+Current board:
+. | B | B | B | B | B | B | B
+. | . | . | B | B | B | B | .
+. | . | W | W | B | B | W | .
+. | W | W | W | B | B | B | W
+W | W | W | B | W | B | B | B
+. | . | B | W | B | B | . | B
+. | W | W | W | W | B | B | .
+. | . | . | . | B | B | B | B
+Human played (6, 1)
+Probability distribution is - [0.07142857 0.07142857 0.07142857 0.07142857 0.07142857 0.07142857
+ 0.07142857 0.07142857 0.07142857 0.07142857 0.07142857 0.07142857
+ 0.07142857 0.07142857]
+Evaluation Score of Position is 1.3800000000000001
+AI move computation took 0.081 seconds.
+(6, 0)
+
+Current board:
+. | B | B | B | B | B | B | B
+. | . | . | B | B | B | B | .
+. | . | W | W | B | B | W | .
+. | W | W | W | B | B | B | W
+W | W | W | B | W | B | B | B
+. | . | B | W | B | B | . | B
+B | W | W | W | W | B | B | .
+. | . | . | . | B | B | B | B
+
+Current board:
+. | B | B | B | B | B | B | B
+. | . | . | B | B | B | B | .
+. | . | W | W | B | B | W | .
+. | W | W | W | B | B | B | W
+W | W | W | B | W | B | B | B
+. | . | B | W | B | B | . | B
+B | B | B | B | B | B | B | .
+. | . | . | . | B | B | B | B
+AI played (6, 0)
+7 2
+
+Current board:
+. | B | B | B | B | B | B | B
+. | . | . | B | B | B | B | .
+. | . | W | W | B | B | W | .
+. | W | W | W | B | B | B | W
+W | W | W | B | W | B | B | B
+. | . | B | W | B | B | . | B
+B | B | B | B | B | B | B | .
+. | . | W | . | B | B | B | B
+
+Current board:
+. | B | B | B | B | B | B | B
+. | . | . | B | B | B | B | .
+. | . | W | W | B | B | W | .
+. | W | W | W | B | B | B | W
+W | W | W | B | W | B | B | B
+. | . | W | W | B | B | . | B
+B | B | W | B | B | B | B | .
+. | . | W | . | B | B | B | B
+Human played (7, 2)
+Probability distribution is - [0.         0.16666667 0.16666667 0.         0.         0.16666667
+ 0.         0.16666667 0.16666667 0.16666667]
+Evaluation Score of Position is 1.3800000000000001
+AI move computation took 0.074 seconds.
+(1, 7)
+
+Current board:
+. | B | B | B | B | B | B | B
+. | . | . | B | B | B | B | B
+. | . | W | W | B | B | W | .
+. | W | W | W | B | B | B | W
+W | W | W | B | W | B | B | B
+. | . | W | W | B | B | . | B
+B | B | W | B | B | B | B | .
+. | . | W | . | B | B | B | B
+
+Current board:
+. | B | B | B | B | B | B | B
+. | . | . | B | B | B | B | B
+. | . | W | W | B | B | B | .
+. | W | W | W | B | B | B | W
+W | W | W | B | W | B | B | B
+. | . | W | W | B | B | . | B
+B | B | W | B | B | B | B | .
+. | . | W | . | B | B | B | B
+AI played (1, 7)
+6 7
+
+Current board:
+. | B | B | B | B | B | B | B
+. | . | . | B | B | B | B | B
+. | . | W | W | B | B | B | .
+. | W | W | W | B | B | B | W
+W | W | W | B | W | B | B | B
+. | . | W | W | B | B | . | B
+B | B | W | B | B | B | B | W
+. | . | W | . | B | B | B | B
+
+Current board:
+. | B | B | B | B | B | B | B
+. | . | . | B | B | B | B | B
+. | . | W | W | B | B | B | .
+. | W | W | W | B | B | B | W
+W | W | W | B | W | B | B | W
+. | . | W | W | B | B | . | W
+B | B | W | W | W | W | W | W
+. | . | W | . | B | B | B | B
+Human played (6, 7)
+Probability distribution is - [0.2 0.  0.2 0.  0.2 0.  0.  0.2 0.  0.2 0. ]
+Evaluation Score of Position is 1.3800000000000001
+AI move computation took 0.058 seconds.
+(1, 1)
+
+Current board:
+. | B | B | B | B | B | B | B
+. | B | . | B | B | B | B | B
+. | . | W | W | B | B | B | .
+. | W | W | W | B | B | B | W
+W | W | W | B | W | B | B | W
+. | . | W | W | B | B | . | W
+B | B | W | W | W | W | W | W
+. | . | W | . | B | B | B | B
+
+Current board:
+. | B | B | B | B | B | B | B
+. | B | . | B | B | B | B | B
+. | . | B | W | B | B | B | .
+. | W | W | B | B | B | B | W
+W | W | W | B | B | B | B | W
+. | . | W | W | B | B | . | W
+B | B | W | W | W | W | W | W
+. | . | W | . | B | B | B | B
+AI played (1, 1)
+2 7
+
+Current board:
+. | B | B | B | B | B | B | B
+. | B | . | B | B | B | B | B
+. | . | B | W | B | B | B | W
+. | W | W | B | B | B | B | W
+W | W | W | B | B | B | B | W
+. | . | W | W | B | B | . | W
+B | B | W | W | W | W | W | W
+. | . | W | . | B | B | B | B
+
+Current board:
+. | B | B | B | B | B | B | B
+. | B | . | B | B | B | B | B
+. | . | B | W | W | W | W | W
+. | W | W | B | B | B | W | W
+W | W | W | B | B | W | B | W
+. | . | W | W | W | B | . | W
+B | B | W | W | W | W | W | W
+. | . | W | . | B | B | B | B
+Human played (2, 7)
+Probability distribution is - [0. 0. 0. 0. 0. 0. 1. 0. 0.]
+Evaluation Score of Position is 1.3800000000000001
+AI move computation took 0.055 seconds.
+(5, 6)
+
+Current board:
+. | B | B | B | B | B | B | B
+. | B | . | B | B | B | B | B
+. | . | B | W | W | W | W | W
+. | W | W | B | B | B | W | W
+W | W | W | B | B | W | B | W
+. | . | W | W | W | B | B | W
+B | B | W | W | W | W | W | W
+. | . | W | . | B | B | B | B
+
+Current board:
+. | B | B | B | B | B | B | B
+. | B | . | B | B | B | B | B
+. | . | B | W | W | W | W | W
+. | W | W | B | B | B | W | W
+W | W | W | B | B | B | B | W
+. | . | W | W | W | B | B | W
+B | B | W | W | W | B | B | W
+. | . | W | . | B | B | B | B
+AI played (5, 6)
+1 2
+
+Current board:
+. | B | B | B | B | B | B | B
+. | B | W | B | B | B | B | B
+. | . | B | W | W | W | W | W
+. | W | W | B | B | B | W | W
+W | W | W | B | B | B | B | W
+. | . | W | W | W | B | B | W
+B | B | W | W | W | B | B | W
+. | . | W | . | B | B | B | B
+
+Current board:
+. | B | B | B | B | B | B | B
+. | B | W | B | B | B | B | B
+. | . | W | W | W | W | W | W
+. | W | W | B | B | B | W | W
+W | W | W | B | B | B | B | W
+. | . | W | W | W | B | B | W
+B | B | W | W | W | B | B | W
+. | . | W | . | B | B | B | B
+Human played (1, 2)
+Probability distribution is - [0.         0.33333333 0.         0.         0.         0.33333333
+ 0.33333333]
+Evaluation Score of Position is 1.3800000000000001
+AI move computation took 0.037 seconds.
+(7, 1)
+
+Current board:
+. | B | B | B | B | B | B | B
+. | B | W | B | B | B | B | B
+. | . | W | W | W | W | W | W
+. | W | W | B | B | B | W | W
+W | W | W | B | B | B | B | W
+. | . | W | W | W | B | B | W
+B | B | W | W | W | B | B | W
+. | B | W | . | B | B | B | B
+
+Current board:
+. | B | B | B | B | B | B | B
+. | B | W | B | B | B | B | B
+. | . | W | W | W | W | W | W
+. | W | W | B | B | B | W | W
+W | W | W | B | B | B | B | W
+. | . | W | B | W | B | B | W
+B | B | B | W | W | B | B | W
+. | B | W | . | B | B | B | B
+AI played (7, 1)
+5 0
+
+Current board:
+. | B | B | B | B | B | B | B
+. | B | W | B | B | B | B | B
+. | . | W | W | W | W | W | W
+. | W | W | B | B | B | W | W
+W | W | W | B | B | B | B | W
+W | . | W | B | W | B | B | W
+B | B | B | W | W | B | B | W
+. | B | W | . | B | B | B | B
+
+Current board:
+. | B | B | B | B | B | B | B
+. | B | W | B | B | B | B | B
+. | . | W | W | W | W | W | W
+. | W | W | B | B | B | W | W
+W | W | W | B | B | B | B | W
+W | . | W | B | W | B | B | W
+B | W | B | W | W | B | B | W
+. | B | W | . | B | B | B | B
+Human played (5, 0)
+Probability distribution is - [0.25 0.25 0.   0.   0.25 0.25]
+Evaluation Score of Position is 992
+AI move computation took 0.370 seconds.
+(7, 3)
+
+Current board:
+. | B | B | B | B | B | B | B
+. | B | W | B | B | B | B | B
+. | . | W | W | W | W | W | W
+. | W | W | B | B | B | W | W
+W | W | W | B | B | B | B | W
+W | . | W | B | W | B | B | W
+B | W | B | W | W | B | B | W
+. | B | W | B | B | B | B | B
+
+Current board:
+. | B | B | B | B | B | B | B
+. | B | W | B | B | B | B | B
+. | . | W | W | W | W | W | W
+. | W | W | B | B | B | W | W
+W | W | W | B | B | B | B | W
+W | . | W | B | W | B | B | W
+B | W | B | B | B | B | B | W
+. | B | B | B | B | B | B | B
+AI played (7, 3)
+7 0
+
+Current board:
+. | B | B | B | B | B | B | B
+. | B | W | B | B | B | B | B
+. | . | W | W | W | W | W | W
+. | W | W | B | B | B | W | W
+W | W | W | B | B | B | B | W
+W | . | W | B | W | B | B | W
+B | W | B | B | B | B | B | W
+W | B | B | B | B | B | B | B
+
+Current board:
+. | B | B | B | B | B | B | B
+. | B | W | B | B | B | B | B
+. | . | W | W | W | W | W | W
+. | W | W | B | B | B | W | W
+W | W | W | B | B | B | B | W
+W | . | W | B | W | B | B | W
+W | W | B | B | B | B | B | W
+W | B | B | B | B | B | B | B
+Human played (7, 0)
+Probability distribution is - [0.  0.5 0.  0.5]
+Evaluation Score of Position is 994
+AI move computation took 0.027 seconds.
+(2, 1)
+
+Current board:
+. | B | B | B | B | B | B | B
+. | B | W | B | B | B | B | B
+. | B | W | W | W | W | W | W
+. | W | W | B | B | B | W | W
+W | W | W | B | B | B | B | W
+W | . | W | B | W | B | B | W
+W | W | B | B | B | B | B | W
+W | B | B | B | B | B | B | B
+
+Current board:
+. | B | B | B | B | B | B | B
+. | B | B | B | B | B | B | B
+. | B | W | W | W | W | W | W
+. | W | B | B | B | B | W | W
+W | W | W | B | B | B | B | W
+W | . | W | B | W | B | B | W
+W | W | B | B | B | B | B | W
+W | B | B | B | B | B | B | B
+AI played (2, 1)
+2 0
+
+Current board:
+. | B | B | B | B | B | B | B
+. | B | B | B | B | B | B | B
+W | B | W | W | W | W | W | W
+. | W | B | B | B | B | W | W
+W | W | W | B | B | B | B | W
+W | . | W | B | W | B | B | W
+W | W | B | B | B | B | B | W
+W | B | B | B | B | B | B | B
+
+Current board:
+. | B | B | B | B | B | B | B
+. | B | B | B | B | B | B | B
+W | W | W | W | W | W | W | W
+. | W | B | B | B | B | W | W
+W | W | W | B | B | B | B | W
+W | . | W | B | W | B | B | W
+W | W | B | B | B | B | B | W
+W | B | B | B | B | B | B | B
+Human played (2, 0)
+Probability distribution is - [0. 1. 0.]
+Evaluation Score of Position is 996
+AI move computation took 0.004 seconds.
+(3, 0)
+
+Current board:
+. | B | B | B | B | B | B | B
+. | B | B | B | B | B | B | B
+W | W | W | W | W | W | W | W
+B | W | B | B | B | B | W | W
+W | W | W | B | B | B | B | W
+W | . | W | B | W | B | B | W
+W | W | B | B | B | B | B | W
+W | B | B | B | B | B | B | B
+
+Current board:
+. | B | B | B | B | B | B | B
+. | B | B | B | B | B | B | B
+W | B | W | W | W | W | W | W
+B | B | B | B | B | B | W | W
+W | B | W | B | B | B | B | W
+W | . | B | B | W | B | B | W
+W | W | B | B | B | B | B | W
+W | B | B | B | B | B | B | B
+AI played (3, 0)
+0 0
+
+Current board:
+W | B | B | B | B | B | B | B
+. | B | B | B | B | B | B | B
+W | B | W | W | W | W | W | W
+B | B | B | B | B | B | W | W
+W | B | W | B | B | B | B | W
+W | . | B | B | W | B | B | W
+W | W | B | B | B | B | B | W
+W | B | B | B | B | B | B | B
+
+Current board:
+W | B | B | B | B | B | B | B
+. | W | B | B | B | B | B | B
+W | B | W | W | W | W | W | W
+B | B | B | B | B | B | W | W
+W | B | W | B | B | B | B | W
+W | . | B | B | W | B | B | W
+W | W | B | B | B | B | B | W
+W | B | B | B | B | B | B | B
+Human played (0, 0)
+Probability distribution is - [0.5 0.5]
+Evaluation Score of Position is 996
+AI move computation took 0.000 seconds.
+(1, 0)
+
+Current board:
+W | B | B | B | B | B | B | B
+B | W | B | B | B | B | B | B
+W | B | W | W | W | W | W | W
+B | B | B | B | B | B | W | W
+W | B | W | B | B | B | B | W
+W | . | B | B | W | B | B | W
+W | W | B | B | B | B | B | W
+W | B | B | B | B | B | B | B
+
+Current board:
+W | B | B | B | B | B | B | B
+B | B | B | B | B | B | B | B
+B | B | W | W | W | W | W | W
+B | B | B | B | B | B | W | W
+W | B | W | B | B | B | B | W
+W | . | B | B | W | B | B | W
+W | W | B | B | B | B | B | W
+W | B | B | B | B | B | B | B
+AI played (1, 0)
+5 1
+
+Current board:
+W | B | B | B | B | B | B | B
+B | B | B | B | B | B | B | B
+B | B | W | W | W | W | W | W
+B | B | B | B | B | B | W | W
+W | B | W | B | B | B | B | W
+W | W | B | B | W | B | B | W
+W | W | B | B | B | B | B | W
+W | B | B | B | B | B | B | B
+
+Current board:
+W | B | B | B | B | B | B | B
+B | B | B | B | B | B | B | B
+B | B | W | W | W | W | W | W
+B | B | B | B | B | B | W | W
+W | B | W | B | B | B | B | W
+W | W | W | W | W | B | B | W
+W | W | B | B | B | B | B | W
+W | B | B | B | B | B | B | B
+Human played (5, 1)
+Win for Player 1

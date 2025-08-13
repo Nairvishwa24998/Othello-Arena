@@ -1,0 +1,109 @@
+=== ROOT AFTER SEARCH FINISHED ===
+[root] move (3, 0) visits = 545 wins   = 0
+[root] move (1, 2) visits = 47 wins   = 0
+[root] move (0, 3) visits = 54 wins   = 0
+[root] move (3, 2) visits = 52 wins   = 0
+[root] move (3, 1) visits = 1 wins   = 0
+[root] move (0, 2) visits = 1 wins   = 0
+[root] move (0, 1) visits = 1 wins   = 0
+[root] move (2, 3) visits = 174 wins   = 0
+[root] move (2, 0) visits = 1 wins   = 0
+[root] move (2, 1) visits = 1 wins   = 0
+[root] move (2, 2) visits = 183 wins   = 0
+[root] move (3, 3) visits = 1 wins   = 0
+[root] move (1, 3) visits = 2 wins   = 0
+[root] move (0, 0) visits = 1 wins   = 0
+[root] move (1, 0) visits = 434 wins   = 0
+[root] move (1, 1) visits = 2 wins   = 0
+==================================
+
+id(self) = 1884417855184
+id(root.state) = 1884452137488
+
+=== ROOT AFTER SEARCH FINISHED ===
+[root] move (2, 3) visits = 1 wins   = 0
+[root] move (1, 2) visits = 1483 wins   = 0
+[root] move (1, 0) visits = 1 wins   = 0
+[root] move (0, 2) visits = 1 wins   = 0
+[root] move (3, 3) visits = 3 wins   = 0
+[root] move (3, 2) visits = 1 wins   = 0
+[root] move (0, 3) visits = 1 wins   = 0
+[root] move (1, 1) visits = 1 wins   = 0
+[root] move (0, 0) visits = 1 wins   = 0
+[root] move (2, 1) visits = 1 wins   = 0
+[root] move (3, 1) visits = 1 wins   = 0
+[root] move (1, 3) visits = 3 wins   = 0
+[root] move (2, 0) visits = 1 wins   = 0
+[root] move (0, 1) visits = 1 wins   = 0
+==================================
+
+id(self) = 1884417855184
+id(root.state) = 1884534200400
+
+=== ROOT AFTER SEARCH FINISHED ===
+[root] move (3, 1) visits = 1 wins   = 0
+[root] move (0, 1) visits = 1 wins   = 0
+[root] move (0, 0) visits = 1 wins   = 0
+[root] move (2, 0) visits = 1 wins   = 0
+[root] move (3, 2) visits = 1 wins   = 0
+[root] move (1, 0) visits = 1489 wins   = 0
+[root] move (2, 3) visits = 1 wins   = 0
+[root] move (1, 3) visits = 1 wins   = 0
+[root] move (3, 3) visits = 1 wins   = 0
+[root] move (0, 2) visits = 1 wins   = 0
+[root] move (0, 3) visits = 1 wins   = 0
+[root] move (1, 1) visits = 1 wins   = 0
+==================================
+
+id(self) = 1884417855184
+id(root.state) = 1884809194896
+
+=== ROOT AFTER SEARCH FINISHED ===
+[root] move (0, 2) visits = 102 wins   = 0
+[root] move (3, 2) visits = 62 wins   = 0
+[root] move (1, 1) visits = 875 wins   = 0
+[root] move (0, 3) visits = 41 wins   = 0
+[root] move (0, 1) visits = 1 wins   = 0
+[root] move (0, 0) visits = 105 wins   = 0
+[root] move (3, 1) visits = 8 wins   = 0
+[root] move (3, 3) visits = 306 wins   = 0
+==================================
+
+id(self) = 1884417855184
+id(root.state) = 1884691835408
+
+=== ROOT AFTER SEARCH FINISHED ===
+[root] move (3, 1) visits = 283 wins   = 0
+[root] move (0, 1) visits = 450 wins   = 0
+[root] move (3, 2) visits = 144 wins   = 0
+[root] move (0, 2) visits = 151 wins   = 0
+[root] move (0, 0) visits = 415 wins   = 0
+[root] move (3, 3) visits = 57 wins   = 0
+==================================
+
+id(self) = 1884417855184
+id(root.state) = 1884859342352
+
+=== ROOT AFTER SEARCH FINISHED ===
+[root] move (0, 2) visits = 403 wins   = 0
+[root] move (0, 0) visits = 443 wins   = 0
+[root] move (3, 1) visits = 376 wins   = 0
+[root] move (3, 2) visits = 278 wins   = 0
+==================================
+
+id(self) = 1884417855184
+id(root.state) = 1884901751888
+
+=== ROOT AFTER SEARCH FINISHED ===
+[root] move (3, 2) visits = 686 wins   = 0
+[root] move (3, 1) visits = 814 wins   = 0
+==================================
+
+id(self) = 1884417855184
+id(root.state) = 1884858344720
+total_rounds = 1
+MCTS+NN-wins = 0
+ALPHA_BETA_PRUNING-wins = 0
+draws = 1
+
+Process finished with exit code 0

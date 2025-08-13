@@ -1,0 +1,3089 @@
+Game has now begun
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | W | B | . | . | .
+. | . | . | B | W | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+Human vs AI mode - MCTS+NN
+3 2
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | B | W | B | . | . | .
+. | . | . | B | W | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | B | B | B | . | . | .
+. | . | . | B | W | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+Human played (3, 2)
+2025-08-10 17:37:19.074959: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1754843839.642206   22932 service.cc:145] XLA service 0x1d1195c3500 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+I0000 00:00:1754843839.642424   22932 service.cc:153]   StreamExecutor device (0): Host, Default Version
+2025-08-10 17:37:19.659031: I tensorflow/compiler/mlir/tensorflow/utils/dump_mlir_util.cc:268] disabling MLIR crash reproducer, set env var `MLIR_CRASH_REPRODUCER_DIRECTORY` to enable.
+I0000 00:00:1754843840.119847   22932 device_compiler.h:188] Compiled cluster using XLA!  This line is logged at most once for the lifetime of the process.
+ XLA compilation successful for othello model
+ XLA compilation successful for othello model
+ XLA enabled for othello 8x8 model
+batch_time = 0.48634609999135137
+batch_time = 0.027751399989938363
+batch_time = 0.028631299996050075
+batch_time = 0.02775789998122491
+batch_time = 0.030281399987870827
+batch_time = 0.029035299987299368
+batch_time = 0.02846590001718141
+batch_time = 0.028472300007706508
+batch_time = 0.030295499978819862
+batch_time = 0.03136520000407472
+batch_time = 0.028595700016012415
+batch_time = 0.027785399986896664
+batch_time = 0.02916529998765327
+batch_time = 0.026539599988609552
+batch_time = 0.027530700026545674
+batch_time = 0.026906299986876547
+batch_time = 0.029168000008212402
+batch_time = 0.027329400007147342
+batch_time = 0.028797499981010333
+batch_time = 0.027657600003294647
+batch_time = 0.02856679999968037
+batch_time = 0.026906199986115098
+batch_time = 0.028132300009019673
+batch_time = 0.027875400002812967
+batch_time = 0.026299299992388114
+batch_time = 0.027856700005941093
+batch_time = 0.02801129998988472
+batch_time = 0.026269199996022508
+batch_time = 0.030464200011920184
+batch_time = 0.026699300011387095
+batch_time = 0.029168700013542548
+batch_time = 0.02846020000288263
+batch_time = 0.02761869999812916
+batch_time = 0.02785150002455339
+batch_time = 0.027488599997013807
+batch_time = 0.027995799988275394
+batch_time = 0.03117899998323992
+batch_time = 0.029393100005108863
+batch_time = 0.02778299999772571
+batch_time = 0.029668099974514917
+batch_time = 0.02791319999960251
+batch_time = 0.029220600001281127
+batch_time = 0.02931489999173209
+batch_time = 0.02687939998577349
+batch_time = 0.028890999994473532
+batch_time = 0.027782499993918464
+batch_time = 0.48599640000611544
+
+=== ROOT AFTER SEARCH FINISHED ===
+[root] move (2, 4) visits = 2060 wins   = 0
+[root] move (2, 2) visits = 24 wins   = 0
+[root] move (4, 2) visits = 916 wins   = 0
+==================================
+
+id(self) = 1997483128720
+id(root.state) = 1997692199248
+AI move computation took 14.860 seconds.
+(2, 4)
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | W | . | . | .
+. | . | B | B | B | . | . | .
+. | . | . | B | W | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | W | . | . | .
+. | . | B | B | W | . | . | .
+. | . | . | B | W | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+AI played (2, 4)
+3 5
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | W | . | . | .
+. | . | B | B | W | B | . | .
+. | . | . | B | W | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | W | . | . | .
+. | . | B | B | B | B | . | .
+. | . | . | B | W | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+Human played (3, 5)
+ XLA compilation successful for othello model
+ XLA compilation successful for othello model
+ XLA enabled for othello 8x8 model
+batch_time = 0.4805320000159554
+batch_time = 0.02600240000174381
+batch_time = 0.025128600012976676
+batch_time = 0.026736400002846494
+batch_time = 0.027292899991152808
+batch_time = 0.026601399993523955
+batch_time = 0.02697690000059083
+batch_time = 0.02868230000603944
+batch_time = 0.02935530000831932
+batch_time = 0.02620810002554208
+batch_time = 0.027897599997231737
+batch_time = 0.02714130000094883
+batch_time = 0.027115400007460266
+batch_time = 0.026955399982398376
+batch_time = 0.02607899997383356
+batch_time = 0.02754149999236688
+batch_time = 0.0274644999881275
+batch_time = 0.027217599999858066
+batch_time = 0.026883999991696328
+batch_time = 0.027192999987164512
+batch_time = 0.02748220000648871
+batch_time = 0.027192899986403063
+batch_time = 0.027812099986476824
+batch_time = 0.027678400016156957
+batch_time = 0.026841199985938147
+batch_time = 0.027196799986995757
+batch_time = 0.027460799989057705
+batch_time = 0.0279887999931816
+batch_time = 0.02822619999642484
+batch_time = 0.028548500005854294
+batch_time = 0.028323500009719282
+batch_time = 0.026819099992280826
+batch_time = 0.028705499978968874
+batch_time = 0.027599000022746623
+batch_time = 0.026130700018256903
+batch_time = 0.026266400003805757
+batch_time = 0.025917100021615624
+batch_time = 0.026683200005209073
+batch_time = 0.026428300014231354
+batch_time = 0.02910459999111481
+batch_time = 0.027589599980274215
+batch_time = 0.02905409998493269
+batch_time = 0.027536100009456277
+batch_time = 0.0280200999986846
+batch_time = 0.02787930000340566
+batch_time = 0.028545700013637543
+batch_time = 0.4816772000049241
+
+=== ROOT AFTER SEARCH FINISHED ===
+[root] move (2, 2) visits = 1361 wins   = 0
+[root] move (2, 6) visits = 142 wins   = 0
+[root] move (4, 6) visits = 904 wins   = 0
+[root] move (4, 2) visits = 593 wins   = 0
+==================================
+
+id(self) = 1997483128720
+id(root.state) = 1997785366288
+AI move computation took 13.290 seconds.
+(2, 2)
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | W | . | W | . | . | .
+. | . | B | B | B | B | . | .
+. | . | . | B | W | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | W | . | W | . | . | .
+. | . | B | W | B | B | . | .
+. | . | . | B | W | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+AI played (2, 2)
+5 3
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | W | . | W | . | . | .
+. | . | B | W | B | B | . | .
+. | . | . | B | W | . | . | .
+. | . | . | B | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | W | . | W | . | . | .
+. | . | B | W | B | B | . | .
+. | . | . | B | B | . | . | .
+. | . | . | B | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+Human played (5, 3)
+ XLA compilation successful for othello model
+ XLA compilation successful for othello model
+ XLA enabled for othello 8x8 model
+batch_time = 0.4799120999814477
+batch_time = 0.02622890000930056
+batch_time = 0.027058899984695017
+batch_time = 0.026117300003534183
+batch_time = 0.02380490000359714
+batch_time = 0.02667160000419244
+batch_time = 0.02664210001239553
+batch_time = 0.02754170002299361
+batch_time = 0.025569999997969717
+batch_time = 0.026294699986465275
+batch_time = 0.02641530000255443
+batch_time = 0.026623799989465624
+batch_time = 0.02652829998987727
+batch_time = 0.026349499996285886
+batch_time = 0.025900899985572323
+batch_time = 0.02582149999216199
+batch_time = 0.026262500003213063
+batch_time = 0.026170500001171604
+batch_time = 0.026262400002451614
+batch_time = 0.024825000000419095
+batch_time = 0.026798299979418516
+batch_time = 0.026265300024533644
+batch_time = 0.027662200009217486
+batch_time = 0.027297399996314198
+batch_time = 0.026160099980188534
+batch_time = 0.027549399994313717
+batch_time = 0.02690880000591278
+batch_time = 0.02671899998676963
+batch_time = 0.02697120001539588
+batch_time = 0.02766729998984374
+batch_time = 0.026760200009448454
+batch_time = 0.027252100000623614
+batch_time = 0.028945800004294142
+batch_time = 0.028790200012736022
+batch_time = 0.02890919998753816
+batch_time = 0.029106699978001416
+batch_time = 0.026443200011271983
+batch_time = 0.027820599992992356
+batch_time = 0.02808839999488555
+batch_time = 0.028550799994263798
+batch_time = 0.027043200010666624
+batch_time = 0.026240000006509945
+batch_time = 0.026970200007781386
+batch_time = 0.027523099997779354
+batch_time = 0.026881800004048273
+batch_time = 0.02793839998776093
+batch_time = 0.4851267999911215
+
+=== ROOT AFTER SEARCH FINISHED ===
+[root] move (4, 2) visits = 717 wins   = 0
+[root] move (3, 1) visits = 335 wins   = 0
+[root] move (6, 3) visits = 6 wins   = 0
+[root] move (5, 4) visits = 5 wins   = 0
+[root] move (4, 6) visits = 8 wins   = 0
+[root] move (3, 6) visits = 10 wins   = 0
+[root] move (5, 5) visits = 1919 wins   = 0
+==================================
+
+id(self) = 1997483128720
+id(root.state) = 1997785618192
+AI move computation took 13.073 seconds.
+(5, 5)
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | W | . | W | . | . | .
+. | . | B | W | B | B | . | .
+. | . | . | B | B | . | . | .
+. | . | . | B | . | W | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | W | . | W | . | . | .
+. | . | B | W | B | B | . | .
+. | . | . | B | W | . | . | .
+. | . | . | B | . | W | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+AI played (5, 5)
+2 3
+
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | W | B | W | . | . | .
+. | . | B | W | B | B | . | .
+. | . | . | B | W | . | . | .
+. | . | . | B | . | W | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | W | B | W | . | . | .
+. | . | B | B | B | B | . | .
+. | . | . | B | W | . | . | .
+. | . | . | B | . | W | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+Human played (2, 3)
+ XLA compilation successful for othello model
+ XLA compilation successful for othello model
+ XLA enabled for othello 8x8 model
+batch_time = 0.48360190002131276
+batch_time = 0.026209200004814193
+batch_time = 0.02594270001281984
+batch_time = 0.02793559999554418
+batch_time = 0.02559309999924153
+batch_time = 0.027401200000895187
+batch_time = 0.02608380001038313
+batch_time = 0.026180399989243597
+batch_time = 0.026375000015832484
+batch_time = 0.026676899986341596
+batch_time = 0.02768810000270605
+batch_time = 0.02718439997988753
+batch_time = 0.026466999988770112
+batch_time = 0.02760540001327172
+batch_time = 0.027621899993391708
+batch_time = 0.026245899993227795
+batch_time = 0.026766099996166304
+batch_time = 0.027241800009505823
+batch_time = 0.026561300008324906
+batch_time = 0.027050400007283315
+batch_time = 0.026324499980546534
+batch_time = 0.02605990000301972
+batch_time = 0.026883400016231462
+batch_time = 0.027495000016642734
+batch_time = 0.026617800001986325
+batch_time = 0.026446000003488734
+batch_time = 0.026922699995338917
+batch_time = 0.0272914000088349
+batch_time = 0.025616099999751896
+batch_time = 0.02840390001074411
+batch_time = 0.027521499985596165
+batch_time = 0.027226399979554117
+batch_time = 0.026349199994001538
+batch_time = 0.026720399997429922
+batch_time = 0.025774600013392046
+batch_time = 0.03763129998696968
+batch_time = 0.026740799978142604
+batch_time = 0.027884600014658645
+batch_time = 0.03596330000436865
+batch_time = 0.02940079997642897
+batch_time = 0.02818600001046434
+batch_time = 0.02771759999450296
+batch_time = 0.02663350000511855
+batch_time = 0.02623749998747371
+batch_time = 0.0274496000201907
+batch_time = 0.026251499977661297
+batch_time = 0.487621800013585
+
+=== ROOT AFTER SEARCH FINISHED ===
+[root] move (2, 6) visits = 1166 wins   = 0
+[root] move (4, 6) visits = 965 wins   = 0
+[root] move (4, 2) visits = 845 wins   = 0
+[root] move (6, 2) visits = 24 wins   = 0
+==================================
+
+id(self) = 1997483128720
+id(root.state) = 1997961640720
+AI move computation took 13.348 seconds.
+(2, 6)
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | W | B | W | . | W | .
+. | . | B | B | B | B | . | .
+. | . | . | B | W | . | . | .
+. | . | . | B | . | W | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | W | B | W | . | W | .
+. | . | B | B | B | W | . | .
+. | . | . | B | W | . | . | .
+. | . | . | B | . | W | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+AI played (2, 6)
+Please provide only and exactly 2 co-ordinates, indexed from 0 indicating where u want ur move to be placed
+5 4
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | W | B | W | . | W | .
+. | . | B | B | B | W | . | .
+. | . | . | B | W | . | . | .
+. | . | . | B | B | W | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | W | B | W | . | W | .
+. | . | B | B | B | W | . | .
+. | . | . | B | B | . | . | .
+. | . | . | B | B | W | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+Human played (5, 4)
+ XLA compilation successful for othello model
+ XLA compilation successful for othello model
+ XLA enabled for othello 8x8 model
+batch_time = 0.47730530000990257
+batch_time = 0.02569680000306107
+batch_time = 0.026442900008987635
+batch_time = 0.027007199998479337
+batch_time = 0.026626300008501858
+batch_time = 0.026019299984909594
+batch_time = 0.027021200017770752
+batch_time = 0.026814399985596538
+batch_time = 0.027049300028011203
+batch_time = 0.027393900003517047
+batch_time = 0.027997199998935685
+batch_time = 0.026891999994404614
+batch_time = 0.027828499994939193
+batch_time = 0.026433999999426305
+batch_time = 0.02726460000849329
+batch_time = 0.027349300013156608
+batch_time = 0.02747490000911057
+batch_time = 0.02790619997540489
+batch_time = 0.028567399975145236
+batch_time = 0.026497999991988763
+batch_time = 0.027020400011679158
+batch_time = 0.026638899988029152
+batch_time = 0.027779800002463162
+batch_time = 0.027269900019746274
+batch_time = 0.02668819998507388
+batch_time = 0.02657560000079684
+batch_time = 0.026795699988724664
+batch_time = 0.026920100004645064
+batch_time = 0.026582199992844835
+batch_time = 0.02637229999527335
+batch_time = 0.025640400010161102
+batch_time = 0.027303400012897328
+batch_time = 0.026026799983810633
+batch_time = 0.02623200000380166
+batch_time = 0.027100899984361604
+batch_time = 0.02649560000281781
+batch_time = 0.026715700019849464
+batch_time = 0.026376099995104596
+batch_time = 0.02742169998236932
+batch_time = 0.026042600016808137
+batch_time = 0.02644980000331998
+batch_time = 0.026062299992190674
+batch_time = 0.02851970001938753
+batch_time = 0.028438300010748208
+batch_time = 0.02675190000445582
+batch_time = 0.026997299981303513
+batch_time = 0.47797990002436563
+
+=== ROOT AFTER SEARCH FINISHED ===
+[root] move (6, 4) visits = 15 wins   = 0
+[root] move (4, 2) visits = 2947 wins   = 0
+[root] move (6, 2) visits = 11 wins   = 0
+[root] move (3, 1) visits = 14 wins   = 0
+[root] move (5, 2) visits = 13 wins   = 0
+==================================
+
+id(self) = 1997483128720
+id(root.state) = 1997843928336
+AI move computation took 15.747 seconds.
+(4, 2)
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | W | B | W | . | W | .
+. | . | B | B | B | W | . | .
+. | . | W | B | B | . | . | .
+. | . | . | B | B | W | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+. | . | W | B | W | . | W | .
+. | . | W | W | B | W | . | .
+. | . | W | B | B | . | . | .
+. | . | . | B | B | W | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+AI played (4, 2)
+1 4
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | B | . | . | .
+. | . | W | B | W | . | W | .
+. | . | W | W | B | W | . | .
+. | . | W | B | B | . | . | .
+. | . | . | B | B | W | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | B | . | . | .
+. | . | W | B | B | . | W | .
+. | . | W | W | B | W | . | .
+. | . | W | B | B | . | . | .
+. | . | . | B | B | W | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+Human played (1, 4)
+ XLA compilation successful for othello model
+ XLA compilation successful for othello model
+ XLA enabled for othello 8x8 model
+batch_time = 0.4787073000043165
+batch_time = 0.029555299988714978
+batch_time = 0.028192800004035234
+batch_time = 0.028470099990954623
+batch_time = 0.028939800016814843
+batch_time = 0.02787630000966601
+batch_time = 0.027915599988773465
+batch_time = 0.027490499982377514
+batch_time = 0.028022199985571206
+batch_time = 0.02884410001570359
+batch_time = 0.028874299983726814
+batch_time = 0.028824099979829043
+batch_time = 0.02853129999130033
+batch_time = 0.027902300003916025
+batch_time = 0.029187200008891523
+batch_time = 0.027588099997956306
+batch_time = 0.028973499982384965
+batch_time = 0.02805130000342615
+batch_time = 0.030546699999831617
+batch_time = 0.028559800004586577
+batch_time = 0.02871799998683855
+batch_time = 0.028927700011990964
+batch_time = 0.027848900004755706
+batch_time = 0.027989999973215163
+batch_time = 0.028613399976165965
+batch_time = 0.028557600016938522
+batch_time = 0.02819340000860393
+batch_time = 0.02960979999625124
+batch_time = 0.029078199993819
+batch_time = 0.029648099996848032
+batch_time = 0.029805099999066442
+batch_time = 0.029001499991863966
+batch_time = 0.03042749999440275
+batch_time = 0.030346899991855025
+batch_time = 0.028235400008270517
+batch_time = 0.02912110000033863
+batch_time = 0.02932669999427162
+batch_time = 0.028809499985072762
+batch_time = 0.029782400000840425
+batch_time = 0.028624300000956282
+batch_time = 0.029802200006088242
+batch_time = 0.029571399994893
+batch_time = 0.028422499977750704
+batch_time = 0.02836659998865798
+batch_time = 0.02830289999837987
+batch_time = 0.02815190001274459
+batch_time = 0.49146550000295974
+
+=== ROOT AFTER SEARCH FINISHED ===
+[root] move (2, 5) visits = 583 wins   = 0
+[root] move (6, 3) visits = 7 wins   = 0
+[root] move (4, 5) visits = 6 wins   = 0
+[root] move (1, 5) visits = 1733 wins   = 0
+[root] move (1, 3) visits = 642 wins   = 0
+[root] move (6, 4) visits = 5 wins   = 0
+[root] move (0, 5) visits = 4 wins   = 0
+[root] move (5, 2) visits = 8 wins   = 0
+[root] move (6, 2) visits = 8 wins   = 0
+[root] move (6, 5) visits = 4 wins   = 0
+==================================
+
+id(self) = 1997483128720
+id(root.state) = 1998002797584
+AI move computation took 14.018 seconds.
+(1, 5)
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | B | W | . | .
+. | . | W | B | B | . | W | .
+. | . | W | W | B | W | . | .
+. | . | W | B | B | . | . | .
+. | . | . | B | B | W | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | B | W | . | .
+. | . | W | B | W | . | W | .
+. | . | W | W | B | W | . | .
+. | . | W | B | B | . | . | .
+. | . | . | B | B | W | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+AI played (1, 5)
+2 5
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | B | W | . | .
+. | . | W | B | W | B | W | .
+. | . | W | W | B | W | . | .
+. | . | W | B | B | . | . | .
+. | . | . | B | B | W | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+
+Current board:
+. | . | . | . | . | . | . | .
+. | . | . | . | B | W | . | .
+. | . | W | B | B | B | W | .
+. | . | W | W | B | W | . | .
+. | . | W | B | B | . | . | .
+. | . | . | B | B | W | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+Human played (2, 5)
+ XLA compilation successful for othello model
+ XLA compilation successful for othello model
+ XLA enabled for othello 8x8 model
+batch_time = 0.47765220000292175
+batch_time = 0.026405900018289685
+batch_time = 0.02738319998024963
+batch_time = 0.026691699982620776
+batch_time = 0.02802469997550361
+batch_time = 0.02614739999989979
+batch_time = 0.026253299991367385
+batch_time = 0.027925700007472187
+batch_time = 0.027749899978516623
+batch_time = 0.02773880001041107
+batch_time = 0.028159700013929978
+batch_time = 0.02626760001294315
+batch_time = 0.02734920001239516
+batch_time = 0.02862180001102388
+batch_time = 0.02771769999526441
+batch_time = 0.027167799999006093
+batch_time = 0.026497799990465865
+batch_time = 0.027789299987489358
+batch_time = 0.027638700004899874
+batch_time = 0.026898900017840788
+batch_time = 0.028315600007772446
+batch_time = 0.027672299998812377
+batch_time = 0.028592699993168935
+batch_time = 0.029529100022045895
+batch_time = 0.027336599974660203
+batch_time = 0.027154499985044822
+batch_time = 0.027695999975549057
+batch_time = 0.027294499974232167
+batch_time = 0.027015300001949072
+batch_time = 0.027946299989707768
+batch_time = 0.02782029999070801
+batch_time = 0.027091800002381206
+batch_time = 0.027832399995531887
+batch_time = 0.028952799999387935
+batch_time = 0.02750739999464713
+batch_time = 0.026805500005139038
+batch_time = 0.02717990000382997
+batch_time = 0.027310699981171638
+batch_time = 0.02761260000988841
+batch_time = 0.027156900003319606
+batch_time = 0.027844900003401563
+batch_time = 0.027424999978393316
+batch_time = 0.02792529997532256
+batch_time = 0.026449299999512732
+batch_time = 0.027854899992235005
+batch_time = 0.026998700021067634
+batch_time = 0.4794496000104118
+
+=== ROOT AFTER SEARCH FINISHED ===
+[root] move (0, 5) visits = 2945 wins   = 0
+[root] move (6, 2) visits = 6 wins   = 0
+[root] move (5, 2) visits = 9 wins   = 0
+[root] move (4, 5) visits = 11 wins   = 0
+[root] move (6, 4) visits = 5 wins   = 0
+[root] move (6, 3) visits = 10 wins   = 0
+[root] move (1, 3) visits = 8 wins   = 0
+[root] move (6, 5) visits = 6 wins   = 0
+==================================
+
+id(self) = 1997483128720
+id(root.state) = 1998001947536
+AI move computation took 13.860 seconds.
+(0, 5)
+
+Current board:
+. | . | . | . | . | W | . | .
+. | . | . | . | B | W | . | .
+. | . | W | B | B | B | W | .
+. | . | W | W | B | W | . | .
+. | . | W | B | B | . | . | .
+. | . | . | B | B | W | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+
+Current board:
+. | . | . | . | . | W | . | .
+. | . | . | . | W | W | . | .
+. | . | W | W | B | B | W | .
+. | . | W | W | B | W | . | .
+. | . | W | B | B | . | . | .
+. | . | . | B | B | W | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+AI played (0, 5)
+4 5
+
+Current board:
+. | . | . | . | . | W | . | .
+. | . | . | . | W | W | . | .
+. | . | W | W | B | B | W | .
+. | . | W | W | B | W | . | .
+. | . | W | B | B | B | . | .
+. | . | . | B | B | W | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+
+Current board:
+. | . | . | . | . | W | . | .
+. | . | . | . | W | W | . | .
+. | . | W | W | B | B | W | .
+. | . | W | W | B | B | . | .
+. | . | W | B | B | B | . | .
+. | . | . | B | B | W | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+Human played (4, 5)
+ XLA compilation successful for othello model
+ XLA compilation successful for othello model
+ XLA enabled for othello 8x8 model
+batch_time = 0.47533230000408366
+batch_time = 0.02678140002535656
+batch_time = 0.02639780001481995
+batch_time = 0.02584810002008453
+batch_time = 0.025001100002555177
+batch_time = 0.02667180000571534
+batch_time = 0.025497300026472658
+batch_time = 0.025699399993754923
+batch_time = 0.02478259999770671
+batch_time = 0.026659700000891462
+batch_time = 0.028580900019733235
+batch_time = 0.025080300023546442
+batch_time = 0.027880100009497255
+batch_time = 0.0263977000140585
+batch_time = 0.02688240000861697
+batch_time = 0.026111000013770536
+batch_time = 0.02710449998266995
+batch_time = 0.027071599994087592
+batch_time = 0.02753260001190938
+batch_time = 0.02676350000547245
+batch_time = 0.02608080001664348
+batch_time = 0.026469899981748313
+batch_time = 0.02619210002012551
+batch_time = 0.026267799985362217
+batch_time = 0.026799699990078807
+batch_time = 0.025533100008033216
+batch_time = 0.02586130000418052
+batch_time = 0.025506399979349226
+batch_time = 0.02689249999821186
+batch_time = 0.025785400008317083
+batch_time = 0.026690300001064315
+batch_time = 0.025701700011268258
+batch_time = 0.027334499987773597
+batch_time = 0.025890700024319813
+batch_time = 0.026985100004822016
+batch_time = 0.026549699978204444
+batch_time = 0.02756060002138838
+batch_time = 0.02639459999045357
+batch_time = 0.026215099991532043
+batch_time = 0.025930199975846335
+batch_time = 0.02704980000271462
+batch_time = 0.026085599994985387
+batch_time = 0.02672949997941032
+batch_time = 0.02781549998326227
+batch_time = 0.02805270001408644
+batch_time = 0.02920399999129586
+batch_time = 0.47748430000501685
+
+=== ROOT AFTER SEARCH FINISHED ===
+[root] move (6, 5) visits = 12 wins   = 0
+[root] move (6, 2) visits = 7 wins   = 0
+[root] move (3, 6) visits = 2943 wins   = 0
+[root] move (5, 2) visits = 8 wins   = 0
+[root] move (4, 6) visits = 11 wins   = 0
+[root] move (5, 6) visits = 3 wins   = 0
+[root] move (6, 3) visits = 7 wins   = 0
+[root] move (6, 4) visits = 9 wins   = 0
+==================================
+
+id(self) = 1997483128720
+id(root.state) = 1998001922832
+AI move computation took 14.013 seconds.
+(3, 6)
+
+Current board:
+. | . | . | . | . | W | . | .
+. | . | . | . | W | W | . | .
+. | . | W | W | B | B | W | .
+. | . | W | W | B | B | W | .
+. | . | W | B | B | B | . | .
+. | . | . | B | B | W | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+
+Current board:
+. | . | . | . | . | W | . | .
+. | . | . | . | W | W | . | .
+. | . | W | W | B | W | W | .
+. | . | W | W | W | W | W | .
+. | . | W | B | B | B | . | .
+. | . | . | B | B | W | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+AI played (3, 6)
+4 6
+
+Current board:
+. | . | . | . | . | W | . | .
+. | . | . | . | W | W | . | .
+. | . | W | W | B | W | W | .
+. | . | W | W | W | W | W | .
+. | . | W | B | B | B | B | .
+. | . | . | B | B | W | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+
+Current board:
+. | . | . | . | . | W | . | .
+. | . | . | . | W | W | . | .
+. | . | W | W | B | W | W | .
+. | . | W | W | W | B | W | .
+. | . | W | B | B | B | B | .
+. | . | . | B | B | W | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+Human played (4, 6)
+ XLA compilation successful for othello model
+ XLA compilation successful for othello model
+ XLA enabled for othello 8x8 model
+batch_time = 0.4776791000040248
+batch_time = 0.026837199984584004
+batch_time = 0.028565999993588775
+batch_time = 0.026339200005168095
+batch_time = 0.026015099982032552
+batch_time = 0.02675759998965077
+batch_time = 0.026206099981209263
+batch_time = 0.026271300012012944
+batch_time = 0.026170700002694502
+batch_time = 0.026081499992869794
+batch_time = 0.02724530000705272
+batch_time = 0.027120300015667453
+batch_time = 0.026287599990610033
+batch_time = 0.026294399984180927
+batch_time = 0.02788689997396432
+batch_time = 0.02724090000265278
+batch_time = 0.02688090002629906
+batch_time = 0.028861200000392273
+batch_time = 0.026256099983584136
+batch_time = 0.026835899974685162
+batch_time = 0.02615299998433329
+batch_time = 0.026643199991667643
+batch_time = 0.027959699975326657
+batch_time = 0.027122699975734577
+batch_time = 0.02786599998944439
+batch_time = 0.028233799996087328
+batch_time = 0.02723930001957342
+batch_time = 0.028557599987834692
+batch_time = 0.02568379999138415
+batch_time = 0.025903599977027625
+batch_time = 0.02620219998061657
+batch_time = 0.0265800999768544
+batch_time = 0.02607480000006035
+batch_time = 0.02827489998890087
+batch_time = 0.027380899991840124
+batch_time = 0.026036900002509356
+batch_time = 0.027506700018420815
+batch_time = 0.026057600014610216
+batch_time = 0.026638600014848635
+batch_time = 0.026977900008205324
+batch_time = 0.027528699982212856
+batch_time = 0.027235199988353997
+batch_time = 0.02657280000858009
+batch_time = 0.02700530001311563
+batch_time = 0.026060799980768934
+batch_time = 0.0261117999907583
+batch_time = 0.47625639999751
+
+=== ROOT AFTER SEARCH FINISHED ===
+[root] move (6, 2) visits = 8 wins   = 0
+[root] move (5, 2) visits = 3 wins   = 0
+[root] move (5, 6) visits = 6 wins   = 0
+[root] move (3, 7) visits = 2947 wins   = 0
+[root] move (6, 4) visits = 9 wins   = 0
+[root] move (6, 3) visits = 9 wins   = 0
+[root] move (6, 5) visits = 9 wins   = 0
+[root] move (4, 7) visits = 9 wins   = 0
+==================================
+
+id(self) = 1997483128720
+id(root.state) = 1998005159568
+AI move computation took 13.524 seconds.
+(3, 7)
+
+Current board:
+. | . | . | . | . | W | . | .
+. | . | . | . | W | W | . | .
+. | . | W | W | B | W | W | .
+. | . | W | W | W | B | W | W
+. | . | W | B | B | B | B | .
+. | . | . | B | B | W | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+
+Current board:
+. | . | . | . | . | W | . | .
+. | . | . | . | W | W | . | .
+. | . | W | W | B | W | W | .
+. | . | W | W | W | B | W | W
+. | . | W | B | B | B | W | .
+. | . | . | B | B | W | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+AI played (3, 7)
+4 7
+
+Current board:
+. | . | . | . | . | W | . | .
+. | . | . | . | W | W | . | .
+. | . | W | W | B | W | W | .
+. | . | W | W | W | B | W | W
+. | . | W | B | B | B | W | B
+. | . | . | B | B | W | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+
+Current board:
+. | . | . | . | . | W | . | .
+. | . | . | . | W | W | . | .
+. | . | W | W | B | W | W | .
+. | . | W | W | W | B | W | W
+. | . | W | B | B | B | B | B
+. | . | . | B | B | W | . | .
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+Human played (4, 7)
+ XLA compilation successful for othello model
+ XLA compilation successful for othello model
+ XLA enabled for othello 8x8 model
+batch_time = 0.49163159998715855
+batch_time = 0.026543499989202246
+batch_time = 0.025889300013659522
+batch_time = 0.026232700009131804
+batch_time = 0.025645999994594604
+batch_time = 0.026432699989527464
+batch_time = 0.026415200001792982
+batch_time = 0.0256465999991633
+batch_time = 0.02574559999629855
+batch_time = 0.025716800009831786
+batch_time = 0.02608219999819994
+batch_time = 0.026348400017013773
+batch_time = 0.027885799994692206
+batch_time = 0.02459889999590814
+batch_time = 0.02622599998721853
+batch_time = 0.025774300011107698
+batch_time = 0.02636789999087341
+batch_time = 0.02644800001871772
+batch_time = 0.027104900014819577
+batch_time = 0.02582140002050437
+batch_time = 0.02606020000530407
+batch_time = 0.026254500000504777
+batch_time = 0.026793900004122406
+batch_time = 0.026429799996549264
+batch_time = 0.026843100000405684
+batch_time = 0.025733099988428876
+batch_time = 0.026460699999006465
+batch_time = 0.026633000001311302
+batch_time = 0.027051899989601225
+batch_time = 0.02714009999181144
+batch_time = 0.026130100013688207
+batch_time = 0.025454900023760274
+batch_time = 0.0272629999963101
+batch_time = 0.027934600017033517
+batch_time = 0.029558600013842806
+batch_time = 0.03023810000740923
+batch_time = 0.02998040002421476
+batch_time = 0.03067519998876378
+batch_time = 0.029620599991176277
+batch_time = 0.02702010000939481
+batch_time = 0.027534399996511638
+batch_time = 0.027344000001903623
+batch_time = 0.026412000006530434
+batch_time = 0.026926999998977408
+batch_time = 0.028394299995852634
+batch_time = 0.02725730001111515
+batch_time = 0.4780402000178583
+
+=== ROOT AFTER SEARCH FINISHED ===
+[root] move (5, 2) visits = 11 wins   = 0
+[root] move (5, 6) visits = 1022 wins   = 0
+[root] move (6, 5) visits = 10 wins   = 0
+[root] move (5, 7) visits = 1928 wins   = 0
+[root] move (6, 4) visits = 13 wins   = 0
+[root] move (6, 2) visits = 8 wins   = 0
+[root] move (6, 3) visits = 8 wins   = 0
+==================================
+
+id(self) = 1997483128720
+id(root.state) = 1997980298896
+AI move computation took 13.185 seconds.
+(5, 7)
+
+Current board:
+. | . | . | . | . | W | . | .
+. | . | . | . | W | W | . | .
+. | . | W | W | B | W | W | .
+. | . | W | W | W | B | W | W
+. | . | W | B | B | B | B | B
+. | . | . | B | B | W | . | W
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+
+Current board:
+. | . | . | . | . | W | . | .
+. | . | . | . | W | W | . | .
+. | . | W | W | B | W | W | .
+. | . | W | W | W | B | W | W
+. | . | W | B | B | B | B | W
+. | . | . | B | B | W | . | W
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+AI played (5, 7)
+1 2
+
+Current board:
+. | . | . | . | . | W | . | .
+. | . | B | . | W | W | . | .
+. | . | W | W | B | W | W | .
+. | . | W | W | W | B | W | W
+. | . | W | B | B | B | B | W
+. | . | . | B | B | W | . | W
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+
+Current board:
+. | . | . | . | . | W | . | .
+. | . | B | . | W | W | . | .
+. | . | W | B | B | W | W | .
+. | . | W | W | B | B | W | W
+. | . | W | B | B | B | B | W
+. | . | . | B | B | W | . | W
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+Human played (1, 2)
+ XLA compilation successful for othello model
+ XLA compilation successful for othello model
+ XLA enabled for othello 8x8 model
+batch_time = 0.4795942999771796
+batch_time = 0.02662020002026111
+batch_time = 0.02702759997919202
+batch_time = 0.027612999983830377
+batch_time = 0.027506400016136467
+batch_time = 0.027059600019128993
+batch_time = 0.026697900000726804
+batch_time = 0.027116899989778176
+batch_time = 0.027149900008225814
+batch_time = 0.027711100003216416
+batch_time = 0.026862500002607703
+batch_time = 0.02754289997392334
+batch_time = 0.026962400006596
+batch_time = 0.026783199980854988
+batch_time = 0.027599599998211488
+batch_time = 0.026103599986527115
+batch_time = 0.026660300005460158
+batch_time = 0.025476799986790866
+batch_time = 0.026986400014720857
+batch_time = 0.02636540000094101
+batch_time = 0.03000970001448877
+batch_time = 0.028829699993366376
+batch_time = 0.027536500012502074
+batch_time = 0.026756699982797727
+batch_time = 0.026196599996183068
+batch_time = 0.026888899999903515
+batch_time = 0.026543800020590425
+batch_time = 0.02701540000271052
+batch_time = 0.02643330002319999
+batch_time = 0.027654900011839345
+batch_time = 0.02582859998801723
+batch_time = 0.027470800006994978
+batch_time = 0.0262024000112433
+batch_time = 0.025799600000027567
+batch_time = 0.02701260001049377
+batch_time = 0.027173400012543425
+batch_time = 0.02790580000146292
+batch_time = 0.027740899997297674
+batch_time = 0.025924100016709417
+batch_time = 0.0269652999995742
+batch_time = 0.026337399991462007
+batch_time = 0.027105599991045892
+batch_time = 0.027916100021684542
+batch_time = 0.02657829999225214
+batch_time = 0.028577499993843958
+batch_time = 0.026652200001990423
+batch_time = 0.49093580001499504
+
+=== ROOT AFTER SEARCH FINISHED ===
+[root] move (6, 4) visits = 6 wins   = 0
+[root] move (6, 2) visits = 5 wins   = 0
+[root] move (6, 3) visits = 8 wins   = 0
+[root] move (5, 2) visits = 6 wins   = 0
+[root] move (6, 5) visits = 13 wins   = 0
+[root] move (0, 2) visits = 8 wins   = 0
+[root] move (1, 3) visits = 2624 wins   = 0
+[root] move (5, 6) visits = 330 wins   = 0
+==================================
+
+id(self) = 1997483128720
+id(root.state) = 1997734863184
+AI move computation took 12.480 seconds.
+(1, 3)
+
+Current board:
+. | . | . | . | . | W | . | .
+. | . | B | W | W | W | . | .
+. | . | W | B | B | W | W | .
+. | . | W | W | B | B | W | W
+. | . | W | B | B | B | B | W
+. | . | . | B | B | W | . | W
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+
+Current board:
+. | . | . | . | . | W | . | .
+. | . | B | W | W | W | . | .
+. | . | W | W | W | W | W | .
+. | . | W | W | B | W | W | W
+. | . | W | B | B | B | W | W
+. | . | . | B | B | W | . | W
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+AI played (1, 3)
+2 7
+
+Current board:
+. | . | . | . | . | W | . | .
+. | . | B | W | W | W | . | .
+. | . | W | W | W | W | W | B
+. | . | W | W | B | W | W | W
+. | . | W | B | B | B | W | W
+. | . | . | B | B | W | . | W
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+
+Current board:
+. | . | . | . | . | W | . | .
+. | . | B | W | W | W | . | .
+. | . | W | W | W | W | W | B
+. | . | W | W | B | W | B | W
+. | . | W | B | B | B | W | W
+. | . | . | B | B | W | . | W
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+Human played (2, 7)
+ XLA compilation successful for othello model
+ XLA compilation successful for othello model
+ XLA enabled for othello 8x8 model
+batch_time = 0.47953519999282435
+batch_time = 0.027998700010357425
+batch_time = 0.030114699999103323
+batch_time = 0.02895639999769628
+batch_time = 0.028789900010451674
+batch_time = 0.027551100007258356
+batch_time = 0.028315600007772446
+batch_time = 0.02860980000696145
+batch_time = 0.027733599999919534
+batch_time = 0.02820519998203963
+batch_time = 0.0279325999727007
+batch_time = 0.027943699999013916
+batch_time = 0.028047300002072006
+batch_time = 0.028720299975248054
+batch_time = 0.027942599990637973
+batch_time = 0.02808660001028329
+batch_time = 0.02917149997665547
+batch_time = 0.02912689998629503
+batch_time = 0.02737290001823567
+batch_time = 0.028279100020881742
+batch_time = 0.027282900002319366
+batch_time = 0.029983999993419275
+batch_time = 0.030809499992756173
+batch_time = 0.031830300024012104
+batch_time = 0.02879029998439364
+batch_time = 0.02976989999297075
+batch_time = 0.027088899980299175
+batch_time = 0.028710300015518442
+batch_time = 0.028322700003627688
+batch_time = 0.029444899992085993
+batch_time = 0.028599699988262728
+batch_time = 0.029331900004763156
+batch_time = 0.02874459998565726
+batch_time = 0.029366200004005805
+batch_time = 0.028305099986027926
+batch_time = 0.028265299974009395
+batch_time = 0.028482899972004816
+batch_time = 0.028561299986904487
+batch_time = 0.02930179997929372
+batch_time = 0.02743950000149198
+batch_time = 0.028327199979685247
+batch_time = 0.028641199984122068
+batch_time = 0.02879069998743944
+batch_time = 0.02846899998257868
+batch_time = 0.0280542999971658
+batch_time = 0.028600399993592873
+batch_time = 0.48501830000896007
+
+=== ROOT AFTER SEARCH FINISHED ===
+[root] move (1, 7) visits = 2689 wins   = 0
+[root] move (6, 4) visits = 8 wins   = 0
+[root] move (0, 1) visits = 5 wins   = 0
+[root] move (5, 6) visits = 262 wins   = 0
+[root] move (6, 3) visits = 5 wins   = 0
+[root] move (5, 2) visits = 7 wins   = 0
+[root] move (1, 1) visits = 4 wins   = 0
+[root] move (6, 2) visits = 5 wins   = 0
+[root] move (6, 5) visits = 7 wins   = 0
+[root] move (0, 2) visits = 8 wins   = 0
+==================================
+
+id(self) = 1997483128720
+id(root.state) = 1997899732240
+AI move computation took 12.227 seconds.
+(1, 7)
+
+Current board:
+. | . | . | . | . | W | . | .
+. | . | B | W | W | W | . | W
+. | . | W | W | W | W | W | B
+. | . | W | W | B | W | B | W
+. | . | W | B | B | B | W | W
+. | . | . | B | B | W | . | W
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+
+Current board:
+. | . | . | . | . | W | . | .
+. | . | B | W | W | W | . | W
+. | . | W | W | W | W | W | W
+. | . | W | W | B | W | B | W
+. | . | W | B | B | B | W | W
+. | . | . | B | B | W | . | W
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+AI played (1, 7)
+5 6
+
+Current board:
+. | . | . | . | . | W | . | .
+. | . | B | W | W | W | . | W
+. | . | W | W | W | W | W | W
+. | . | W | W | B | W | B | W
+. | . | W | B | B | B | W | W
+. | . | . | B | B | W | B | W
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+
+Current board:
+. | . | . | . | . | W | . | .
+. | . | B | W | W | W | . | W
+. | . | W | W | W | W | W | W
+. | . | W | W | B | W | B | W
+. | . | W | B | B | B | B | W
+. | . | . | B | B | B | B | W
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+Human played (5, 6)
+ XLA compilation successful for othello model
+ XLA compilation successful for othello model
+ XLA enabled for othello 8x8 model
+batch_time = 0.47484199999598786
+batch_time = 0.027535100001841784
+batch_time = 0.027619700005743653
+batch_time = 0.027874299994437024
+batch_time = 0.026696000015363097
+batch_time = 0.026986500015482306
+batch_time = 0.026591199974063784
+batch_time = 0.02667930000461638
+batch_time = 0.027364300010958686
+batch_time = 0.028114100015955046
+batch_time = 0.026318299991544336
+batch_time = 0.02689419998205267
+batch_time = 0.02615789999254048
+batch_time = 0.02665270000579767
+batch_time = 0.026916000002529472
+batch_time = 0.0262732999981381
+batch_time = 0.027657499973429367
+batch_time = 0.026380299997981638
+batch_time = 0.026536300021689385
+batch_time = 0.02672069999971427
+batch_time = 0.026395300024887547
+batch_time = 0.027297999971779063
+batch_time = 0.027175199997145683
+batch_time = 0.02787960000569001
+batch_time = 0.02676060001249425
+batch_time = 0.02632809997885488
+batch_time = 0.02696369998739101
+batch_time = 0.026947699981974438
+batch_time = 0.026090700004715472
+batch_time = 0.028164999996079132
+batch_time = 0.027138100005686283
+batch_time = 0.02582300000358373
+batch_time = 0.02640830000746064
+batch_time = 0.02639499999349937
+batch_time = 0.027465699997264892
+batch_time = 0.02673710000817664
+batch_time = 0.026580799982184544
+batch_time = 0.02760839997790754
+batch_time = 0.027518799994140863
+batch_time = 0.027142100007040426
+batch_time = 0.026776300015626475
+batch_time = 0.02677699999185279
+batch_time = 0.026644400000805035
+batch_time = 0.02693990000989288
+batch_time = 0.026620899996487424
+batch_time = 0.026644300000043586
+batch_time = 0.48261880001518875
+
+=== ROOT AFTER SEARCH FINISHED ===
+[root] move (0, 2) visits = 2939 wins   = 0
+[root] move (6, 2) visits = 7 wins   = 0
+[root] move (6, 4) visits = 5 wins   = 0
+[root] move (5, 2) visits = 8 wins   = 0
+[root] move (6, 6) visits = 5 wins   = 0
+[root] move (6, 5) visits = 6 wins   = 0
+[root] move (0, 1) visits = 8 wins   = 0
+[root] move (6, 7) visits = 4 wins   = 0
+[root] move (6, 3) visits = 9 wins   = 0
+[root] move (1, 1) visits = 9 wins   = 0
+==================================
+
+id(self) = 1997483128720
+id(root.state) = 1997897097552
+AI move computation took 12.135 seconds.
+(0, 2)
+
+Current board:
+. | . | W | . | . | W | . | .
+. | . | B | W | W | W | . | W
+. | . | W | W | W | W | W | W
+. | . | W | W | B | W | B | W
+. | . | W | B | B | B | B | W
+. | . | . | B | B | B | B | W
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+
+Current board:
+. | . | W | . | . | W | . | .
+. | . | W | W | W | W | . | W
+. | . | W | W | W | W | W | W
+. | . | W | W | B | W | B | W
+. | . | W | B | B | B | B | W
+. | . | . | B | B | B | B | W
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+AI played (0, 2)
+0 3
+
+Current board:
+. | . | W | B | . | W | . | .
+. | . | W | W | W | W | . | W
+. | . | W | W | W | W | W | W
+. | . | W | W | B | W | B | W
+. | . | W | B | B | B | B | W
+. | . | . | B | B | B | B | W
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+
+Current board:
+. | . | W | B | . | W | . | .
+. | . | W | B | B | W | . | W
+. | . | W | B | W | B | W | W
+. | . | W | B | B | W | B | W
+. | . | W | B | B | B | B | W
+. | . | . | B | B | B | B | W
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+Human played (0, 3)
+ XLA compilation successful for othello model
+ XLA compilation successful for othello model
+ XLA enabled for othello 8x8 model
+batch_time = 0.4766199999721721
+batch_time = 0.026060900010634214
+batch_time = 0.02657420001924038
+batch_time = 0.02755020000040531
+batch_time = 0.027570400008698925
+batch_time = 0.02599749999353662
+batch_time = 0.02627760000177659
+batch_time = 0.026872799993725494
+batch_time = 0.028407200006768107
+batch_time = 0.027057799976319075
+batch_time = 0.02713719999883324
+batch_time = 0.027827100013382733
+batch_time = 0.027143600018462166
+batch_time = 0.026867900014622137
+batch_time = 0.026494899997487664
+batch_time = 0.026367799990111962
+batch_time = 0.027594000013777986
+batch_time = 0.026704999996582046
+batch_time = 0.026532000018050894
+batch_time = 0.026758200023323298
+batch_time = 0.025945000001229346
+batch_time = 0.026287900021998212
+batch_time = 0.02860079999663867
+batch_time = 0.025995100004365668
+batch_time = 0.0263357000076212
+batch_time = 0.02596970001468435
+batch_time = 0.026133199979085475
+batch_time = 0.02652520002448
+batch_time = 0.02702019998105243
+batch_time = 0.025400099984835833
+batch_time = 0.026029300002846867
+batch_time = 0.025337800005218014
+batch_time = 0.026721899979747832
+batch_time = 0.028078800009097904
+batch_time = 0.0257825999869965
+batch_time = 0.02650439998251386
+batch_time = 0.02613869999186136
+batch_time = 0.025986199994804338
+batch_time = 0.027053300000261515
+batch_time = 0.026397199981147423
+batch_time = 0.02599179997923784
+batch_time = 0.026458000007551163
+batch_time = 0.025776599999517202
+batch_time = 0.027079699997557327
+batch_time = 0.02539309998974204
+batch_time = 0.02612789999693632
+batch_time = 0.4840410999895539
+
+=== ROOT AFTER SEARCH FINISHED ===
+[root] move (6, 5) visits = 8 wins   = 0
+[root] move (6, 7) visits = 711 wins   = 0
+[root] move (6, 2) visits = 7 wins   = 0
+[root] move (6, 3) visits = 702 wins   = 0
+[root] move (5, 2) visits = 8 wins   = 0
+[root] move (0, 4) visits = 1543 wins   = 0
+[root] move (6, 6) visits = 12 wins   = 0
+[root] move (6, 4) visits = 9 wins   = 0
+==================================
+
+id(self) = 1997483128720
+id(root.state) = 1998001844112
+AI move computation took 11.215 seconds.
+(0, 4)
+
+Current board:
+. | . | W | B | W | W | . | .
+. | . | W | B | B | W | . | W
+. | . | W | B | W | B | W | W
+. | . | W | B | B | W | B | W
+. | . | W | B | B | B | B | W
+. | . | . | B | B | B | B | W
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+
+Current board:
+. | . | W | W | W | W | . | .
+. | . | W | W | W | W | . | W
+. | . | W | B | W | B | W | W
+. | . | W | B | B | W | B | W
+. | . | W | B | B | B | B | W
+. | . | . | B | B | B | B | W
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+AI played (0, 4)
+1 6
+
+Current board:
+. | . | W | W | W | W | . | .
+. | . | W | W | W | W | B | W
+. | . | W | B | W | B | W | W
+. | . | W | B | B | W | B | W
+. | . | W | B | B | B | B | W
+. | . | . | B | B | B | B | W
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+
+Current board:
+. | . | W | W | W | W | . | .
+. | . | W | W | W | W | B | W
+. | . | W | B | W | B | B | W
+. | . | W | B | B | W | B | W
+. | . | W | B | B | B | B | W
+. | . | . | B | B | B | B | W
+. | . | . | . | . | . | . | .
+. | . | . | . | . | . | . | .
+Human played (1, 6)
+ XLA compilation successful for othello model
+ XLA compilation successful for othello model
+ XLA enabled for othello 8x8 model
+batch_time = 0.48230859998147935
+batch_time = 0.027642000000923872
+batch_time = 0.027953800017712638
+batch_time = 0.029392500000540167
+batch_time = 0.028708099998766556
+batch_time = 0.028515399986645207
+batch_time = 0.027008799981558695
+batch_time = 0.026459099986823276
+batch_time = 0.026600399985909462
+batch_time = 0.026826800021808594
+batch_time = 0.02618129999609664
+batch_time = 0.028207099996507168
+batch_time = 0.028354000009130687
+batch_time = 0.026396600005682558
+batch_time = 0.0272601000033319
+batch_time = 0.027042700006859377
+batch_time = 0.02706620001117699
+batch_time = 0.02691029998823069
+batch_time = 0.02767059998586774
+batch_time = 0.026917500013951212
+batch_time = 0.026006100000813603
+batch_time = 0.027201699995202944
+batch_time = 0.027755999995861202
+batch_time = 0.027676800003973767
+batch_time = 0.02724679998937063
+batch_time = 0.026665200013667345
+batch_time = 0.02651470000273548
+batch_time = 0.028352299996186048
+batch_time = 0.025881399982608855
+batch_time = 0.026690500002587214
+batch_time = 0.02710429998114705
+batch_time = 0.026063299999805167
+batch_time = 0.02687609998974949
+batch_time = 0.026989900012267753
+batch_time = 0.028464100003475323
+batch_time = 0.028033099981257692
+batch_time = 0.0278245999943465
+batch_time = 0.026559499994618818
+batch_time = 0.027793900022516027
+batch_time = 0.02710449998266995
+batch_time = 0.028813099983381107
+batch_time = 0.029307299992069602
+batch_time = 0.030471800011582673
+batch_time = 0.029782600002363324
+batch_time = 0.02665990000241436
+batch_time = 0.02864090001094155
+batch_time = 0.4967596000060439
+
+=== ROOT AFTER SEARCH FINISHED ===
+[root] move (6, 4) visits = 8 wins   = 0
+[root] move (6, 2) visits = 15 wins   = 0
+[root] move (5, 2) visits = 10 wins   = 0
+[root] move (6, 7) visits = 1215 wins   = 0
+[root] move (6, 6) visits = 8 wins   = 0
+[root] move (6, 5) visits = 12 wins   = 0
+[root] move (6, 3) visits = 1732 wins   = 0
+==================================
+
+id(self) = 1997483128720
+id(root.state) = 1997843928336
+AI move computation took 11.726 seconds.
+(6, 3)
+
+Current board:
+. | . | W | W | W | W | . | .
+. | . | W | W | W | W | B | W
+. | . | W | B | W | B | B | W
+. | . | W | B | B | W | B | W
+. | . | W | B | B | B | B | W
+. | . | . | B | B | B | B | W
+. | . | . | W | . | . | . | .
+. | . | . | . | . | . | . | .
+
+Current board:
+. | . | W | W | W | W | . | .
+. | . | W | W | W | W | B | W
+. | . | W | W | W | B | B | W
+. | . | W | W | B | W | W | W
+. | . | W | W | B | W | B | W
+. | . | . | W | W | B | B | W
+. | . | . | W | . | . | . | .
+. | . | . | . | . | . | . | .
+AI played (6, 3)
+6 4
+
+Current board:
+. | . | W | W | W | W | . | .
+. | . | W | W | W | W | B | W
+. | . | W | W | W | B | B | W
+. | . | W | W | B | W | W | W
+. | . | W | W | B | W | B | W
+. | . | . | W | W | B | B | W
+. | . | . | W | B | . | . | .
+. | . | . | . | . | . | . | .
+
+Current board:
+. | . | W | W | W | W | . | .
+. | . | W | W | W | W | B | W
+. | . | W | W | W | B | B | W
+. | . | W | W | B | W | W | W
+. | . | W | W | B | W | B | W
+. | . | . | W | B | B | B | W
+. | . | . | W | B | . | . | .
+. | . | . | . | . | . | . | .
+Human played (6, 4)
+ XLA compilation successful for othello model
+ XLA compilation successful for othello model
+ XLA enabled for othello 8x8 model
+batch_time = 0.4821562999859452
+batch_time = 0.027878299995791167
+batch_time = 0.029147299996111542
+batch_time = 0.02869289999944158
+batch_time = 0.028523500019218773
+batch_time = 0.02804539998760447
+batch_time = 0.027997500001220033
+batch_time = 0.028432999999495223
+batch_time = 0.028041599987773225
+batch_time = 0.0278245999943465
+batch_time = 0.028281400009291247
+batch_time = 0.027778199990279973
+batch_time = 0.027955800003837794
+batch_time = 0.028167599986772984
+batch_time = 0.027487899991683662
+batch_time = 0.027587899996433407
+batch_time = 0.027590900019276887
+batch_time = 0.028629899985389784
+batch_time = 0.027737900003558025
+batch_time = 0.02754300000378862
+batch_time = 0.028176599997095764
+batch_time = 0.028607099986402318
+batch_time = 0.02752370000234805
+batch_time = 0.02812839997932315
+batch_time = 0.027379400009522215
+batch_time = 0.027533900021808222
+batch_time = 0.028152399987448007
+batch_time = 0.027721399994334206
+batch_time = 0.028422199975466356
+batch_time = 0.02848809998249635
+batch_time = 0.027918800013139844
+batch_time = 0.028511700016679242
+batch_time = 0.027315600018482655
+batch_time = 0.028253800002858043
+batch_time = 0.028360299998894334
+batch_time = 0.027830900013213977
+batch_time = 0.02789689999190159
+batch_time = 0.027900999994017184
+batch_time = 0.02873550000367686
+batch_time = 0.027625200018519536
+batch_time = 0.028228200011653826
+batch_time = 0.027900999994017184
+batch_time = 0.02805249998345971
+batch_time = 0.02755320002324879
+batch_time = 0.027973699994618073
+batch_time = 0.028795899997930974
+batch_time = 0.48875119999866
+
+=== ROOT AFTER SEARCH FINISHED ===
+[root] move (0, 7) visits = 73 wins   = 0
+[root] move (6, 5) visits = 10 wins   = 0
+[root] move (6, 7) visits = 2368 wins   = 0
+[root] move (7, 4) visits = 5 wins   = 0
+[root] move (7, 3) visits = 6 wins   = 0
+[root] move (0, 6) visits = 7 wins   = 0
+[root] move (7, 5) visits = 521 wins   = 0
+[root] move (6, 6) visits = 10 wins   = 0
+==================================
+
+id(self) = 1997483128720
+id(root.state) = 1998001564880
+AI move computation took 11.344 seconds.
+(6, 7)
+
+Current board:
+. | . | W | W | W | W | . | .
+. | . | W | W | W | W | B | W
+. | . | W | W | W | B | B | W
+. | . | W | W | B | W | W | W
+. | . | W | W | B | W | B | W
+. | . | . | W | B | B | B | W
+. | . | . | W | B | . | . | W
+. | . | . | . | . | . | . | .
+
+Current board:
+. | . | W | W | W | W | . | .
+. | . | W | W | W | W | B | W
+. | . | W | W | W | B | B | W
+. | . | W | W | B | W | W | W
+. | . | W | W | B | W | B | W
+. | . | . | W | B | B | W | W
+. | . | . | W | B | . | . | W
+. | . | . | . | . | . | . | .
+AI played (6, 7)
+4 1
+
+Current board:
+. | . | W | W | W | W | . | .
+. | . | W | W | W | W | B | W
+. | . | W | W | W | B | B | W
+. | . | W | W | B | W | W | W
+. | B | W | W | B | W | B | W
+. | . | . | W | B | B | W | W
+. | . | . | W | B | . | . | W
+. | . | . | . | . | . | . | .
+
+Current board:
+. | . | W | W | W | W | . | .
+. | . | W | W | W | W | B | W
+. | . | W | W | W | B | B | W
+. | . | W | W | B | W | W | W
+. | B | B | B | B | W | B | W
+. | . | . | W | B | B | W | W
+. | . | . | W | B | . | . | W
+. | . | . | . | . | . | . | .
+Human played (4, 1)
+ XLA compilation successful for othello model
+ XLA compilation successful for othello model
+ XLA enabled for othello 8x8 model
+batch_time = 0.5106661999889184
+batch_time = 0.02843790000770241
+batch_time = 0.02993449999485165
+batch_time = 0.02768239998840727
+batch_time = 0.02900410001166165
+batch_time = 0.027060399996116757
+batch_time = 0.027663799992296845
+batch_time = 0.026243100001011044
+batch_time = 0.025442500016652048
+batch_time = 0.026730199984740466
+batch_time = 0.026353599998401478
+batch_time = 0.02640239999163896
+batch_time = 0.025991200003772974
+batch_time = 0.025599999993573874
+batch_time = 0.026037999981781468
+batch_time = 0.025737799995113164
+batch_time = 0.02592240000376478
+batch_time = 0.025850700010778382
+batch_time = 0.025578700006008148
+batch_time = 0.025322500005131587
+batch_time = 0.025747800013050437
+batch_time = 0.02545690000988543
+batch_time = 0.027641699998639524
+batch_time = 0.027249000006122515
+batch_time = 0.026817400008440018
+batch_time = 0.027370499999960884
+batch_time = 0.026520199986407533
+batch_time = 0.02647299997624941
+batch_time = 0.02726160001475364
+batch_time = 0.027318599983118474
+batch_time = 0.02668239999911748
+batch_time = 0.027893199992831796
+batch_time = 0.027116599987493828
+batch_time = 0.026365600002463907
+batch_time = 0.027816800022264943
+batch_time = 0.026994200015906245
+batch_time = 0.02667200000723824
+batch_time = 0.026137500011827797
+batch_time = 0.027136200020322576
+batch_time = 0.026724399998784065
+batch_time = 0.02541829997790046
+batch_time = 0.024687299999641255
+batch_time = 0.02595469998777844
+batch_time = 0.026211999997030944
+batch_time = 0.026390699989860877
+batch_time = 0.025272400001995265
+batch_time = 0.49583699999493547
+
+=== ROOT AFTER SEARCH FINISHED ===
+[root] move (6, 6) visits = 6 wins   = 0
+[root] move (4, 0) visits = 5 wins   = 0
+[root] move (5, 1) visits = 775 wins   = 0
+[root] move (7, 5) visits = 637 wins   = 0
+[root] move (3, 1) visits = 712 wins   = 0
+[root] move (5, 0) visits = 4 wins   = 0
+[root] move (5, 2) visits = 836 wins   = 0
+[root] move (7, 3) visits = 5 wins   = 0
+[root] move (0, 6) visits = 6 wins   = 0
+[root] move (6, 5) visits = 8 wins   = 0
+[root] move (7, 4) visits = 6 wins   = 0
+==================================
+
+id(self) = 1997483128720
+id(root.state) = 1997980492432
+AI move computation took 10.285 seconds.
+(5, 2)
+
+Current board:
+. | . | W | W | W | W | . | .
+. | . | W | W | W | W | B | W
+. | . | W | W | W | B | B | W
+. | . | W | W | B | W | W | W
+. | B | B | B | B | W | B | W
+. | . | W | W | B | B | W | W
+. | . | . | W | B | . | . | W
+. | . | . | . | . | . | . | .
+
+Current board:
+. | . | W | W | W | W | . | .
+. | . | W | W | W | W | B | W
+. | . | W | W | W | B | B | W
+. | . | W | W | B | W | W | W
+. | B | W | B | B | W | B | W
+. | . | W | W | B | B | W | W
+. | . | . | W | B | . | . | W
+. | . | . | . | . | . | . | .
+AI played (5, 2)
+2 1
+
+Current board:
+. | . | W | W | W | W | . | .
+. | . | W | W | W | W | B | W
+. | B | W | W | W | B | B | W
+. | . | W | W | B | W | W | W
+. | B | W | B | B | W | B | W
+. | . | W | W | B | B | W | W
+. | . | . | W | B | . | . | W
+. | . | . | . | . | . | . | .
+
+Current board:
+. | . | W | W | W | W | . | .
+. | . | W | W | W | W | B | W
+. | B | B | B | B | B | B | W
+. | . | B | W | B | W | W | W
+. | B | W | B | B | W | B | W
+. | . | W | W | B | B | W | W
+. | . | . | W | B | . | . | W
+. | . | . | . | . | . | . | .
+Human played (2, 1)
+ XLA compilation successful for othello model
+ XLA compilation successful for othello model
+ XLA enabled for othello 8x8 model
+batch_time = 0.48196249999455176
+batch_time = 0.028443100018193945
+batch_time = 0.030204300011973828
+batch_time = 0.02976119998493232
+batch_time = 0.02925299998605624
+batch_time = 0.028143899980932474
+batch_time = 0.027358999999705702
+batch_time = 0.02808410002035089
+batch_time = 0.029285900003742427
+batch_time = 0.02851480001118034
+batch_time = 0.028688599995803088
+batch_time = 0.02806769998278469
+batch_time = 0.028785100003005937
+batch_time = 0.027851599996211007
+batch_time = 0.028020800004014745
+batch_time = 0.027847699995618314
+batch_time = 0.027949399984208867
+batch_time = 0.02756110002519563
+batch_time = 0.02783060001092963
+batch_time = 0.02840369998011738
+batch_time = 0.028513900004327297
+batch_time = 0.027835599990794435
+batch_time = 0.028952900000149384
+batch_time = 0.028407200006768107
+batch_time = 0.02842029999010265
+batch_time = 0.028163100010715425
+batch_time = 0.026994299987563863
+batch_time = 0.027786799997556955
+batch_time = 0.02800970000680536
+batch_time = 0.028431700018700212
+batch_time = 0.028856500022811815
+batch_time = 0.029150899994419888
+batch_time = 0.02797570000984706
+batch_time = 0.0276659999799449
+batch_time = 0.02777409998816438
+batch_time = 0.02788389998022467
+batch_time = 0.02822770000784658
+batch_time = 0.02855789999011904
+batch_time = 0.027584099996602163
+batch_time = 0.028249199996935204
+batch_time = 0.027465300023322925
+batch_time = 0.027432900009443983
+batch_time = 0.027496199996676296
+batch_time = 0.02711910000653006
+batch_time = 0.028259700018679723
+batch_time = 0.027891999983694404
+batch_time = 0.4911742999975104
+
+=== ROOT AFTER SEARCH FINISHED ===
+[root] move (6, 5) visits = 6 wins   = 0
+[root] move (3, 0) visits = 1984 wins   = 0
+[root] move (1, 1) visits = 7 wins   = 0
+[root] move (0, 6) visits = 4 wins   = 0
+[root] move (6, 6) visits = 2 wins   = 0
+[root] move (7, 3) visits = 3 wins   = 0
+[root] move (7, 4) visits = 3 wins   = 0
+[root] move (4, 0) visits = 201 wins   = 0
+[root] move (3, 1) visits = 580 wins   = 0
+[root] move (0, 7) visits = 1 wins   = 0
+[root] move (5, 0) visits = 5 wins   = 0
+[root] move (2, 0) visits = 5 wins   = 0
+[root] move (7, 5) visits = 199 wins   = 0
+==================================
+
+id(self) = 1997483128720
+id(root.state) = 1999063592720
+AI move computation took 10.791 seconds.
+(3, 0)
+
+Current board:
+. | . | W | W | W | W | . | .
+. | . | W | W | W | W | B | W
+. | B | B | B | B | B | B | W
+W | . | B | W | B | W | W | W
+. | B | W | B | B | W | B | W
+. | . | W | W | B | B | W | W
+. | . | . | W | B | . | . | W
+. | . | . | . | . | . | . | .
+
+Current board:
+. | . | W | W | W | W | . | .
+. | . | W | W | W | W | B | W
+. | W | B | B | B | B | B | W
+W | . | B | W | B | W | W | W
+. | W | W | B | B | W | B | W
+. | . | W | W | B | B | W | W
+. | . | . | W | B | . | . | W
+. | . | . | . | . | . | . | .
+AI played (3, 0)
+2 0
+
+Current board:
+. | . | W | W | W | W | . | .
+. | . | W | W | W | W | B | W
+B | W | B | B | B | B | B | W
+W | . | B | W | B | W | W | W
+. | W | W | B | B | W | B | W
+. | . | W | W | B | B | W | W
+. | . | . | W | B | . | . | W
+. | . | . | . | . | . | . | .
+
+Current board:
+. | . | W | W | W | W | . | .
+. | . | W | W | W | W | B | W
+B | B | B | B | B | B | B | W
+W | . | B | W | B | W | W | W
+. | W | W | B | B | W | B | W
+. | . | W | W | B | B | W | W
+. | . | . | W | B | . | . | W
+. | . | . | . | . | . | . | .
+Human played (2, 0)
+ XLA compilation successful for othello model
+ XLA compilation successful for othello model
+ XLA enabled for othello 8x8 model
+batch_time = 0.48002610000548884
+batch_time = 0.02712809998774901
+batch_time = 0.02858899999409914
+batch_time = 0.027232199994614348
+batch_time = 0.027683299995260313
+batch_time = 0.02587749998201616
+batch_time = 0.027259900001809
+batch_time = 0.02668670000275597
+batch_time = 0.02747650002129376
+batch_time = 0.027298000000882894
+batch_time = 0.02704820001963526
+batch_time = 0.026443200011271983
+batch_time = 0.026723299990408123
+batch_time = 0.025677199999336153
+batch_time = 0.026013499998953193
+batch_time = 0.02518419999978505
+batch_time = 0.02618439999059774
+batch_time = 0.02608529999270104
+batch_time = 0.027299300010781735
+batch_time = 0.029158699995605275
+batch_time = 0.027906300005270168
+batch_time = 0.02718309999909252
+batch_time = 0.02847799999290146
+batch_time = 0.026155900006415322
+batch_time = 0.027033899998059496
+batch_time = 0.02650470001390204
+batch_time = 0.027689400012604892
+batch_time = 0.027093800017610192
+batch_time = 0.025590999983251095
+batch_time = 0.026238199992803857
+batch_time = 0.02613569999812171
+batch_time = 0.025039800006197765
+batch_time = 0.02675029999227263
+batch_time = 0.026628299994627014
+batch_time = 0.027470700006233528
+batch_time = 0.027540899987798184
+batch_time = 0.026701200025854632
+batch_time = 0.02651349999359809
+batch_time = 0.026812099997187033
+batch_time = 0.027166000014403835
+batch_time = 0.029037500004051253
+batch_time = 0.028923100006068125
+batch_time = 0.02729709999402985
+batch_time = 0.027845800010254607
+batch_time = 0.02530010000918992
+batch_time = 0.025739400007296354
+batch_time = 0.49231100000906736
+
+=== ROOT AFTER SEARCH FINISHED ===
+[root] move (3, 1) visits = 904 wins   = 0
+[root] move (1, 0) visits = 4 wins   = 0
+[root] move (7, 3) visits = 10 wins   = 0
+[root] move (0, 7) visits = 4 wins   = 0
+[root] move (6, 6) visits = 5 wins   = 0
+[root] move (6, 5) visits = 10 wins   = 0
+[root] move (7, 5) visits = 2047 wins   = 0
+[root] move (1, 1) visits = 5 wins   = 0
+[root] move (0, 6) visits = 5 wins   = 0
+[root] move (7, 4) visits = 6 wins   = 0
+==================================
+
+id(self) = 1997483128720
+id(root.state) = 1998002998544
+AI move computation took 11.399 seconds.
+(7, 5)
+
+Current board:
+. | . | W | W | W | W | . | .
+. | . | W | W | W | W | B | W
+B | B | B | B | B | B | B | W
+W | . | B | W | B | W | W | W
+. | W | W | B | B | W | B | W
+. | . | W | W | B | B | W | W
+. | . | . | W | B | . | . | W
+. | . | . | . | . | W | . | .
+
+Current board:
+. | . | W | W | W | W | . | .
+. | . | W | W | W | W | B | W
+B | B | B | B | B | B | B | W
+W | . | B | W | B | W | W | W
+. | W | W | B | B | W | B | W
+. | . | W | W | B | B | W | W
+. | . | . | W | W | . | . | W
+. | . | . | . | . | W | . | .
+AI played (7, 5)
+5 0
+
+Current board:
+. | . | W | W | W | W | . | .
+. | . | W | W | W | W | B | W
+B | B | B | B | B | B | B | W
+W | . | B | W | B | W | W | W
+. | W | W | B | B | W | B | W
+B | . | W | W | B | B | W | W
+. | . | . | W | W | . | . | W
+. | . | . | . | . | W | . | .
+
+Current board:
+. | . | W | W | W | W | . | .
+. | . | W | W | W | W | B | W
+B | B | B | B | B | B | B | W
+W | . | B | W | B | W | W | W
+. | B | W | B | B | W | B | W
+B | . | W | W | B | B | W | W
+. | . | . | W | W | . | . | W
+. | . | . | . | . | W | . | .
+Human played (5, 0)
+ XLA compilation successful for othello model
+ XLA compilation successful for othello model
+ XLA enabled for othello 8x8 model
+batch_time = 0.4896885000052862
+batch_time = 0.025854699983028695
+batch_time = 0.025370299990754575
+batch_time = 0.02741249999962747
+batch_time = 0.02672799999709241
+batch_time = 0.02432359999511391
+batch_time = 0.02628079999703914
+batch_time = 0.025676799996290356
+batch_time = 0.025731800007633865
+batch_time = 0.023996500007342547
+batch_time = 0.025568999990355223
+batch_time = 0.025473999994574115
+batch_time = 0.025713699986226857
+batch_time = 0.02696960000321269
+batch_time = 0.02711799999815412
+batch_time = 0.02675910000107251
+batch_time = 0.026102600008016452
+batch_time = 0.02631479999399744
+batch_time = 0.026324500009650365
+batch_time = 0.026163899980019778
+batch_time = 0.024561099999118596
+batch_time = 0.02380769999581389
+batch_time = 0.02572929998859763
+batch_time = 0.02546309999888763
+batch_time = 0.026898999989498407
+batch_time = 0.025999600009527057
+batch_time = 0.025495699985185638
+batch_time = 0.024884400016162544
+batch_time = 0.024441600020509213
+batch_time = 0.0285565999802202
+batch_time = 0.028546599991386756
+batch_time = 0.02660969999851659
+batch_time = 0.026503900007810444
+batch_time = 0.02508360001957044
+batch_time = 0.025763899990124628
+batch_time = 0.025744700018549338
+batch_time = 0.02758150000590831
+batch_time = 0.025581699999747798
+batch_time = 0.02612809999845922
+batch_time = 0.02438879999681376
+batch_time = 0.027875899977516383
+batch_time = 0.026183699985267594
+batch_time = 0.026444399991305545
+batch_time = 0.02556219999678433
+batch_time = 0.02588349999859929
+batch_time = 0.026567499997327104
+batch_time = 0.48854089999804273
+
+=== ROOT AFTER SEARCH FINISHED ===
+[root] move (3, 1) visits = 6 wins   = 0
+[root] move (0, 7) visits = 9 wins   = 0
+[root] move (1, 0) visits = 8 wins   = 0
+[root] move (1, 1) visits = 6 wins   = 0
+[root] move (4, 0) visits = 2945 wins   = 0
+[root] move (6, 5) visits = 7 wins   = 0
+[root] move (6, 6) visits = 8 wins   = 0
+[root] move (0, 6) visits = 11 wins   = 0
+==================================
+
+id(self) = 1997483128720
+id(root.state) = 1997998449808
+AI move computation took 12.496 seconds.
+(4, 0)
+
+Current board:
+. | . | W | W | W | W | . | .
+. | . | W | W | W | W | B | W
+B | B | B | B | B | B | B | W
+W | . | B | W | B | W | W | W
+W | B | W | B | B | W | B | W
+B | . | W | W | B | B | W | W
+. | . | . | W | W | . | . | W
+. | . | . | . | . | W | . | .
+
+Current board:
+. | . | W | W | W | W | . | .
+. | . | W | W | W | W | B | W
+B | B | B | B | B | B | B | W
+W | . | B | W | B | W | W | W
+W | W | W | B | B | W | B | W
+B | . | W | W | B | B | W | W
+. | . | . | W | W | . | . | W
+. | . | . | . | . | W | . | .
+AI played (4, 0)
+5 1
+
+Current board:
+. | . | W | W | W | W | . | .
+. | . | W | W | W | W | B | W
+B | B | B | B | B | B | B | W
+W | . | B | W | B | W | W | W
+W | W | W | B | B | W | B | W
+B | B | W | W | B | B | W | W
+. | . | . | W | W | . | . | W
+. | . | . | . | . | W | . | .
+
+Current board:
+. | . | W | W | W | W | . | .
+. | . | W | W | W | W | B | W
+B | B | B | B | B | B | B | W
+W | . | B | B | B | W | W | W
+W | W | B | B | B | W | B | W
+B | B | B | B | B | B | W | W
+. | . | . | W | W | . | . | W
+. | . | . | . | . | W | . | .
+Human played (5, 1)
+ XLA compilation successful for othello model
+ XLA compilation successful for othello model
+ XLA enabled for othello 8x8 model
+batch_time = 0.4752508000237867
+batch_time = 0.02503299998352304
+batch_time = 0.028123299998696893
+batch_time = 0.02710010000737384
+batch_time = 0.02464810002129525
+batch_time = 0.025852099992334843
+batch_time = 0.02432640001643449
+batch_time = 0.025854600011371076
+batch_time = 0.024114300002111122
+batch_time = 0.026149599987547845
+batch_time = 0.025352099997689947
+batch_time = 0.02473120001377538
+batch_time = 0.02721390000078827
+batch_time = 0.024128600023686886
+batch_time = 0.02542890000040643
+batch_time = 0.026238200021907687
+batch_time = 0.026775200007250533
+batch_time = 0.02311170002212748
+batch_time = 0.025692099996376783
+batch_time = 0.025912800017977133
+batch_time = 0.024523900006897748
+batch_time = 0.025374599994393066
+batch_time = 0.025743999984115362
+batch_time = 0.023451600020052865
+batch_time = 0.025984800013247877
+batch_time = 0.02388779999455437
+batch_time = 0.023957900004461408
+batch_time = 0.027446400024928153
+batch_time = 0.02603189999354072
+batch_time = 0.023913400014862418
+batch_time = 0.026133700011996552
+batch_time = 0.025554199994076043
+batch_time = 0.02576369998860173
+batch_time = 0.02632350000203587
+batch_time = 0.023474200017517433
+batch_time = 0.023343500011833385
+batch_time = 0.02596339999581687
+batch_time = 0.02676529999007471
+batch_time = 0.023946400004206225
+batch_time = 0.02609400000073947
+batch_time = 0.023529099998995662
+batch_time = 0.02464029999100603
+batch_time = 0.025740599987329915
+batch_time = 0.025242899981094524
+batch_time = 0.024866699997801334
+batch_time = 0.02476629999000579
+batch_time = 0.49315809999825433
+
+=== ROOT AFTER SEARCH FINISHED ===
+[root] move (3, 1) visits = 772 wins   = 0
+[root] move (6, 2) visits = 1228 wins   = 0
+[root] move (6, 5) visits = 964 wins   = 0
+[root] move (6, 1) visits = 12 wins   = 0
+[root] move (6, 0) visits = 9 wins   = 0
+[root] move (1, 0) visits = 8 wins   = 0
+[root] move (0, 6) visits = 7 wins   = 0
+==================================
+
+id(self) = 1997483128720
+id(root.state) = 1998000362768
+AI move computation took 10.610 seconds.
+(6, 2)
+
+Current board:
+. | . | W | W | W | W | . | .
+. | . | W | W | W | W | B | W
+B | B | B | B | B | B | B | W
+W | . | B | B | B | W | W | W
+W | W | B | B | B | W | B | W
+B | B | B | B | B | B | W | W
+. | . | W | W | W | . | . | W
+. | . | . | . | . | W | . | .
+
+Current board:
+. | . | W | W | W | W | . | .
+. | . | W | W | W | W | B | W
+B | B | W | B | B | B | B | W
+W | . | W | B | B | W | W | W
+W | W | W | B | W | W | B | W
+B | W | W | W | B | B | W | W
+. | . | W | W | W | . | . | W
+. | . | . | . | . | W | . | .
+AI played (6, 2)
+3 1
+
+Current board:
+. | . | W | W | W | W | . | .
+. | . | W | W | W | W | B | W
+B | B | W | B | B | B | B | W
+W | B | W | B | B | W | W | W
+W | W | W | B | W | W | B | W
+B | W | W | W | B | B | W | W
+. | . | W | W | W | . | . | W
+. | . | . | . | . | W | . | .
+
+Current board:
+. | . | W | W | W | W | . | .
+. | . | W | W | W | W | B | W
+B | B | W | B | B | B | B | W
+W | B | B | B | B | W | W | W
+W | W | W | B | W | W | B | W
+B | W | W | W | B | B | W | W
+. | . | W | W | W | . | . | W
+. | . | . | . | . | W | . | .
+Human played (3, 1)
+ XLA compilation successful for othello model
+ XLA compilation successful for othello model
+ XLA enabled for othello 8x8 model
+batch_time = 0.47577190000447445
+batch_time = 0.025718100019730628
+batch_time = 0.029095000005327165
+batch_time = 0.027570000005653128
+batch_time = 0.026401399984024465
+batch_time = 0.026008900022134185
+batch_time = 0.025118399993516505
+batch_time = 0.024761000007856637
+batch_time = 0.025053500023204833
+batch_time = 0.025536400004057214
+batch_time = 0.02624659999855794
+batch_time = 0.02500819999841042
+batch_time = 0.024917100003222004
+batch_time = 0.025353500008350238
+batch_time = 0.026642600016202778
+batch_time = 0.02596929998253472
+batch_time = 0.025534299988066778
+batch_time = 0.0257825999869965
+batch_time = 0.02536950001376681
+batch_time = 0.02553849999094382
+batch_time = 0.025397099991096184
+batch_time = 0.02548080001724884
+batch_time = 0.02570999998715706
+batch_time = 0.02495009999256581
+batch_time = 0.025589900003978983
+batch_time = 0.02563620000728406
+batch_time = 0.025140999990981072
+batch_time = 0.02550570000312291
+batch_time = 0.028031599998939782
+batch_time = 0.027432600007159635
+batch_time = 0.024597099982202053
+batch_time = 0.0253429000149481
+batch_time = 0.025413600000320002
+batch_time = 0.025727600004756823
+batch_time = 0.025509700004477054
+batch_time = 0.025432399997953326
+batch_time = 0.025959799997508526
+batch_time = 0.025851800019154325
+batch_time = 0.025045400019735098
+batch_time = 0.025241499999538064
+batch_time = 0.025338100007502362
+batch_time = 0.025462000019615516
+batch_time = 0.025346799986436963
+batch_time = 0.025570700003299862
+batch_time = 0.025659000006271526
+batch_time = 0.025542499992297962
+batch_time = 0.49495069999829866
+
+=== ROOT AFTER SEARCH FINISHED ===
+[root] move (0, 6) visits = 9 wins   = 0
+[root] move (6, 6) visits = 325 wins   = 0
+[root] move (6, 0) visits = 9 wins   = 0
+[root] move (1, 0) visits = 7 wins   = 0
+[root] move (0, 7) visits = 1799 wins   = 0
+[root] move (6, 5) visits = 838 wins   = 0
+[root] move (1, 1) visits = 13 wins   = 0
+==================================
+
+id(self) = 1997483128720
+id(root.state) = 1997877489552
+AI move computation took 10.734 seconds.
+(0, 7)
+
+Current board:
+. | . | W | W | W | W | . | W
+. | . | W | W | W | W | B | W
+B | B | W | B | B | B | B | W
+W | B | B | B | B | W | W | W
+W | W | W | B | W | W | B | W
+B | W | W | W | B | B | W | W
+. | . | W | W | W | . | . | W
+. | . | . | . | . | W | . | .
+
+Current board:
+. | . | W | W | W | W | . | W
+. | . | W | W | W | W | W | W
+B | B | W | B | B | W | B | W
+W | B | B | B | W | W | W | W
+W | W | W | W | W | W | B | W
+B | W | W | W | B | B | W | W
+. | . | W | W | W | . | . | W
+. | . | . | . | . | W | . | .
+AI played (0, 7)
+7 4
+
+Current board:
+. | . | W | W | W | W | . | W
+. | . | W | W | W | W | W | W
+B | B | W | B | B | W | B | W
+W | B | B | B | W | W | W | W
+W | W | W | W | W | W | B | W
+B | W | W | W | B | B | W | W
+. | . | W | W | W | . | . | W
+. | . | . | . | B | W | . | .
+
+Current board:
+. | . | W | W | W | W | . | W
+. | . | W | W | W | W | W | W
+B | B | W | B | B | W | B | W
+W | B | B | B | W | W | W | W
+W | W | W | W | W | W | B | W
+B | W | W | W | B | B | W | W
+. | . | W | W | B | . | . | W
+. | . | . | . | B | W | . | .
+Human played (7, 4)
+ XLA compilation successful for othello model
+ XLA compilation successful for othello model
+ XLA enabled for othello 8x8 model
+batch_time = 0.4786317000107374
+batch_time = 0.025348399998620152
+batch_time = 0.025189799984218553
+batch_time = 0.025860599998850375
+batch_time = 0.0257397000095807
+batch_time = 0.02488500002073124
+batch_time = 0.025605299975723028
+batch_time = 0.025558399996953085
+batch_time = 0.025863599992590025
+batch_time = 0.025158000004012138
+batch_time = 0.025507599988486618
+batch_time = 0.02580800000578165
+batch_time = 0.025260399997932836
+batch_time = 0.025358800019603223
+batch_time = 0.02577829998335801
+batch_time = 0.025647500006016344
+batch_time = 0.025657699996372685
+batch_time = 0.02612510000471957
+batch_time = 0.025803099997574463
+batch_time = 0.0257430000056047
+batch_time = 0.026054499991005287
+batch_time = 0.025395100004971027
+batch_time = 0.02416970001650043
+batch_time = 0.023401300015393645
+batch_time = 0.023963800020283088
+batch_time = 0.023708299995632842
+batch_time = 0.023732900008326396
+batch_time = 0.024009000015212223
+batch_time = 0.023799599992344156
+batch_time = 0.023925500019686297
+batch_time = 0.024345299985725433
+batch_time = 0.02438110002549365
+batch_time = 0.02366690000053495
+batch_time = 0.024081599985947832
+batch_time = 0.023758499999530613
+batch_time = 0.02399919999879785
+batch_time = 0.023940500017488375
+batch_time = 0.02404329998535104
+batch_time = 0.024878099997295067
+batch_time = 0.02416799997445196
+batch_time = 0.023783900018315762
+batch_time = 0.023914899997180328
+batch_time = 0.02437400000053458
+batch_time = 0.02424480000627227
+batch_time = 0.023549499979708344
+batch_time = 0.023446899984264746
+batch_time = 0.5038186000019778
+
+=== ROOT AFTER SEARCH FINISHED ===
+[root] move (6, 5) visits = 13 wins   = 0
+[root] move (1, 1) visits = 394 wins   = 0
+[root] move (1, 0) visits = 9 wins   = 0
+[root] move (7, 3) visits = 2560 wins   = 0
+[root] move (6, 6) visits = 12 wins   = 0
+[root] move (6, 0) visits = 12 wins   = 0
+==================================
+
+id(self) = 1997483128720
+id(root.state) = 1997899569552
+AI move computation took 11.199 seconds.
+(7, 3)
+
+Current board:
+. | . | W | W | W | W | . | W
+. | . | W | W | W | W | W | W
+B | B | W | B | B | W | B | W
+W | B | B | B | W | W | W | W
+W | W | W | W | W | W | B | W
+B | W | W | W | B | B | W | W
+. | . | W | W | B | . | . | W
+. | . | . | W | B | W | . | .
+
+Current board:
+. | . | W | W | W | W | . | W
+. | . | W | W | W | W | W | W
+B | B | W | B | B | W | B | W
+W | B | B | B | W | W | W | W
+W | W | W | W | W | W | W | W
+B | W | W | W | B | W | W | W
+. | . | W | W | W | . | . | W
+. | . | . | W | W | W | . | .
+AI played (7, 3)
+0 6
+
+Current board:
+. | . | W | W | W | W | B | W
+. | . | W | W | W | W | W | W
+B | B | W | B | B | W | B | W
+W | B | B | B | W | W | W | W
+W | W | W | W | W | W | W | W
+B | W | W | W | B | W | W | W
+. | . | W | W | W | . | . | W
+. | . | . | W | W | W | . | .
+
+Current board:
+. | . | W | W | W | W | B | W
+. | . | W | W | W | B | B | W
+B | B | W | B | B | W | B | W
+W | B | B | B | W | W | W | W
+W | W | W | W | W | W | W | W
+B | W | W | W | B | W | W | W
+. | . | W | W | W | . | . | W
+. | . | . | W | W | W | . | .
+Human played (0, 6)
+ XLA compilation successful for othello model
+ XLA compilation successful for othello model
+ XLA enabled for othello 8x8 model
+batch_time = 0.4768010000116192
+batch_time = 0.02487920000567101
+batch_time = 0.026813500007847324
+batch_time = 0.025305200018920004
+batch_time = 0.02572360000340268
+batch_time = 0.025441700010560453
+batch_time = 0.024845400010235608
+batch_time = 0.02585259999614209
+batch_time = 0.025587799987988546
+batch_time = 0.024816599994665012
+batch_time = 0.025439500022912398
+batch_time = 0.024663399992277846
+batch_time = 0.024551099981181324
+batch_time = 0.02525100001366809
+batch_time = 0.024701899994397536
+batch_time = 0.02454720000969246
+batch_time = 0.024738100008107722
+batch_time = 0.025229599996237084
+batch_time = 0.02543929999228567
+batch_time = 0.02478149998933077
+batch_time = 0.025558499997714534
+batch_time = 0.025223500007996336
+batch_time = 0.025915600010193884
+batch_time = 0.025759599986486137
+batch_time = 0.02682450000429526
+batch_time = 0.025848799996310845
+batch_time = 0.025564100011251867
+batch_time = 0.025469199987128377
+batch_time = 0.024803799984510988
+batch_time = 0.024069300008704886
+batch_time = 0.02420499999425374
+batch_time = 0.024463400011882186
+batch_time = 0.024410399986663833
+batch_time = 0.023973100003786385
+batch_time = 0.0250510000041686
+batch_time = 0.024033900001086295
+batch_time = 0.02496969999629073
+batch_time = 0.023857399995904416
+batch_time = 0.02506569999968633
+batch_time = 0.025356900005135685
+batch_time = 0.0249486000102479
+batch_time = 0.025349300005473197
+batch_time = 0.02505530000780709
+batch_time = 0.026102100004209206
+batch_time = 0.19075779998092912
+batch_time = 0.025402700004633516
+batch_time = 0.49574529999517836
+
+=== ROOT AFTER SEARCH FINISHED ===
+[root] move (1, 1) visits = 1423 wins   = 0
+[root] move (6, 5) visits = 914 wins   = 0
+[root] move (6, 0) visits = 17 wins   = 0
+[root] move (1, 0) visits = 646 wins   = 0
+==================================
+
+id(self) = 1997483128720
+id(root.state) = 1998002754064
+AI move computation took 10.933 seconds.
+(1, 1)
+
+Current board:
+. | . | W | W | W | W | B | W
+. | W | W | W | W | B | B | W
+B | B | W | B | B | W | B | W
+W | B | B | B | W | W | W | W
+W | W | W | W | W | W | W | W
+B | W | W | W | B | W | W | W
+. | . | W | W | W | . | . | W
+. | . | . | W | W | W | . | .
+
+Current board:
+. | . | W | W | W | W | B | W
+. | W | W | W | W | B | B | W
+B | W | W | B | B | W | B | W
+W | W | B | B | W | W | W | W
+W | W | W | W | W | W | W | W
+B | W | W | W | B | W | W | W
+. | . | W | W | W | . | . | W
+. | . | . | W | W | W | . | .
+AI played (1, 1)
+6 5
+
+Current board:
+. | . | W | W | W | W | B | W
+. | W | W | W | W | B | B | W
+B | W | W | B | B | W | B | W
+W | W | B | B | W | W | W | W
+W | W | W | W | W | W | W | W
+B | W | W | W | B | W | W | W
+. | . | W | W | W | B | . | W
+. | . | . | W | W | W | . | .
+
+Current board:
+. | . | W | W | W | W | B | W
+. | W | W | W | W | B | B | W
+B | W | W | B | B | B | B | W
+W | W | B | B | W | B | W | W
+W | W | W | W | W | B | W | W
+B | W | W | W | B | B | W | W
+. | . | W | W | W | B | . | W
+. | . | . | W | W | W | . | .
+Human played (6, 5)
+ XLA compilation successful for othello model
+ XLA compilation successful for othello model
+ XLA enabled for othello 8x8 model
+batch_time = 0.4733515999978408
+batch_time = 0.026719000015873462
+batch_time = 0.026253300020471215
+batch_time = 0.02616509998915717
+batch_time = 0.02543760000844486
+batch_time = 0.025532800005748868
+batch_time = 0.02529570000478998
+batch_time = 0.025672899995697662
+batch_time = 0.025918200000887737
+batch_time = 0.025971699971705675
+batch_time = 0.025640999985625967
+batch_time = 0.02557389999856241
+batch_time = 0.02601239999057725
+batch_time = 0.026050500018754974
+batch_time = 0.026475100021343678
+batch_time = 0.025670700008049607
+batch_time = 0.02606749997357838
+batch_time = 0.025611700024455786
+batch_time = 0.025692800001706928
+batch_time = 0.026329899992560968
+batch_time = 0.02538440001080744
+batch_time = 0.02525860001333058
+batch_time = 0.02606279999599792
+batch_time = 0.025783599994610995
+batch_time = 0.025885900016874075
+batch_time = 0.025313999998616055
+batch_time = 0.025890200020512566
+batch_time = 0.025308099982794374
+batch_time = 0.02605970000149682
+batch_time = 0.025006999989273027
+batch_time = 0.026307699998142198
+batch_time = 0.025476499984506518
+batch_time = 0.026295799994841218
+batch_time = 0.02596520000952296
+batch_time = 0.02601679999497719
+batch_time = 0.025601000001188368
+batch_time = 0.026373300002887845
+batch_time = 0.025919600011548027
+batch_time = 0.025974699994549155
+batch_time = 0.025909799995133653
+batch_time = 0.02598149998812005
+batch_time = 0.025844399991910905
+batch_time = 0.025909799995133653
+batch_time = 0.02643050000187941
+batch_time = 0.02560340001946315
+batch_time = 0.02585400000680238
+batch_time = 0.48692370002390817
+
+=== ROOT AFTER SEARCH FINISHED ===
+[root] move (1, 0) visits = 1235 wins   = 0
+[root] move (6, 0) visits = 142 wins   = 0
+[root] move (6, 6) visits = 585 wins   = 0
+[root] move (7, 6) visits = 1038 wins   = 0
+==================================
+
+id(self) = 1997483128720
+id(root.state) = 1997412581648
+AI move computation took 10.682 seconds.
+(1, 0)
+
+Current board:
+. | . | W | W | W | W | B | W
+W | W | W | W | W | B | B | W
+B | W | W | B | B | B | B | W
+W | W | B | B | W | B | W | W
+W | W | W | W | W | B | W | W
+B | W | W | W | B | B | W | W
+. | . | W | W | W | B | . | W
+. | . | . | W | W | W | . | .
+
+Current board:
+. | . | W | W | W | W | B | W
+W | W | W | W | W | B | B | W
+W | W | W | B | B | B | B | W
+W | W | B | B | W | B | W | W
+W | W | W | W | W | B | W | W
+B | W | W | W | B | B | W | W
+. | . | W | W | W | B | . | W
+. | . | . | W | W | W | . | .
+AI played (1, 0)
+6 6
+
+Current board:
+. | . | W | W | W | W | B | W
+W | W | W | W | W | B | B | W
+W | W | W | B | B | B | B | W
+W | W | B | B | W | B | W | W
+W | W | W | W | W | B | W | W
+B | W | W | W | B | B | W | W
+. | . | W | W | W | B | B | W
+. | . | . | W | W | W | . | .
+
+Current board:
+. | . | W | W | W | W | B | W
+W | W | W | W | W | B | B | W
+W | W | W | B | B | B | B | W
+W | W | B | B | W | B | B | W
+W | W | W | W | W | B | B | W
+B | W | W | W | B | B | B | W
+. | . | W | W | W | B | B | W
+. | . | . | W | W | W | . | .
+Human played (6, 6)
+ XLA compilation successful for othello model
+ XLA compilation successful for othello model
+ XLA enabled for othello 8x8 model
+batch_time = 0.47824169998057187
+batch_time = 0.027078100014477968
+batch_time = 0.024539300007745624
+batch_time = 0.02601999999023974
+batch_time = 0.025001500005600974
+batch_time = 0.02445070000248961
+batch_time = 0.025811500003328547
+batch_time = 0.024282800004584715
+batch_time = 0.02496960002463311
+batch_time = 0.02500359999248758
+batch_time = 0.025115799973718822
+batch_time = 0.024137300002621487
+batch_time = 0.026653599983546883
+batch_time = 0.025533700012601912
+batch_time = 0.02542300001368858
+batch_time = 0.024284599989186972
+batch_time = 0.025159899989375845
+batch_time = 0.0247281999909319
+batch_time = 0.026864999992540106
+batch_time = 0.024885399994673207
+batch_time = 0.026312100002542138
+batch_time = 0.02628489999915473
+batch_time = 0.02448359999107197
+batch_time = 0.024799999984679744
+batch_time = 0.026783500012243167
+batch_time = 0.025200100004440174
+batch_time = 0.025247699988540262
+batch_time = 0.02494740000111051
+batch_time = 0.025989899993874133
+batch_time = 0.02421380000305362
+batch_time = 0.02631200000178069
+batch_time = 0.02504510001745075
+batch_time = 0.026089999999385327
+batch_time = 0.025720200006617233
+batch_time = 0.0256124000006821
+batch_time = 0.026115799992112443
+batch_time = 0.02564199999324046
+batch_time = 0.02667910000309348
+batch_time = 0.025369200011482462
+batch_time = 0.02657250000629574
+batch_time = 0.026044500002171844
+batch_time = 0.02451609997660853
+batch_time = 0.027198299998417497
+batch_time = 0.024592200003098696
+batch_time = 0.025598700012778863
+batch_time = 0.5252799000008963
+
+=== ROOT AFTER SEARCH FINISHED ===
+[root] move (6, 0) visits = 21 wins   = 0
+[root] move (7, 7) visits = 276 wins   = 0
+[root] move (7, 6) visits = 2703 wins   = 0
+==================================
+
+id(self) = 1997483128720
+id(root.state) = 1997895053200
+AI move computation took 10.900 seconds.
+(7, 6)
+
+Current board:
+. | . | W | W | W | W | B | W
+W | W | W | W | W | B | B | W
+W | W | W | B | B | B | B | W
+W | W | B | B | W | B | B | W
+W | W | W | W | W | B | B | W
+B | W | W | W | B | B | B | W
+. | . | W | W | W | B | B | W
+. | . | . | W | W | W | W | .
+
+Current board:
+. | . | W | W | W | W | B | W
+W | W | W | W | W | B | B | W
+W | W | W | B | B | B | B | W
+W | W | B | B | W | B | B | W
+W | W | W | W | W | B | B | W
+B | W | W | W | W | B | B | W
+. | . | W | W | W | W | B | W
+. | . | . | W | W | W | W | .
+AI played (7, 6)
+0 0
+
+Current board:
+B | . | W | W | W | W | B | W
+W | W | W | W | W | B | B | W
+W | W | W | B | B | B | B | W
+W | W | B | B | W | B | B | W
+W | W | W | W | W | B | B | W
+B | W | W | W | W | B | B | W
+. | . | W | W | W | W | B | W
+. | . | . | W | W | W | W | .
+
+Current board:
+B | . | W | W | W | W | B | W
+B | B | W | W | W | B | B | W
+B | W | B | B | B | B | B | W
+B | W | B | B | W | B | B | W
+B | W | W | W | W | B | B | W
+B | W | W | W | W | B | B | W
+. | . | W | W | W | W | B | W
+. | . | . | W | W | W | W | .
+Human played (0, 0)
+ XLA compilation successful for othello model
+ XLA compilation successful for othello model
+ XLA enabled for othello 8x8 model
+batch_time = 0.4749840000004042
+batch_time = 0.0247310999839101
+batch_time = 0.026027799991425127
+batch_time = 0.026678599999286234
+batch_time = 0.026012199989054352
+batch_time = 0.0247562000004109
+batch_time = 0.02660979999927804
+batch_time = 0.025792300002649426
+batch_time = 0.027513800014276057
+batch_time = 0.026296299998648465
+batch_time = 0.18323299998883158
+batch_time = 0.025770600012037903
+batch_time = 0.025228200014680624
+batch_time = 0.024429100012639537
+batch_time = 0.026604299986502156
+batch_time = 0.02516499999910593
+batch_time = 0.02512370000476949
+batch_time = 0.025109199981670827
+batch_time = 0.024369899998418987
+batch_time = 0.024982200004160404
+batch_time = 0.026152100006584078
+batch_time = 0.02529399999184534
+batch_time = 0.02602570000453852
+batch_time = 0.024744599999394268
+batch_time = 0.026272399991285056
+batch_time = 0.024786199996015057
+batch_time = 0.02545230000396259
+batch_time = 0.024017899995669723
+batch_time = 0.026345100020989776
+batch_time = 0.025094600016018376
+batch_time = 0.02708959998562932
+batch_time = 0.026121499977307394
+batch_time = 0.024302399979205802
+batch_time = 0.026143700000829995
+
+=== ROOT AFTER SEARCH FINISHED ===
+[root] move (0, 1) visits = 2585 wins   = 0
+[root] move (7, 7) visits = 415 wins   = 0
+==================================
+
+id(self) = 1997483128720
+id(root.state) = 1997894874768
+AI move computation took 9.110 seconds.
+(0, 1)
+
+Current board:
+B | W | W | W | W | W | B | W
+B | B | W | W | W | B | B | W
+B | W | B | B | B | B | B | W
+B | W | B | B | W | B | B | W
+B | W | W | W | W | B | B | W
+B | W | W | W | W | B | B | W
+. | . | W | W | W | W | B | W
+. | . | . | W | W | W | W | .
+
+Current board:
+B | W | W | W | W | W | B | W
+B | W | W | W | W | B | B | W
+B | W | B | B | B | B | B | W
+B | W | B | B | W | B | B | W
+B | W | W | W | W | B | B | W
+B | W | W | W | W | B | B | W
+. | . | W | W | W | W | B | W
+. | . | . | W | W | W | W | .
+AI played (0, 1)
+6 0
+
+Current board:
+B | W | W | W | W | W | B | W
+B | W | W | W | W | B | B | W
+B | W | B | B | B | B | B | W
+B | W | B | B | W | B | B | W
+B | W | W | W | W | B | B | W
+B | W | W | W | W | B | B | W
+B | . | W | W | W | W | B | W
+. | . | . | W | W | W | W | .
+
+Current board:
+B | W | W | W | W | W | B | W
+B | W | W | W | W | B | B | W
+B | W | B | B | B | B | B | W
+B | W | B | B | W | B | B | W
+B | W | B | W | W | B | B | W
+B | B | W | W | W | B | B | W
+B | . | W | W | W | W | B | W
+. | . | . | W | W | W | W | .
+Human played (6, 0)
+ XLA compilation successful for othello model
+ XLA compilation successful for othello model
+ XLA enabled for othello 8x8 model
+batch_time = 0.4778966000012588
+batch_time = 0.02528809997602366
+batch_time = 0.024635400011902675
+batch_time = 0.026207300019450486
+batch_time = 0.02550409999093972
+batch_time = 0.02508510000188835
+batch_time = 0.02402839998831041
+
+=== ROOT AFTER SEARCH FINISHED ===
+[root] move (6, 1) visits = 1564 wins   = 0
+[root] move (7, 7) visits = 1436 wins   = 0
+==================================
+
+id(self) = 1997483128720
+id(root.state) = 1998003800272
+AI move computation took 11.035 seconds.
+(6, 1)
+
+Current board:
+B | W | W | W | W | W | B | W
+B | W | W | W | W | B | B | W
+B | W | B | B | B | B | B | W
+B | W | B | B | W | B | B | W
+B | W | B | W | W | B | B | W
+B | B | W | W | W | B | B | W
+B | W | W | W | W | W | B | W
+. | . | . | W | W | W | W | .
+
+Current board:
+B | W | W | W | W | W | B | W
+B | W | W | W | W | B | B | W
+B | W | B | B | B | B | B | W
+B | W | B | B | W | B | B | W
+B | W | B | W | W | B | B | W
+B | W | W | W | W | B | B | W
+B | W | W | W | W | W | B | W
+. | . | . | W | W | W | W | .
+AI played (6, 1)
+7 0
+
+Current board:
+B | W | W | W | W | W | B | W
+B | W | W | W | W | B | B | W
+B | W | B | B | B | B | B | W
+B | W | B | B | W | B | B | W
+B | W | B | W | W | B | B | W
+B | W | W | W | W | B | B | W
+B | W | W | W | W | W | B | W
+B | . | . | W | W | W | W | .
+
+Current board:
+B | W | W | W | W | W | B | W
+B | W | W | W | W | B | B | W
+B | W | B | B | B | B | B | W
+B | W | B | B | B | B | B | W
+B | W | B | B | W | B | B | W
+B | W | B | W | W | B | B | W
+B | B | W | W | W | W | B | W
+B | . | . | W | W | W | W | .
+Human played (7, 0)
+ XLA compilation successful for othello model
+ XLA compilation successful for othello model
+ XLA enabled for othello 8x8 model
+batch_time = 0.4794662999920547
+
+=== ROOT AFTER SEARCH FINISHED ===
+[root] move (7, 1) visits = 1357 wins   = 0
+[root] move (7, 7) visits = 1643 wins   = 0
+==================================
+
+id(self) = 1997483128720
+id(root.state) = 1998002575248
+AI move computation took 10.925 seconds.
+(7, 7)
+
+Current board:
+B | W | W | W | W | W | B | W
+B | W | W | W | W | B | B | W
+B | W | B | B | B | B | B | W
+B | W | B | B | B | B | B | W
+B | W | B | B | W | B | B | W
+B | W | B | W | W | B | B | W
+B | B | W | W | W | W | B | W
+B | . | . | W | W | W | W | W
+
+Current board:
+B | W | W | W | W | W | B | W
+B | W | W | W | W | B | B | W
+B | W | B | B | B | B | B | W
+B | W | B | B | B | B | B | W
+B | W | B | B | W | B | B | W
+B | W | B | W | W | W | B | W
+B | B | W | W | W | W | W | W
+B | . | . | W | W | W | W | W
+AI played (7, 7)
+7 1
+
+Current board:
+B | W | W | W | W | W | B | W
+B | W | W | W | W | B | B | W
+B | W | B | B | B | B | B | W
+B | W | B | B | B | B | B | W
+B | W | B | B | W | B | B | W
+B | W | B | W | W | W | B | W
+B | B | W | W | W | W | W | W
+B | B | . | W | W | W | W | W
+
+Current board:
+B | W | W | W | W | W | B | W
+B | W | W | W | W | B | B | W
+B | W | B | B | B | B | B | W
+B | W | B | B | B | B | B | W
+B | W | B | B | B | B | B | W
+B | W | B | B | W | W | B | W
+B | B | B | W | W | W | W | W
+B | B | . | W | W | W | W | W
+Human played (7, 1)
+(7, 2)
+
+Current board:
+B | W | W | W | W | W | B | W
+B | W | W | W | W | B | B | W
+B | W | B | B | B | B | B | W
+B | W | B | B | B | B | B | W
+B | W | B | B | B | B | B | W
+B | W | B | B | W | W | B | W
+B | B | B | W | W | W | W | W
+B | B | W | W | W | W | W | W
+
+Current board:
+B | W | W | W | W | W | B | W
+B | W | W | W | W | B | B | W
+B | W | W | B | B | B | B | W
+B | W | W | B | B | B | B | W
+B | W | W | B | B | B | B | W
+B | W | W | B | W | W | B | W
+B | B | W | W | W | W | W | W
+B | B | W | W | W | W | W | W
+AI played (7, 2)
+Win for Player 2
