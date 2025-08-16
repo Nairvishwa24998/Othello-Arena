@@ -11,6 +11,8 @@ from constant_strings import GAME_OTHELLO, GAME_TICTACTOE, MCTS_NN, MCTS
 # this allows us to get all the
 npz_files = glob.glob("game_data_board_size*.npz")
 
+# cache for neural net to prevent compilation each move
+MODEL_CACHE = {}
 
 # can be used to obtain the symbols for the game
 def get_game_symbols(game_name):
@@ -33,7 +35,7 @@ def get_game_abbr(game_name):
 # so one plane for whose turn, another two positional planes is accurate
 # we are giving three matrices here - first matrix with ones wherever X/Black's pieces are found
 # second matrix with of 1s where O/ White pieces
-def flattened_board_to_tensor(state_str: str, game_name):
+def flattened_board_to_tensor(state_str: str, game_name, turn_to_move: int | None = None):
     symbol_1, symbol_2 = get_game_symbols(game_name)
     # we get the square root of the length of the flattened input string
     # for example length of string would be 9 for a 3*3 board
@@ -46,7 +48,11 @@ def flattened_board_to_tensor(state_str: str, game_name):
     second_symbol_plane = (board == symbol_2).astype(np.float32)
 
     # matrix plane for the turn
-    first_player_turn = (first_symbol_plane.sum() == second_symbol_plane.sum())
+    # potential bug. Fine for tictactoe but not for othello
+    if turn_to_move is None:
+        first_player_turn = (first_symbol_plane.sum() == second_symbol_plane.sum())
+    else:
+        first_player_turn = (turn_to_move == 1)
     turn_plane = np.ones_like(first_symbol_plane) if first_player_turn else np.zeros_like(first_symbol_plane)
 
     return np.stack([first_symbol_plane, second_symbol_plane, turn_plane], axis=-1)
@@ -79,14 +85,6 @@ def view_npz_sample_contents(filename):
     data = np.load(filename)
     for key in data.files:
         print("First few values:\n", data[key][:6])
-
-
-
-# # helps with predictability
-# def set_global_seed(seed=42):
-#     np.random.seed(seed)
-#     np.random.seed(seed)
-#     tf.random.set_seed(seed)
 
 
 # splitting the data into training, testing and validation
@@ -145,23 +143,22 @@ def prepare_neural_net_instance(game, size, ai_type):
     # we don't need a neural net for pure MCTS
     if ai_type == MCTS:
         return None
+    # checking if neural_net is already hashed and ready. Then we can just use that
+    key = (game, size)
+    if key in MODEL_CACHE:
+        return MODEL_CACHE[key]
+
     neural_net = Neural_Net(game=game, size = size)
     script_dir = os.path.dirname(os.path.abspath(__file__))
     file_name = os.path.join(script_dir, f"weights_{game}_{size}", f"{game}-{size}.keras")
     neural_net.load(file_name)
     # added for testing with XLA
     neural_net._compile_xla_predict()
+    # reached here means neural_net was not available in cache
+    MODEL_CACHE[key] = neural_net
     print(f" XLA enabled for {game} {size}x{size} model")
     return neural_net
 
 if __name__ == "__main__":
     commence_neural_net_pipeline(game_name=GAME_TICTACTOE, game_size=4)
-
-
-
-
-# for file in npz_files:
-#     data = np.load(file)
-#     print("Loaded", file, "→ keys:", data.files)
-
 

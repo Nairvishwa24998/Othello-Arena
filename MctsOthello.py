@@ -37,6 +37,7 @@ class MctsOthello(MctsParent):
 
             best_confidence_value = max(resultant_values.values())
 
+            # So it also picks second or third best moves if they are close by
             best_children = [child for child, value in resultant_values.items()
                              if abs(value - best_confidence_value) < 1e-12]
 
@@ -82,7 +83,7 @@ class MctsOthello(MctsParent):
             tt_value = self.mcts_transposition_table.get(hashed_board_key)
             if tt_value is None:
                 pre_move_flattened_state_2d = "".join(str(cell) for row in parent_board for cell in row)
-                inp = flattened_board_to_tensor(pre_move_flattened_state_2d, game_name=GAME_OTHELLO)[None, ...]
+                inp = flattened_board_to_tensor(pre_move_flattened_state_2d, game_name=GAME_OTHELLO, turn_to_move=next_player)[None, ...]
                 neural_net = self.get_neural_net()
                 # commented out for testing without XLA
                 # policy_prediction, value_prediction = neural_net.model.predict(inp, verbose=0)
@@ -151,9 +152,13 @@ class MctsOthello(MctsParent):
     #     return child_node
 
     # new one
+
+    # Note
     def exploitation(self, current_node):
         input_game_instance = current_node.state
         ai_type = input_game_instance.get_AI_type()
+        parent_node_move_player = current_node.parent.player_to_move if current_node.parent else input_game_instance.current_player()
+        current_node_move_player = input_game_instance.current_player()
         if ai_type == MCTS_NN and self.neural_net:  # self.neural_net set in __init__
             board_str = "".join(str(c) for row in current_node.state.board for c in row)
             # commented out for testing - without XLA
@@ -163,8 +168,12 @@ class MctsOthello(MctsParent):
             # )[1][0]  # value scalar in [-1,1]
             # added for XLA
             v = self.neural_net.fast_predict(
-                flattened_board_to_tensor(board_str, GAME_OTHELLO)[None, ...])[1][0]
-            return -float(v)  # flip perspective once (backtracking will flip again)
+                flattened_board_to_tensor(state_str=board_str, game_name=GAME_OTHELLO,turn_to_move=current_node_move_player)[None, ...])[1][0]
+            if parent_node_move_player != current_node_move_player:
+                return -float(v)  # flip perspective once (backtracking will flip again)
+            else:
+                return float(v)
+
         simulation_instance = input_game_instance.clone_instance()
         # make it AI-vs-AI
         simulation_instance.set_to_simulation_mode()
@@ -177,7 +186,12 @@ class MctsOthello(MctsParent):
         outcome = simulation_instance.rollout_pseudo_random()
         # please remove befpre final submission
         print("Shouldn't be going here!")
-        refined_outcome = -outcome
+        # Please confirm commented out for now
+        # refined_outcome = -outcome
+        if parent_node_move_player != current_node_move_player:
+            refined_outcome = -outcome
+        else:
+            refined_outcome = outcome
         return refined_outcome
 
     # new_version

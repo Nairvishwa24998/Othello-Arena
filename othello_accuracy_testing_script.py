@@ -63,70 +63,103 @@
 
 
 
-import numpy as np
-import tensorflow as tf
+# import numpy as np
+# import tensorflow as tf
+# from tensorflow.keras.metrics import CategoricalAccuracy, TopKCategoricalAccuracy, MeanAbsoluteError
+#
+# # --- Config ---
+# MODEL_PATH = "othello-8.keras"
+# DATA_PATH  = "game_data_board_size8_othello.npz"
+# BATCH_SIZE = 1024
+#
+# # --- Load model ---
+# model = tf.keras.models.load_model(MODEL_PATH, compile=False)
+# print("Loaded:", MODEL_PATH)
+#
+# # --- Load data ---
+# d = np.load(DATA_PATH, allow_pickle=True)
+# states  = d["states"]                 # (N,) object of 64-char strings
+# policies = d["policies"].astype(np.float32)  # (N,64)
+# values   = d["values"].astype(np.float32)    # (N,)
+#
+# # --- Helpers (match your Neural_Net_Utils.flattened_board_to_tensor) ---
+# def board_str_to_planes_3(s: str):
+#     # plane 0: B, plane 1: W, plane 2: turn (1 if Black-to-move, else 0)
+#     b = np.zeros((8,8), np.float32)
+#     w = np.zeros((8,8), np.float32)
+#     for i, ch in enumerate(s):
+#         r, c = divmod(i, 8)
+#         if ch == 'B': b[r,c] = 1.0
+#         elif ch == 'W': w[r,c] = 1.0
+#     # side to move: in your format, Black moves when counts are equal
+#     turn_plane = np.ones_like(b) if b.sum() == w.sum() else np.zeros_like(b)
+#     return np.stack([b, w, turn_plane], axis=-1)  # (8,8,3)
+#
+# def gen():
+#     # yield batches lazily to keep RAM reasonable
+#     for s, p, v in zip(states, policies, values):
+#         x = board_str_to_planes_3(s)
+#         yield x, {"policy_logits": p, "value": np.array([v], dtype=np.float32)}  # value shape (1,)
+#
+# # --- tf.data pipeline ---
+# output_signature = (
+#     tf.TensorSpec(shape=(8,8,3), dtype=tf.float32),
+#     {
+#         "policy_logits": tf.TensorSpec(shape=(64,), dtype=tf.float32),
+#         "value":         tf.TensorSpec(shape=(1,),  dtype=tf.float32),
+#     },
+# )
+# ds = tf.data.Dataset.from_generator(gen, output_signature=output_signature)\
+#                     .batch(BATCH_SIZE).prefetch(tf.data.AUTOTUNE)
+#
+# # --- Metrics ---
+# top1  = CategoricalAccuracy(name="top1")               # works with logits
+# top3  = TopKCategoricalAccuracy(k=3, name="top3")
+# top5  = TopKCategoricalAccuracy(k=5, name="top5")
+# v_mae = MeanAbsoluteError(name="value_mae")
+#
+# # --- Eval loop ---
+# for bx, by in ds:
+#     pred_policy, pred_value = model(bx, training=False)   # logits, tanh
+#     top1.update_state(by["policy_logits"], pred_policy)
+#     top3.update_state(by["policy_logits"], pred_policy)
+#     top5.update_state(by["policy_logits"], pred_policy)
+#     v_mae.update_state(by["value"], pred_value)
+#
+# print(f"Policy Top-1: {top1.result().numpy():.4f}")
+# print(f"Policy Top-3: {top3.result().numpy():.4f}")
+# print(f"Policy Top-5: {top5.result().numpy():.4f}")
+# print(f"Value MAE   : {v_mae.result().numpy():.4f}")
+
+
+from Neural_Net import Neural_Net
+from Neural_Net_Utils import load_npz_dataset, obtain_train_test_validation_data, prepare_input_output
+from constant_strings import GAME_OTHELLO
+import numpy as np, tensorflow as tf
 from tensorflow.keras.metrics import CategoricalAccuracy, TopKCategoricalAccuracy, MeanAbsoluteError
 
-# --- Config ---
-MODEL_PATH = "othello-8.keras"
-DATA_PATH  = "game_data_board_size8_othello.npz"
-BATCH_SIZE = 1024
+# --- load model ---
+model = tf.keras.models.load_model("othello-8.keras", compile=False)
 
-# --- Load model ---
-model = tf.keras.models.load_model(MODEL_PATH, compile=False)
-print("Loaded:", MODEL_PATH)
+# --- use your existing split helpers (same NPZ you trained on) ---
+dataset = load_npz_dataset(8, GAME_OTHELLO)
+_, val_data, _ = obtain_train_test_validation_data(dataset)   # <- val only
+val_X, val_Y = prepare_input_output(val_data, GAME_OTHELLO)   # uses your flattened_board_to_tensor (with turn_to_move)
 
-# --- Load data ---
-d = np.load(DATA_PATH, allow_pickle=True)
-states  = d["states"]                 # (N,) object of 64-char strings
-policies = d["policies"].astype(np.float32)  # (N,64)
-values   = d["values"].astype(np.float32)    # (N,)
+# --- predict & metrics (logits are fine for these metrics) ---
+pol_logits, val_pred = model.predict(val_X, batch_size=1024, verbose=1)
 
-# --- Helpers (match your Neural_Net_Utils.flattened_board_to_tensor) ---
-def board_str_to_planes_3(s: str):
-    # plane 0: B, plane 1: W, plane 2: turn (1 if Black-to-move, else 0)
-    b = np.zeros((8,8), np.float32)
-    w = np.zeros((8,8), np.float32)
-    for i, ch in enumerate(s):
-        r, c = divmod(i, 8)
-        if ch == 'B': b[r,c] = 1.0
-        elif ch == 'W': w[r,c] = 1.0
-    # side to move: in your format, Black moves when counts are equal
-    turn_plane = np.ones_like(b) if b.sum() == w.sum() else np.zeros_like(b)
-    return np.stack([b, w, turn_plane], axis=-1)  # (8,8,3)
+top1 = CategoricalAccuracy()
+top3 = TopKCategoricalAccuracy(k=3)
+top5 = TopKCategoricalAccuracy(k=5)
+mae  = MeanAbsoluteError()
 
-def gen():
-    # yield batches lazily to keep RAM reasonable
-    for s, p, v in zip(states, policies, values):
-        x = board_str_to_planes_3(s)
-        yield x, {"policy_logits": p, "value": np.array([v], dtype=np.float32)}  # value shape (1,)
-
-# --- tf.data pipeline ---
-output_signature = (
-    tf.TensorSpec(shape=(8,8,3), dtype=tf.float32),
-    {
-        "policy_logits": tf.TensorSpec(shape=(64,), dtype=tf.float32),
-        "value":         tf.TensorSpec(shape=(1,),  dtype=tf.float32),
-    },
-)
-ds = tf.data.Dataset.from_generator(gen, output_signature=output_signature)\
-                    .batch(BATCH_SIZE).prefetch(tf.data.AUTOTUNE)
-
-# --- Metrics ---
-top1  = CategoricalAccuracy(name="top1")               # works with logits
-top3  = TopKCategoricalAccuracy(k=3, name="top3")
-top5  = TopKCategoricalAccuracy(k=5, name="top5")
-v_mae = MeanAbsoluteError(name="value_mae")
-
-# --- Eval loop ---
-for bx, by in ds:
-    pred_policy, pred_value = model(bx, training=False)   # logits, tanh
-    top1.update_state(by["policy_logits"], pred_policy)
-    top3.update_state(by["policy_logits"], pred_policy)
-    top5.update_state(by["policy_logits"], pred_policy)
-    v_mae.update_state(by["value"], pred_value)
+top1.update_state(val_Y["policy_logits"], pol_logits)
+top3.update_state(val_Y["policy_logits"], pol_logits)
+top5.update_state(val_Y["policy_logits"], pol_logits)
+mae.update_state(val_Y["value"],         val_pred)
 
 print(f"Policy Top-1: {top1.result().numpy():.4f}")
 print(f"Policy Top-3: {top3.result().numpy():.4f}")
 print(f"Policy Top-5: {top5.result().numpy():.4f}")
-print(f"Value MAE   : {v_mae.result().numpy():.4f}")
+print(f"Value MAE   : {mae.result().numpy():.4f}")
