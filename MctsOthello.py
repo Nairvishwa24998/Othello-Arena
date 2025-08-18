@@ -79,7 +79,7 @@ class MctsOthello(MctsParent):
         next_player = cloned_instance.current_player()
         child_node = Node(cloned_instance, parent=current_node, move=move,player_to_move=next_player)
         if ai_type == MCTS_NN:
-            hashed_board_key = board_hash(parent_board, player_turn)
+            hashed_board_key = board_hash(parent_board, player_turn, ai_type)
             tt_value = self.mcts_transposition_table.get(hashed_board_key)
             if tt_value is None:
                 pre_move_flattened_state_2d = "".join(str(cell) for row in parent_board for cell in row)
