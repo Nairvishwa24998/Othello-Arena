@@ -52,7 +52,7 @@ class Node:
         parent_visits = 0
         # otherwise would lead to dividing by 0 related errors
         if visits == 0:
-            return math.inf
+            return 1e12
         # to prevent edge case where parent visit is 0 and causes error in log
         parent_visits = max(parent.get_visits(), 1) if parent else 1
         # applied formula for UCB1

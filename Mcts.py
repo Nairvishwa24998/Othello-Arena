@@ -11,7 +11,7 @@ class Mcts:
     def __init__(self, root, game_instance):
         self.root = Node(state=game_instance)
         # just a hashed version of the current board state when MCTS is called
-        self.hashed_root = board_hash(game_instance.get_current_board_state(), game_instance.current_player())
+        self.hashed_root = board_hash(game_instance.get_current_board_state(), game_instance.current_player(), game_instance.get_AI_type())
         # removed the hardcoded game name
         self.neural_net = prepare_neural_net_instance(game=game_instance.game_name, size = game_instance.get_board_size(), ai_type = game_instance.get_AI_type())
         # # # Cache for batch predictions to avoid repeated tensor conversions
@@ -82,7 +82,7 @@ class Mcts:
         cloned_instance.increment_total_move_count()
         child_node = Node(cloned_instance, parent=current_node, move=move)
         if ai_type == MCTS_NN:
-            hashed_board_key = board_hash(parent_board, player_turn)
+            hashed_board_key = board_hash(parent_board, player_turn, ai_type)
             tt_value = self.mcts_transposition_table.get(hashed_board_key)
             if tt_value is None:
                 pre_move_flattened_state_2d = "".join(str(cell) for row in parent_board for cell in row)

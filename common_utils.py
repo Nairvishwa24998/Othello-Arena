@@ -47,11 +47,20 @@ def set_starting_othello_board():
 
 # common to MCTS and ab pruning
 # to be used to generate hash for transposition table
-def board_hash(board,player_on_move=None):
+def board_hash(board,player_on_move=None, ai_type=None):
     # accidentally omitted te player to move since that has a key role to play in determining in the relevance of
     # a board state to a player
     flat = tuple(cell for row in board for cell in row)
-    return flat if player_on_move is None else flat + (player_on_move,)
+    if player_on_move is None:
+        return flat
+    else:
+        if ai_type is None:
+            return flat + (player_on_move,)
+        else:
+            return flat + (player_on_move,ai_type)
+
+    # prevent cross contamination
+    # return flat if player_on_move is None else flat + (player_on_move,)
 
 
 # ab pruning only
