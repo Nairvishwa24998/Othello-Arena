@@ -1,24 +1,21 @@
 # Let us represent players with player 1 by 0 and player 2 by 1
 # default setting to be against human player, and size and win_length to conventional 3*3
-import math
 import random
 import time
 from copy import deepcopy
 
 import numpy as np
 
-from Mcts import Mcts
 from MctsOthello import MctsOthello
 from boardgame import BoardGame
-from common_utils import set_starting_othello_board, othello_camp
+from utils.common_utils import set_starting_othello_board, othello_camp
 from constant_strings import TEMPERATURE_CONTROL_FOR_MIN_RANDOMNESS, MOVE_B, MOVE_W, OTHELLO_BOARD_SIZE, DIRECTIONS, \
     COIN_PARITY_HEURISTIC_MULTIPLIER, MOBILITY_HEURISTIC_MULTIPLIER, STABILITY_HEURISTIC_MULTIPLIER, \
     CORNER_CAPTURE_HEURISTIC_MULTIPLIER, CAPTURED_CORNER_WEIGHT, POTENTIAL_CORNER_WEIGHT, UNLIKELY_CORNER_WEIGHT, \
-    ALPHA_BETA_PRUNING, MCTS, MCTS_NN, MAX_PLY_DEPTH_TTT, MIN_GAME_SIM_VS_HUMAN_BENCHMARK_MCTS_TTT, \
-    MIN_GAME_SIM_BENCHMARK_MCTS, \
+    ALPHA_BETA_PRUNING, MCTS, MCTS_NN, MIN_GAME_SIM_BENCHMARK_MCTS, \
     GAME_OTHELLO, MIN_GAME_SIM_VS_HUMAN_BENCHMARK_MCTS_OTHELLO, ASPIRATION_WINDOW_MULTIPLIER, \
     ASPIRATION_WINDOW_FAILURE_UPPER_LIMIT, MAX_PLY_DEPTH_OTHELLO, INF
-from othello_ui import fetch_ui_config, set_ui_config_to_board
+from user_interface.othello_ui import fetch_ui_config, set_ui_config_to_board
 
 
 class Othello(BoardGame) :
@@ -57,8 +54,8 @@ class Othello(BoardGame) :
         except Exception:
             self._pg = None
             return
-
-    def _ui_pg_draw(self, black_score, white_score):
+    #     def _ui_pg_draw(self, black_score, white_score):
+    def _ui_pg_draw(self, black_score, white_score, current_player = None):
         if getattr(self, "_pg", None) is None:
             self._ui_pygame_init()
         if not self._pg:
@@ -74,118 +71,9 @@ class Othello(BoardGame) :
                 pg.quit()
                 self._pg = None
                 return
-        set_ui_config_to_board(pygame_config, board, black_score, white_score)
+        # set_ui_config_to_board(pygame_config, board, black_score, white_score)
+        set_ui_config_to_board(pygame_config, board, black_score, white_score, current_player)
         pg.display.flip()
-
-    # def _ui_pg_init(self):
-    #     # Lazy init; pulls sizes/colors from your constants module.
-    #     try:
-    #         import pygame
-    #         from constant_strings import (
-    #             UI_LINE_THICKNESS, UI_MARGIN, UI_PIXEL_COUNT,
-    #             GREEN, GRID, BLACK, WHITE, MOVE_B, MOVE_W
-    #         )
-    #     except Exception:
-    #         self._pg = None
-    #         return
-    #
-    #     pygame.init()
-    #     n = self.get_board_size()
-    #     CELL = UI_PIXEL_COUNT
-    #     MARG = UI_MARGIN
-    #     LINE = UI_LINE_THICKNESS
-    #     W = H = MARG * 2 + CELL * n
-    #
-    #     screen = pygame.display.set_mode((W, H))
-    #     pygame.display.set_caption("Othello")
-    #
-    #     # simple wood + label colours; tweak if you like
-    #     WOOD = (148, 96, 55)
-    #     LABEL = (245, 226, 179)  # light “engraved” look
-    #     FONT = pygame.font.SysFont(None, max(12, int(MARG * 0.6)))
-    #
-    #     self._pg = {
-    #         "pygame": pygame, "screen": screen, "n": n, "W": W, "H": H,
-    #         "CELL": CELL, "MARG": MARG, "LINE": LINE,
-    #         "GREEN": GREEN, "GRID": GRID, "BLACK": BLACK, "WHITE": WHITE,
-    #         "MOVE_B": MOVE_B, "MOVE_W": MOVE_W,
-    #         "WOOD": WOOD, "LABEL": LABEL, "FONT": FONT,
-    #     }
-
-    # def _ui_pg_draw(self):
-    #     if getattr(self, "_pg", None) is None:
-    #         self._ui_pygame_init()
-    #     if not self._pg:
-    #         return
-    #
-    #     pg = self._pg["pygame"]
-    #     screen = self._pg["screen"]
-    #     n = self._pg["n"]
-    #     W, H = self._pg["W"], self._pg["H"]
-    #     CELL = self._pg["CELL"]
-    #     MARG = self._pg["MARG"]
-    #     LINE = self._pg["LINE"]
-    #     GREEN = self._pg["GREEN"]
-    #     GRID = self._pg["GRID"]
-    #     BLACK = self._pg["BLACK"]
-    #     WHITE = self._pg["WHITE"]
-    #     MOVE_B = self._pg["MOVE_B"]
-    #     MOVE_W = self._pg["MOVE_W"]
-    #     WOOD = self._pg["WOOD"]
-    #     LABELC = self._pg["LABEL"]
-    #     FONT = self._pg["FONT"]
-    #
-    #     # keep window responsive. pygame requires
-    #     # event loop to  remain active otherwise it treats it as game being
-    #     # non responsive
-    #     pg.event.pump()
-    #     for e in pg.event.get():
-    #         if e.type == pg.QUIT:
-    #             pg.quit()
-    #             self._pg = None
-    #             return
-    #
-    #     # --- wood frame & label bands (use the existing margin area) ---
-    #     screen.fill(WOOD)  # full window wood
-    #     # inset board area
-    #     board_rect = (MARG, MARG, CELL * n, CELL * n)
-    #     pg.draw.rect(screen, GREEN, board_rect)  # green board
-    #     pg.draw.rect(screen, (110, 70, 38),  # darker inner bevel
-    #                  (MARG - 2, MARG - 2, CELL * n + 4, CELL * n + 4), 4)
-    #
-    #     # place alpha
-    #     for c in range(n):
-    #         ch = chr(ord('A') + c)
-    #         surf = FONT.render(ch, True, LABELC)
-    #         rect = surf.get_rect(center=(MARG + c * CELL + CELL // 2, MARG // 2))
-    #         screen.blit(surf, rect)
-    #
-    #     # left 1.. numbers
-    #     for r in range(n):
-    #         ch = str(r + 1)
-    #         surf = FONT.render(ch, True, LABELC)
-    #         rect = surf.get_rect(center=(MARG // 2, MARG + r * CELL + CELL // 2))
-    #         screen.blit(surf, rect)
-    #
-    #     # --- grid ---
-    #     for i in range(n + 1):
-    #         x = MARG + i * CELL
-    #         pg.draw.line(screen, GRID, (x, MARG), (x, MARG + CELL * n), LINE)
-    #         pg.draw.line(screen, GRID, (MARG, MARG + i * CELL),
-    #                      (MARG + CELL * n, MARG + i * CELL), LINE)
-    #
-    #     # --- discs ---
-    #     B = self.get_current_board_state()
-    #     for r in range(n):
-    #         for c in range(n):
-    #             v = B[r][c]
-    #             if v == MOVE_B or v == MOVE_W:
-    #                 cx = MARG + c * CELL + CELL // 2
-    #                 cy = MARG + r * CELL + CELL // 2
-    #                 color = BLACK if v == MOVE_B else WHITE
-    #                 pg.draw.circle(screen, color, (cx, cy), CELL // 2 - 6)
-    #
-    #     pg.display.flip()
 
     # To display the board to the user
     def display_board(self, display = False):
@@ -201,7 +89,8 @@ class Othello(BoardGame) :
         try:
             black_score = self.get_player_piece_count(MOVE_B)
             white_score = self.get_player_piece_count(MOVE_W)
-            self._ui_pg_draw(black_score, white_score)
+            # self._ui_pg_draw(black_score, white_score)
+            self._ui_pg_draw(black_score, white_score, self.current_player())
         except Exception:
             # Never break gameplay if UI fails; console keeps working.
             pass
@@ -883,15 +772,13 @@ class Othello(BoardGame) :
         children = parent_node.get_children()
         # just added for safety
         if not children:
-            raise RuntimeError("MCTS produced no children – check rollout budget.")
-        # ───────── DEBUG PRINT: show root statistics once per AI move ─────────
-        print("\n=== ROOT AFTER SEARCH FINISHED ===")
+            raise RuntimeError("MCTS produced no children – verify rollout budget.")
+
+        print("\n=== Root after search finished ===")
         for mv, node in children.items():
             print("[root] move", mv,
                   "visits =", node.get_visits(),
                   "wins   =", node.get_wins())
-        print("==================================\n")
-        # ───────────────────────────────────────────────────────────────────────
 
         move_score_list = [(move, children[move].get_visits()) for move in children]
         # basically getting max based on move visit counts
@@ -924,7 +811,6 @@ class Othello(BoardGame) :
             if best_move is None:  # no legal moves → pass
                 self.last_moved = self.current_player()  # mark who just “moved”
                 return  # skip placement / flips
-            # -----------
         if ai_type in [MCTS, MCTS_NN]:
             # this check is very very very important and has been added to prevent
             # missing immediate wins and losses

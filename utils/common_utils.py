@@ -53,14 +53,14 @@ def board_hash(board,player_on_move=None, ai_type=None):
     flat = tuple(cell for row in board for cell in row)
     if player_on_move is None:
         return flat
+    # prevent cross contamination
+    # return flat if player_on_move is None else flat + (player_on_move,)
     else:
         if ai_type is None:
             return flat + (player_on_move,)
         else:
             return flat + (player_on_move,ai_type)
 
-    # prevent cross contamination
-    # return flat if player_on_move is None else flat + (player_on_move,)
 
 
 # ab pruning only
@@ -68,7 +68,7 @@ def check_existing_hash(self, depth_to_result):
     current_board_state = self.get_current_board_state()
     # compute hash key
     key = board_hash(current_board_state, self.current_player())
-    # --- TRANSPOSE TABLE: check for cached score ---
+    # TT table check for cached score ---
     cached = self.transposition_table.get(key)
     if cached is not None:
         # basically we only need to use it if the cached evaluation

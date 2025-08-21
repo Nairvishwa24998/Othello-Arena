@@ -1,5 +1,4 @@
 import pygame
-from pygame.sprite import LayeredDirty
 
 from constant_strings import UI_LINE_THICKNESS, UI_MARGIN, UI_PIXEL_COUNT, GRID, BLACK, WHITE, MOVE_B, MOVE_W, GREEN, \
     MAX_ICON_SIZE
@@ -12,8 +11,7 @@ def fetch_ui_config(n):
     MARG = max(UI_MARGIN, CELL - 12 + 10)
     LINE = UI_LINE_THICKNESS
     W = H = MARG * 2 + CELL * n
-    # resolve path: <repo>/static/logo.png (adjust if your path differs)
-    logo_path = "static/logo.png"
+    logo_path = "../static/logo.png"
     screen = pygame.display.set_mode((W, H))
     pygame.display.set_caption("Othello")
     add_logo(logo_path)
@@ -37,12 +35,14 @@ def create_board_layout(screen, pygame_config):
     board_margin = pygame_config["MARG"]
     cell = pygame_config["CELL"]
     n = pygame_config["n"]
-    # --- wood frame & label bands (use the existing margin area) ---
+    # wood frame & labels
     screen.fill(wood)  # full window wood
     # inset board area
     board_rect = (board_margin, board_margin, cell * n, cell * n)
-    pg.draw.rect(screen, GREEN, board_rect)  # green board
-    pg.draw.rect(screen, (110, 70, 38),  # darker inner bevel
+    # green board
+    pg.draw.rect(screen, GREEN, board_rect)
+    # darker inner bevel
+    pg.draw.rect(screen, (110, 70, 38),
                  (board_margin - 2, board_margin - 2, cell * n + 4, cell * n + 4), 4)
 
 def add_alphabets_board_border(screen, pygame_config):
@@ -98,17 +98,17 @@ def place_discs(screen, pygame_config,board):
                 cy = board_margin + r * cell + cell // 2
                 color = BLACK if v == MOVE_B else WHITE
                 pg.draw.circle(screen, color, (cx, cy), cell // 2 - 6)
-
-def set_ui_config_to_board(pygame_config, board, black_score, white_score):
+# def set_ui_config_to_board(pygame_config, board, black_score, white_score):
+def set_ui_config_to_board(pygame_config, board, black_score, white_score, current_player = None):
     screen = pygame_config["screen"]
     create_board_layout(screen, pygame_config)
-    draw_scoreboard(screen, pygame_config, black_score=black_score, white_score=white_score)
+    draw_scoreboard(screen, pygame_config, black_score=black_score, white_score=white_score,current_player = current_player)
     add_alphabets_board_border(screen, pygame_config)
     add_numbers_board_border(screen, pygame_config)
     add_grid_lines(screen, pygame_config)
     place_discs(screen,pygame_config,board)
 
-def draw_scoreboard(screen, pygame_config, black_score=2, white_score=2):
+def draw_scoreboard(screen, pygame_config, black_score=2, white_score=2, current_player = None):
     pg    = pygame_config["pygame"]
     W, H  = pygame_config["W"], pygame_config["H"]
     m     = pygame_config["MARG"]
@@ -121,6 +121,11 @@ def draw_scoreboard(screen, pygame_config, black_score=2, white_score=2):
     r   = cell // 2 - 6
     pad = max(12, r // 2)
 
+    # to setup glow
+    glow_color  = label
+    glow_radius = r + 6
+    glow_width  = 6
+
     # place in bottom margin, BELOW the A–H row
     letters_center = H - m // 2
     y = H - (r + 6)                # near bottom edge
@@ -128,6 +133,9 @@ def draw_scoreboard(screen, pygame_config, black_score=2, white_score=2):
 
     # Left: Black
     xL = max(8, m // 3) + r
+    # Black to move, adding glow circle around black
+    if current_player == 0:
+        pg.draw.circle(screen, glow_color, (xL, y), glow_radius, glow_width)
     pg.draw.circle(screen, BLACK, (xL, y), r)
     tB = font.render(f"- {black_score}", True, label)
     screen.blit(tB, (xL + r + pad, y - tB.get_height() // 2))
@@ -137,6 +145,9 @@ def draw_scoreboard(screen, pygame_config, black_score=2, white_score=2):
     cluster_w = (r * 2) + pad + tW.get_width()
     x_start   = W - max(8, m // 3) - cluster_w
     xR        = x_start + r
+    # White to move, add glowing circle around
+    if current_player == 1:
+        pg.draw.circle(screen, glow_color, (xR, y), glow_radius, glow_width)
     pg.draw.circle(screen, WHITE, (xR, y), r)
     pg.draw.circle(screen, (40,40,40), (xR, y), r, 1)
     screen.blit(tW, (xR + r + pad, y - tW.get_height() // 2))
@@ -146,7 +157,7 @@ def draw_scoreboard(screen, pygame_config, black_score=2, white_score=2):
 def add_logo(icon_path):
     try:
         icon = pygame.image.load(str(icon_path)).convert_alpha()
-        # (optional) scale big images down so Windows/Linux tray looks crisp
+        # scale big images down
         if icon.get_width() > MAX_ICON_SIZE or icon.get_height() > MAX_ICON_SIZE:
             icon = pygame.transform.smoothscale(icon, (MAX_ICON_SIZE, MAX_ICON_SIZE))
         pygame.display.set_icon(icon)

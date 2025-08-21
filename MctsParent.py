@@ -5,10 +5,11 @@ import numpy as np
 
 from Neural_Net_Utils import prepare_neural_net_instance, flattened_board_to_tensor
 from Node import Node
-from common_utils import board_hash
-from constant_strings import GAME_TICTACTOE, GAME_OTHELLO, MCTS
+from utils.common_utils import board_hash
+from constant_strings import GAME_OTHELLO, MCTS
 
 
+# Parent MCTS class to potentially be extended into multiple games
 class MctsParent:
     def __init__(self, root, game_instance):
         self.root = Node(state=game_instance)
@@ -74,10 +75,9 @@ class MctsParent:
                     encoded = flattened_board_to_tensor(state_str=flat_str,game_name=game_name, turn_to_move=turn_to_move)
                     self.pending_batch.append((child, encoded))
                 else:
-                    # already has NN value (from TT) → rollout / heuristic
                     value = self.exploitation(child)
                     self.backtracking(child, value)
-                # ── run batch when full or on final simulation ──────────────
+                # run batch when full or on final simulation
                 if len(self.pending_batch) >= self.BATCH_SIZE or number == max_runs - 1:
                     if self.pending_batch:  # safeguard
                         batch = np.stack([b for _, b in self.pending_batch], axis=0)
@@ -86,8 +86,8 @@ class MctsParent:
                         print("batch_time =", time.perf_counter() - start)
                         for (leaf, _), v in zip(self.pending_batch, value_batch):
                             # old
-                            # leaf.expanded_by_nn = True  # mark done
-                            # self.backtracking(leaf, float(v))  # propagate
+                            # leaf.expanded_by_nn = True
+                            # self.backtracking(leaf, float(v))
                             # because of batching a group skips exploitation and gets the predicted values directly
                             child_to_move = leaf.state.current_player()
                             parent_to_move = leaf.parent.player_to_move if leaf.parent else child_to_move

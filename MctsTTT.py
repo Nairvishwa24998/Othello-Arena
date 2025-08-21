@@ -1,22 +1,15 @@
 import random
-import numpy as np
 
+from MctsParent import MctsParent
 from Neural_Net_Utils import flattened_board_to_tensor, prepare_neural_net_instance
 from Node import Node
-from common_utils import board_hash, link_game_position_hash_to_pv
-from constant_strings import MIN_GAME_SIM_BENCHMARK_MCTS, MCTS, MCTS_NN, GAME_TICTACTOE
+from utils.common_utils import board_hash, link_game_position_hash_to_pv
+from constant_strings import MCTS, MCTS_NN, GAME_TICTACTOE
 
 
-class Mcts:
+class MctsTTT(MctsParent):
     def __init__(self, root, game_instance):
-        self.root = Node(state=game_instance)
-        # just a hashed version of the current board state when MCTS is called
-        self.hashed_root = board_hash(game_instance.get_current_board_state(), game_instance.current_player(), game_instance.get_AI_type())
-        # removed the hardcoded game name
-        self.neural_net = prepare_neural_net_instance(game=game_instance.game_name, size = game_instance.get_board_size(), ai_type = game_instance.get_AI_type())
-        # # # Cache for batch predictions to avoid repeated tensor conversions
-        # self._prediction_cache = {}
-        self.mcts_transposition_table = game_instance.mcts_transposition_table
+        super().__init__(root, game_instance)
 
 
 

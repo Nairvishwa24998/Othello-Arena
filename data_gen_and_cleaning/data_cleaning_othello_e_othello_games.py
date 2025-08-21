@@ -85,7 +85,7 @@ def csv_to_npz(csv_file: Path, winner_col: str, moves_col: str, dialect: csv.Dia
                 colour = "W" if colour == "B" else "B"
 
     np.savez_compressed(
-        "game_data_board_size8_othello.npz",
+        "../game_data_board_size8_othello.npz",
         states=np.array(states, dtype=object),
         policies=np.array(policies, dtype=np.float32),
         values=np.array(values, dtype=np.int8),
@@ -114,4 +114,4 @@ if __name__ == "__main__":
     if not args.csv_file.exists():
         sys.exit(f"No such file: {args.csv_file}")
 
-    # 1️⃣ pick a dialect (delimiter)
+    # pick a dialect (delimiter)

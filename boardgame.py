@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 import numpy as np
 
-from common_utils import board_hash
+from utils.common_utils import board_hash
 from constant_strings import CONCLUSIVE_RESULT_MULTIPLIER
 from scipy.special import softmax
 
@@ -68,8 +68,6 @@ class BoardGame(ABC):
     def set_to_simulation_mode(self):
         self.simulation_mode = True
         return self.simulation_mode
-
-
 
 
 

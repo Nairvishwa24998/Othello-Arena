@@ -1,11 +1,10 @@
 import random
-import numpy as np
 
 from MctsParent import MctsParent
-from Neural_Net_Utils import flattened_board_to_tensor, prepare_neural_net_instance
+from Neural_Net_Utils import flattened_board_to_tensor
 from Node import Node
-from common_utils import board_hash, link_game_position_hash_to_pv
-from constant_strings import MIN_GAME_SIM_BENCHMARK_MCTS, MCTS, MCTS_NN, GAME_TICTACTOE, GAME_OTHELLO
+from utils.common_utils import board_hash, link_game_position_hash_to_pv
+from constant_strings import MCTS, MCTS_NN, GAME_OTHELLO
 
 
 class MctsOthello(MctsParent):
@@ -184,10 +183,6 @@ class MctsOthello(MctsParent):
         # only two possible outcomes here MCTS or MCTS + NN. Alpha beta pruning doesn't even come here
         # this would be the no mcts case
         outcome = simulation_instance.rollout_pseudo_random()
-        # please remove befpre final submission
-        print("Shouldn't be going here!")
-        # Please confirm commented out for now
-        # refined_outcome = -outcome
         if parent_node_move_player != current_node_move_player:
             refined_outcome = -outcome
         else:

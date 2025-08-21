@@ -8,7 +8,7 @@ from Neural_Net_Utils import flattened_board_to_tensor
 model = load_model("ttt-4.keras")
 
 # Load the test dataset
-data = np.load("game_data_board_size4_ttt.npz", allow_pickle=True)
+data = np.load("../game_data_board_size4_ttt.npz", allow_pickle=True)
 test_X = data["states"]
 test_Y = {
     "policy_logits": data["policies"],
@@ -37,5 +37,5 @@ true_value_signs = np.round(test_Y["value"].flatten())
 predicted_value_signs = np.round(value_preds.flatten())
 value_sign_accuracy = np.mean(true_value_signs == predicted_value_signs)
 
-print(f"📊 Policy Accuracy: {policy_accuracy * 100:.2f}%")
-print(f"📊 Value Sign Accuracy: {value_sign_accuracy * 100:.2f}%")
+print(f"Policy Accuracy: {policy_accuracy * 100:.2f}%")
+print(f" Value Sign Accuracy: {value_sign_accuracy * 100:.2f}%")

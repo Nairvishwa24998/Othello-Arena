@@ -3,15 +3,14 @@ from copy import deepcopy
 import random
 import time
 import numpy as np
-from scipy.special import softmax
 
-from Mcts import Mcts
+from MctsTTT import MctsTTT
 from boardgame import BoardGame
-from constant_strings import CONCLUSIVE_RESULT_MULTIPLIER, TEMPERATURE_CONTROL_FOR_MIN_RANDOMNESS, \
+from constant_strings import TEMPERATURE_CONTROL_FOR_MIN_RANDOMNESS, \
     MAX_MOVE_COUNT_WITH_INITIAL_TEMPERATURE_CONTROL, MOVE_X, MOVE_O, MCTS, ALPHA_BETA_PRUNING, \
     MIN_GAME_SIM_VS_HUMAN_BENCHMARK_MCTS_TTT, MIN_GAME_SIM_BENCHMARK_MCTS, MCTS_NN, ASPIRATION_WINDOW_MULTIPLIER, \
     ASPIRATION_WINDOW_FAILURE_UPPER_LIMIT, MAX_PLY_DEPTH_TTT, GAME_TICTACTOE
-from common_utils import clamp
+from utils.common_utils import clamp
 
 
 # Let us represent players with player 1 by 0 and player 2 by 1
@@ -158,11 +157,6 @@ class Tictactoe(BoardGame) :
         self.display_board()
         # increment total move counter by 1
         self.increment_total_move_count()
-
-    # modifications to be done
-    def make_best_nn_based_move(self):
-        pass
-
 
 
     # checking for moves which can lead to immediate wins or lead to immediate losse
@@ -932,7 +926,7 @@ class Tictactoe(BoardGame) :
         # original instance and just perform everything on a clone
         simulated_mode = self.get_game_mode()
         cloned_instance = self.clone_instance()
-        mcts = Mcts(root=None, game_instance=cloned_instance)
+        mcts = MctsTTT(root=None, game_instance=cloned_instance)
         # variable which assigns different number of max runs based on self or vs human play
         max_runs = MIN_GAME_SIM_VS_HUMAN_BENCHMARK_MCTS_TTT if simulated_mode == False else MIN_GAME_SIM_BENCHMARK_MCTS
         mcts.commence_mcts_for_selfplay(max_runs=max_runs)

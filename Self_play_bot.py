@@ -1,8 +1,8 @@
 import numpy as np
 
-from common_utils import ttt_validate_bot_play_inp_config, othello_validate_bot_play_inp_config
-from constant_strings import ALPHA_BETA_PRUNING, MCTS, MCTS_NN, OTHELLO_BOARD_SIZE, MOVE_B, MOVE_W
-from utility_methods import setup_tictactoe_instance_for_training_simulations, setup_tictactoe_instance_for_bot_matches, \
+from utils.common_utils import ttt_validate_bot_play_inp_config, othello_validate_bot_play_inp_config
+from constant_strings import ALPHA_BETA_PRUNING, MCTS_NN, MOVE_B, MOVE_W
+from utils.game_play_utility_methods import setup_tictactoe_instance_for_training_simulations, setup_tictactoe_instance_for_bot_matches, \
     setup_othello_instance_for_bot_matches
 
 
@@ -11,15 +11,6 @@ from utility_methods import setup_tictactoe_instance_for_training_simulations, s
 class SelfPlayBot:
 
     def __init__(self):
-        # trying to keep records of game runs for each board size
-        self.game_info = {
-            2 : 0,
-            3 : 0,
-            4 : 0,
-            5 : 0,
-            6 : 0,
-            7 : 0
-        }
         self.training_data = []
         self.bot_contest_data = []
 
@@ -199,7 +190,7 @@ if __name__ == "__main__":
     # commented out for testing purposes
     # bot.run_simulations(6, ALPHA_BETA_PRUNING)
     # bot.run_bot_v_bot_matches(ai_player_1=MCTS_NN, ai_player_2=ALPHA_BETA_PRUNING, rounds=5, board_size=4)
-    bot.othello_run_bot_v_bot_matches(ai_player_1=MCTS, ai_player_2=MCTS_NN, rounds=1)
+    bot.othello_run_bot_v_bot_matches(ai_player_1=MCTS_NN, ai_player_2=ALPHA_BETA_PRUNING, rounds=1)
 
 
 
