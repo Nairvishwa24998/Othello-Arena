@@ -208,6 +208,5 @@ class MctsOthello(MctsParent):
             # Flip sign only if the side to move changes between parent and child
             if parent.player_to_move != current_node.player_to_move:
                 refined_outcome = -refined_outcome  # opponent’s perspective
-            # else: same mover again (pass) → keep sign
-
+            # else: same mover again (pass) and keep sign
             current_node = parent

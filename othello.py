@@ -14,7 +14,8 @@ from constant_strings import TEMPERATURE_CONTROL_FOR_MIN_RANDOMNESS, MOVE_B, MOV
     CORNER_CAPTURE_HEURISTIC_MULTIPLIER, CAPTURED_CORNER_WEIGHT, POTENTIAL_CORNER_WEIGHT, UNLIKELY_CORNER_WEIGHT, \
     ALPHA_BETA_PRUNING, MCTS, MCTS_NN, MIN_GAME_SIM_BENCHMARK_MCTS, \
     GAME_OTHELLO, MIN_GAME_SIM_VS_HUMAN_BENCHMARK_MCTS_OTHELLO, ASPIRATION_WINDOW_MULTIPLIER, \
-    ASPIRATION_WINDOW_FAILURE_UPPER_LIMIT, MAX_PLY_DEPTH_OTHELLO, INF
+    ASPIRATION_WINDOW_FAILURE_UPPER_LIMIT, MAX_PLY_DEPTH_OTHELLO, INF, \
+    MIN_GAME_SIM_VS_HUMAN_BENCHMARK_PURE_MCTS_OTHELLO_DEMO
 from user_interface.othello_ui import fetch_ui_config, set_ui_config_to_board
 
 
@@ -752,6 +753,16 @@ class Othello(BoardGame) :
         print(f"AI move computation took {end_time - start_time:.3f} seconds.")
         return best_follow_up_move, policy_map
 
+    # helper method to set sim count based on different conditions
+    def set_sim_count(self):
+        simulated_mode = self.get_game_mode()
+        if self.ai_type == MCTS:
+                 return MIN_GAME_SIM_VS_HUMAN_BENCHMARK_PURE_MCTS_OTHELLO_DEMO
+        else:
+            if not simulated_mode:
+                return MIN_GAME_SIM_VS_HUMAN_BENCHMARK_MCTS_OTHELLO
+            return MIN_GAME_SIM_BENCHMARK_MCTS
+
     # to be implemented
     # Formula used in the Alpha Go paper prioritizing visit count as the most viable metric πₐ ∝ N(s, a)¹/τ
     # Long story short, ove a decent number of simulations visit count is the best metric to look for
@@ -767,7 +778,7 @@ class Othello(BoardGame) :
         best_follow_up_move = None
         mcts = MctsOthello(root=None, game_instance=cloned_instance)
         # variable which assigns different number of max runs based on self or vs human play
-        max_runs = MIN_GAME_SIM_VS_HUMAN_BENCHMARK_MCTS_OTHELLO if simulated_mode == False else MIN_GAME_SIM_BENCHMARK_MCTS
+        max_runs = self.set_sim_count()
         mcts.commence_mcts_for_selfplay(max_runs=max_runs)
         parent_node = mcts.get_root()
         children = parent_node.get_children()

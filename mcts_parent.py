@@ -50,11 +50,6 @@ class MctsParent:
     # MIN_GAME_SIM_VS_HUMAN_BENCHMARK_MCTS used for vs human play
     def commence_mcts_for_selfplay(self, max_runs):
         for number in range(max_runs):
-            # old version
-            # parent = self.selection()
-            # child = self.expansion(parent) or parent
-            # value = self.exploitation(child)
-            # self.backtracking(child, value)
             if self.root.state.ai_type == MCTS:
                 parent = self.selection()
                 child = self.expansion(parent) or parent
@@ -85,9 +80,6 @@ class MctsParent:
                         policy_batch, value_batch = self.neural_net.fast_predict(batch)
                         print("batch_time =", time.perf_counter() - start)
                         for (leaf, _), v in zip(self.pending_batch, value_batch):
-                            # old
-                            # leaf.expanded_by_nn = True
-                            # self.backtracking(leaf, float(v))
                             # because of batching a group skips exploitation and gets the predicted values directly
                             child_to_move = leaf.state.current_player()
                             parent_to_move = leaf.parent.player_to_move if leaf.parent else child_to_move
