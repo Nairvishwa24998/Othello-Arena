@@ -3,7 +3,7 @@ from abc import abstractmethod
 
 import numpy as np
 
-from Neural_Net_Utils import prepare_neural_net_instance, flattened_board_to_tensor
+from neural_net_utils import prepare_neural_net_instance, flattened_board_to_tensor
 from Node import Node
 from utils.common_utils import board_hash
 from constant_strings import GAME_OTHELLO, MCTS

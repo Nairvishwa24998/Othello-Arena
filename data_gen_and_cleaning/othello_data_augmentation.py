@@ -1,5 +1,5 @@
 import tensorflow as tf
-from Neural_Net import Neural_Net
+from neural_net import Neural_Net
 # from constant_strings import GAME_OTHELLO
 # from tensorflow.keras.optimizers import Adam
 # from tensorflow.keras.losses import CategoricalCrossentropy, MeanSquaredError
@@ -8,7 +8,7 @@ from keras.src.optimizers import Adam
 from keras.src.losses import CategoricalCrossentropy, MeanSquaredError
 from keras.src.callbacks import ModelCheckpoint, ReduceLROnPlateau, EarlyStopping
 
-from Neural_Net_Utils import load_npz_dataset, obtain_train_test_validation_data, prepare_input_output
+from neural_net_utils import load_npz_dataset, obtain_train_test_validation_data, prepare_input_output
 from constant_strings import GAME_OTHELLO
 
 dataset = load_npz_dataset(8, GAME_OTHELLO)               # uses your NPZ w/ to_move

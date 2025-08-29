@@ -4,7 +4,7 @@ import random
 import time
 import numpy as np
 
-from MctsTTT import MctsTTT
+from mcts_ttt import MctsTTT
 from boardgame import BoardGame
 from constant_strings import TEMPERATURE_CONTROL_FOR_MIN_RANDOMNESS, \
     MAX_MOVE_COUNT_WITH_INITIAL_TEMPERATURE_CONTROL, MOVE_X, MOVE_O, MCTS, ALPHA_BETA_PRUNING, \
@@ -932,7 +932,7 @@ class Tictactoe(BoardGame) :
         mcts.commence_mcts_for_selfplay(max_runs=max_runs)
         parent_node = mcts.get_root()
         children = parent_node.get_children()
-        # ───────── DEBUG PRINT: show root statistics once per AI move ─────────
+        # show root mcts statistics at each move
         print("\n=== ROOT AFTER SEARCH FINISHED ===")
         for mv, node in children.items():
             print("[root] move", mv,
@@ -944,15 +944,6 @@ class Tictactoe(BoardGame) :
         move_score_list= [(move,children[move].get_visits()) for move in children]
         # basically getting max based on move visit counts
         best_move = max(move_score_list, key=lambda x: x[1])[0]
-        # # ── choose best_move ────────────────────────────────────────────────
-        # for mv, node in children.items():  # proven-win guard
-        #     if node.get_visits() > 0 and node.get_wins() == node.get_visits():
-        #         best_move = mv
-        #         break
-        # else:  # fall back to visits
-        #     move_score_list = [(m, c.get_visits()) for m, c in children.items()]
-        #     best_move = max(move_score_list, key=lambda x: x[1])[0]
-        # # ────────────────────────────────────────────────────────────────────
         total_visits = sum(score for move, score in move_score_list)
         prob_distribution = [score / total_visits for move, score in move_score_list]
         policy_map = self.generate_flattened_policy_board_map_for_neural_net(move_score_list, prob_distribution)

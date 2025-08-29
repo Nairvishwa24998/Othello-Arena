@@ -64,15 +64,9 @@ def start_board() -> List[List[str]]:
 def board_to_str(board: List[List[str]]) -> str:
     return "".join(board[r][c] for r in range(8) for c in range(8))
 
-# -----------------------------
 # WTHOR parsing (8x8)
-# -----------------------------
+
 def parse_wtb_record(rec: bytes):
-    """
-    Parse a single 68-byte record.
-    Returns: (tourn_id, black_id, white_id, black_real_score, move_codes[])
-    Move codes are bytes col + 10*row with rows/cols in 1..8 (a1=11, h8=88). 0 ends list.
-    """
     tourn, pid_b, pid_w, black_real, theo = struct.unpack_from("<HHHBB", rec, 0)
     moves_raw = rec[8:]  # 60 bytes
     codes = []

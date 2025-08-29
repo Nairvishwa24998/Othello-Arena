@@ -3,8 +3,8 @@ from constant_strings import MOVE_B, MOVE_W, OTHELLO_BOARD_SIZE
 
 from constant_strings import TEMPERATURE_CONTROL_FOR_MAX_RANDOMNESS, ALPHA_BETA_PRUNING, MCTS, MCTS_NN, \
     TEMPERATURE_CONTROL_FOR_MIN_RANDOMNESS, GAME_TICTACTOE, GAME_OTHELLO
-from Othello import Othello
-from Tictactoe_variant import Tictactoe
+from othello import Othello
+from tictactoe_variant import Tictactoe
 
 
 def prompt_user_fresh_game_or_custom_position(game_name):

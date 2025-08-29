@@ -116,7 +116,7 @@ class Neural_Net:
         # value_prediction = layers.Dense(units = value_layer_output_units, activation=ACTIVATION_TANH, name = "value")(value_head_resultant_layer)
         # return value_prediction
         hidden_units = 128
-        wd = 1e-4
+        weight_decay = 1e-4
         value_layer_filter_count = self.get_value_filter_count()
         secondary_kernel_size = self.get_secondary_kernel_size()
 
@@ -125,9 +125,9 @@ class Neural_Net:
         )
         x = layers.Flatten(name="value_flatten")(x)
         x = layers.Dense(hidden_units, activation="relu",
-                         kernel_regularizer=L2(wd), name="value_fc")(x)
+                         kernel_regularizer=L2(weight_decay), name="value_fc")(x)
         value = layers.Dense(1, activation=ACTIVATION_TANH,
-                             kernel_regularizer=L2(wd), name="value")(x)
+                             kernel_regularizer=L2(weight_decay), name="value")(x)
         return value
 
 

@@ -41,6 +41,8 @@ class SelfPlayBot:
         base_filename =  "game_data_board_size"
         return base_filename + str(size)
 
+    # helper method for tictactoe selfplay with dataset generation and storage functionality
+    # Not for demo, minimal display setting
     def run_simulations(self, size, ai_type):
         count = 0
         win_X = 0
@@ -79,6 +81,8 @@ class SelfPlayBot:
         print(f" Training data stored in file: {generated_file_name}")
 
 
+
+    # helper method for demonstration of TicTacToe bot v bot matches between different AI agents
     def ttt_run_bot_v_bot_matches(
             self,
             ai_player_1: str,
@@ -128,6 +132,7 @@ class SelfPlayBot:
         print(f"{ai_player_2}-wins = {wins_p2}")
         print(f"draws = {draws}")
 
+    # helper method for demonstration of Othello bot v bot matches between different AI agents
     def othello_run_bot_v_bot_matches(
             self,
             ai_player_1: str,

@@ -6,7 +6,7 @@ from copy import deepcopy
 
 import numpy as np
 
-from MctsOthello import MctsOthello
+from mcts_othello import MctsOthello
 from boardgame import BoardGame
 from utils.common_utils import set_starting_othello_board, othello_camp
 from constant_strings import TEMPERATURE_CONTROL_FOR_MIN_RANDOMNESS, MOVE_B, MOVE_W, OTHELLO_BOARD_SIZE, DIRECTIONS, \
@@ -54,7 +54,7 @@ class Othello(BoardGame) :
         except Exception:
             self._pg = None
             return
-    #     def _ui_pg_draw(self, black_score, white_score):
+
     def _ui_pg_draw(self, black_score, white_score, current_player = None):
         if getattr(self, "_pg", None) is None:
             self._ui_pygame_init()
@@ -71,7 +71,6 @@ class Othello(BoardGame) :
                 pg.quit()
                 self._pg = None
                 return
-        # set_ui_config_to_board(pygame_config, board, black_score, white_score)
         set_ui_config_to_board(pygame_config, board, black_score, white_score, current_player)
         pg.display.flip()
 
@@ -89,7 +88,6 @@ class Othello(BoardGame) :
         try:
             black_score = self.get_player_piece_count(MOVE_B)
             white_score = self.get_player_piece_count(MOVE_W)
-            # self._ui_pg_draw(black_score, white_score)
             self._ui_pg_draw(black_score, white_score, self.current_player())
         except Exception:
             # Never break gameplay if UI fails; console keeps working.
@@ -265,31 +263,7 @@ class Othello(BoardGame) :
 
     # list of tuples of potential flip candidates given the latest move x,y by the player
     # need to be run after every move
-    def get_flip_candidates(self,board, x, y, player_symbol, opponent_symbol):
-        size = self.get_board_size()
-        flips = []
-        # basically we move in 8 directions from any point and check
-        for dx, dy in DIRECTIONS:
-            path = []
-            updated_x, updated_y = x + dx, y + dy
-            # to address for the edge case and we don't go out of bounds
-            while 0 <= updated_x < size and 0 <= updated_y < size:
-                cell = board[updated_x][updated_y]
-                # this could be a potential flip candidate
-                if cell == opponent_symbol:
-                    path.append((updated_x, updated_y))
-                    updated_x += dx
-                    updated_y += dy
-                # if we reached our piece, everything of opposite color upto now can be flipped
-                # can see from ordering that loop breaks when empty spot encountered
-                elif cell == player_symbol:
-                    if path:
-                        flips.extend(path)
-                    break
-                # Hit empty spot, so no point checking in that direction
-                else:
-                    break
-        return flips
+
 
 
     def implement_flips(self, x, y, player_symbol, opponent_symbol):
@@ -495,7 +469,7 @@ class Othello(BoardGame) :
         return 100.0 * (curr_player_score - opp_score) / total
 
 
-
+    # helper method to calculate uninterrupted streak of pieces of the player's color from a corner
     def calculate_uninterrupted_streak_from_corner(self, player_symbol, corner_x, corner_y):
         board_size = self.get_board_size()
         player_score = 0
@@ -774,6 +748,7 @@ class Othello(BoardGame) :
         if not children:
             raise RuntimeError("MCTS produced no children – verify rollout budget.")
 
+        # optional print to showcase mcts iteration statistics.
         print("\n=== Root after search finished ===")
         for mv, node in children.items():
             print("[root] move", mv,
@@ -837,6 +812,7 @@ class Othello(BoardGame) :
         self.last_moved = ai_player_code
         print(f"AI played {best_move[0], best_move[1]}")
 
+    # helper method to make pseudo random move. Used within Monte Carlo Tree Search during random rollouts
     def make_pseudo_random_move(self):
         current_player = self.current_player()
         possible_moves = self.get_possible_moves(current_player)

@@ -5,7 +5,7 @@ import argparse, csv, string, sys
 from pathlib import Path
 import numpy as np
 
-# ── Othello helpers ─────────────────────────────────────────────────────────
+# Othello helpers
 DIRS = [(dx, dy) for dx in (-1, 0, 1) for dy in (-1, 0, 1) if dx or dy]
 FILE2COL = {c: i for i, c in enumerate(string.ascii_lowercase[:8])}
 
@@ -18,7 +18,7 @@ def start_board() -> np.ndarray:
 
 
 def flips(board: np.ndarray, r: int, c: int, colour: str) -> list[tuple[int, int]]:
-    if board[r, c] != ".":  # occupied
+    if board[r, c] != ".":
         return []
     opp = "W" if colour == "B" else "B"
     acc: list[tuple[int, int]] = []
@@ -95,7 +95,6 @@ def csv_to_npz(csv_file: Path, winner_col: str, moves_col: str, dialect: csv.Dia
 
 
 def choose_dialect(csv_path: Path) -> csv.Dialect:
-    """Try csv.Sniffer(); fall back to comma if it fails."""
     with csv_path.open("r", encoding="utf-8-sig", newline="") as fh:
         sample = fh.read(4096)
         fh.seek(0)
@@ -105,13 +104,11 @@ def choose_dialect(csv_path: Path) -> csv.Dialect:
             return csv.get_dialect("excel")  # ',' delimiter
 
 
-# ── CLI wrapper (notebook-safe) ────────────────────────────────────────────
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(description="Convert Othello CSV → .npz", allow_abbrev=False)
     ap.add_argument("csv_file", type=Path, help="CSV with winner & game_moves columns")
-    args, _unknown = ap.parse_known_args()  # ignore Jupyter’s hidden -f argument
+    args, _unknown = ap.parse_known_args()
 
     if not args.csv_file.exists():
         sys.exit(f"No such file: {args.csv_file}")
 
-    # pick a dialect (delimiter)

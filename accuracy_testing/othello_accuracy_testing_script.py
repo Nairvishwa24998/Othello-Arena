@@ -1,18 +1,19 @@
-from Neural_Net import Neural_Net
-from Neural_Net_Utils import load_npz_dataset, obtain_train_test_validation_data, prepare_input_output
+from neural_net import Neural_Net
+from neural_net_utils import load_npz_dataset, obtain_train_test_validation_data, prepare_input_output
 from constant_strings import GAME_OTHELLO
 import numpy as np, tensorflow as tf
-from tensorflow.keras.metrics import CategoricalAccuracy, TopKCategoricalAccuracy, MeanAbsoluteError
-
+# from tensorflow.keras.metrics import CategoricalAccuracy, TopKCategoricalAccuracy, MeanAbsoluteError
+from keras.src.metrics import CategoricalAccuracy, TopKCategoricalAccuracy, MeanAbsoluteError
 # load model
 model = tf.keras.models.load_model("othello-8.keras", compile=False)
 
-#use your existing split helpers (same NPZ you trained on) ---
 dataset = load_npz_dataset(8, GAME_OTHELLO)
-_, val_data, _ = obtain_train_test_validation_data(dataset)   # <- val only
+
+# only val data is relevant
+_, val_data, _ = obtain_train_test_validation_data(dataset)
 val_X, val_Y = prepare_input_output(val_data, GAME_OTHELLO)   # uses your flattened_board_to_tensor (with turn_to_move)
 
-#predict & metrics (logits are fine for these metrics) ---
+#predict & metrics (logits are fine for these metrics)
 pol_logits, val_pred = model.predict(val_X, batch_size=1024, verbose=1)
 
 top1 = CategoricalAccuracy()
