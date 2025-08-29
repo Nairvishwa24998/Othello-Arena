@@ -88,7 +88,7 @@ class SelfPlayBot:
             ai_player_1: str,
             ai_player_2: str,
             rounds: int = 100,
-            board_size: int = 3,
+            board_size: int = 4,
     ):
         ttt_validate_bot_play_inp_config(ai_player_1, ai_player_2, rounds, board_size)
         # clear any previous contest records
@@ -96,6 +96,7 @@ class SelfPlayBot:
         wins_p1 = wins_p2 = draws = 0
         for game_number in range(1, rounds + 1):
             game = setup_tictactoe_instance_for_bot_matches(board_size, ai_player_1)
+            game.display_board(display=True)
             while True:
                 turn = game.determine_player_turn()
                 # player 1 plays
@@ -108,7 +109,7 @@ class SelfPlayBot:
                     game.ai_player_code = 1
                     game.set_AI_type(ai_player_2)
                     game.make_ai_move(ai_player_2)
-
+                game.display_board(display=True)
                 outcome = game.detect_win_loss()
                 if outcome is not None:
                     break
@@ -195,7 +196,8 @@ if __name__ == "__main__":
     # commented out for testing purposes
     # bot.run_simulations(6, ALPHA_BETA_PRUNING)
     # bot.run_bot_v_bot_matches(ai_player_1=MCTS_NN, ai_player_2=ALPHA_BETA_PRUNING, rounds=5, board_size=4)
-    bot.othello_run_bot_v_bot_matches(ai_player_1=MCTS_NN, ai_player_2=ALPHA_BETA_PRUNING, rounds=1)
+    bot.ttt_run_bot_v_bot_matches(ai_player_1=ALPHA_BETA_PRUNING, ai_player_2=ALPHA_BETA_PRUNING, rounds=1)
+    # bot.othello_run_bot_v_bot_matches(ai_player_1=ALPHA_BETA_PRUNING, ai_player_2=MCTS_NN, rounds=5)
 
 
 
