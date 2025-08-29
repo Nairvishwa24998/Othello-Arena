@@ -264,6 +264,33 @@ class Othello(BoardGame) :
     # list of tuples of potential flip candidates given the latest move x,y by the player
     # need to be run after every move
 
+    # list of tuples of potential flip candidates given the latest move x,y by the player
+    # need to be run after every move
+    def get_flip_candidates(self, board, x, y, player_symbol, opponent_symbol):
+        size = self.get_board_size()
+        flips = []
+        # basically we move in 8 directions from any point and check
+        for dx, dy in DIRECTIONS:
+            path = []
+            updated_x, updated_y = x + dx, y + dy
+            # to address for the edge case and we don't go out of bounds
+            while 0 <= updated_x < size and 0 <= updated_y < size:
+                cell = board[updated_x][updated_y]
+                # this could be a potential flip candidate
+                if cell == opponent_symbol:
+                    path.append((updated_x, updated_y))
+                    updated_x += dx
+                    updated_y += dy
+                # if we reached our piece, everything of opposite color upto now can be flipped
+                # can see from ordering that loop breaks when empty spot encountered
+                elif cell == player_symbol:
+                    if path:
+                        flips.extend(path)
+                    break
+                # Hit empty spot, so no point checking in that direction
+                else:
+                    break
+        return flips
 
 
     def implement_flips(self, x, y, player_symbol, opponent_symbol):
