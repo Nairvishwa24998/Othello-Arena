@@ -1029,6 +1029,8 @@ class Othello(BoardGame) :
                                        reverse=isMax)
                 best_score = current_best_score
 
+
+
                 # Aspiration-window success?
                 if window_low < current_best_score < window_high:
                     prev_score = current_best_score
