@@ -6,8 +6,8 @@ from copy import deepcopy
 
 import numpy as np
 
-from mcts_othello import MctsOthello
-from boardgame import BoardGame
+from search_layer.mcts_othello import MctsOthello
+from game_logic_layer.boardgame import BoardGame
 from search_layer.othello_ab_pruning_helper import minimax_with_alpha_beta_pruning, \
     heuristic_minimax_with_alpha_beta_pruning_with_iterative_deepening
 from utils.common_utils import set_starting_othello_board, othello_camp

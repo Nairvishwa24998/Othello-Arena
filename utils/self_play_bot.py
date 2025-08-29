@@ -196,8 +196,8 @@ if __name__ == "__main__":
     # commented out for testing purposes
     # bot.run_simulations(6, ALPHA_BETA_PRUNING)
     # bot.run_bot_v_bot_matches(ai_player_1=MCTS_NN, ai_player_2=ALPHA_BETA_PRUNING, rounds=5, board_size=4)
-    bot.ttt_run_bot_v_bot_matches(ai_player_1=ALPHA_BETA_PRUNING, ai_player_2=ALPHA_BETA_PRUNING, rounds=1)
-    # bot.othello_run_bot_v_bot_matches(ai_player_1=ALPHA_BETA_PRUNING, ai_player_2=MCTS_NN, rounds=5)
+    # bot.ttt_run_bot_v_bot_matches(ai_player_1=ALPHA_BETA_PRUNING, ai_player_2=ALPHA_BETA_PRUNING, rounds=1)
+    bot.othello_run_bot_v_bot_matches(ai_player_1=ALPHA_BETA_PRUNING, ai_player_2=ALPHA_BETA_PRUNING, rounds=1)
 
 
 

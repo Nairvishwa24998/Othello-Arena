@@ -4,8 +4,8 @@ import random
 import time
 import numpy as np
 
-from mcts_ttt import MctsTTT
-from boardgame import BoardGame
+from search_layer.mcts_ttt import MctsTTT
+from game_logic_layer.boardgame import BoardGame
 from constant_strings import TEMPERATURE_CONTROL_FOR_MIN_RANDOMNESS, \
     MAX_MOVE_COUNT_WITH_INITIAL_TEMPERATURE_CONTROL, MOVE_X, MOVE_O, MCTS, ALPHA_BETA_PRUNING, \
     MIN_GAME_SIM_VS_HUMAN_BENCHMARK_MCTS_TTT, MIN_GAME_SIM_BENCHMARK_MCTS, MCTS_NN, MAX_PLY_DEPTH_TTT, GAME_TICTACTOE
