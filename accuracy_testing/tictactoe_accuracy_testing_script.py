@@ -18,6 +18,7 @@ test_Y = {
 game_name = "tictactoe"
 game_size = 4
 
+
 # Preprocess X (convert strings to tensors)
 test_X_tensor = np.array([
     flattened_board_to_tensor(state_str, game_name)
