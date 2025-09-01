@@ -1,6 +1,7 @@
-# Othello AI Arena – AlphaZero-Inspired Game AI
+#DESIGN AND IMPLEMENTATION OF A MULTI-GAME AI FRAMEWORK USING MONTE CARLO TREE SEARCH, ALPHA-BETA PRUNING, AND NEURAL NETWORKS
 
-A **Othello AI platform** featuring **Alpha-Beta**, **Monte Carlo Tree Search (MCTS)**, and **Neural‑MCTS (AlphaZero‑style)** agents.  
+
+A **Othello + TicTacToe AI platform** featuring **Alpha-Beta**, **Monte Carlo Tree Search (MCTS)**, and **Neural‑MCTS (AlphaZero‑style)** agents.  
 Powered by a **deep residual CNN** for policy & value prediction, with **self-play reinforcement learning** and **research‑grade performance optimizations**.
 
 ---
