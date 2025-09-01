@@ -16,6 +16,7 @@ val_X, val_Y = prepare_input_output(val_data, GAME_OTHELLO)   # uses your flatte
 #predict & metrics (logits are fine for these metrics)
 pol_logits, val_pred = model.predict(val_X, batch_size=1024, verbose=1)
 
+
 top1 = CategoricalAccuracy()
 top3 = TopKCategoricalAccuracy(k=3)
 top5 = TopKCategoricalAccuracy(k=5)
