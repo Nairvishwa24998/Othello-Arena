@@ -1,6 +1,6 @@
 # Othello AI Arena – AlphaZero-Inspired Game AI
 
-A full-stack **Othello AI platform** featuring **Alpha-Beta**, **Monte Carlo Tree Search (MCTS)**, and **Neural‑MCTS (AlphaZero‑style)** agents.  
+A **Othello AI platform** featuring **Alpha-Beta**, **Monte Carlo Tree Search (MCTS)**, and **Neural‑MCTS (AlphaZero‑style)** agents.  
 Powered by a **deep residual CNN** for policy & value prediction, with **self-play reinforcement learning** and **research‑grade performance optimizations**.
 
 ---
@@ -52,22 +52,48 @@ Powered by a **deep residual CNN** for policy & value prediction, with **self-pl
 
 ```
 Othello-AI-Arena/
-│── boardgame.py             # Base game class
-│── tictactoe_variant.py     # Generalized Tic-Tac-Toe implementation
-│── othello.py               # Othello game logic
-│── Mcts.py                  # Monte Carlo Tree Search (Tic-Tac-Toe)
-│── MctsParent.py            # Shared MCTS scaffolding
-│── MctsOthello.py           # MCTS for Othello
-│── Node.py                  # Tree node for MCTS
-│── Neural_Net.py            # Residual CNN for policy & value prediction
-│── Neural_Net_Utils.py      # Data prep & model training utilities
-│── self_play_bot.py         # Self-play and dataset generation
-│── common_utils.py          # Helper functions & hashing
-│── utility_methods.py       # Game setup & CLI helpers (entrypoint)
-│── constant_strings.py      # Global constants
-│── game_data_*.npz          # Training datasets (generated)
-│── weights_*/               # Saved models (see usage)
-│── LICENSE                  # MIT License
+├── accuracy_testing/
+│   ├── othello_accuracy_testing_script.py
+│   └── tictactoe_accuracy_testing_script.py
+├── checkpoints/
+├── constant_strings.py
+├── data_gen_and_cleaning/
+│   ├── data_cleaning_othello_e_othello_games.py
+│   ├── data_set_generation_othello.py
+│   └── othello_data_augmentation.py
+├── game_data_board_size3_ttt.npz
+├── game_data_board_size4_ttt.npz
+├── game_data_board_size5_ttt.npz
+├── game_data_board_size8_othello.npz
+├── game_logic_layer/
+│   ├── boardgame.py
+│   ├── othello.py
+│   └── tictactoe_variant.py
+├── neural_net.py
+├── neural_net_utils.py
+├── requirements.txt
+├── search_layer/
+│   ├── Node.py
+│   ├── mcts_othello.py
+│   ├── mcts_parent.py
+│   ├── mcts_ttt.py
+│   ├── othello_ab_pruning_helper.py
+│   └── ttt_ab_pruning_helper.py
+├── static/
+│   └── logo.png
+├── training_logs/
+│   └── d4_90_24_training_logs/
+├── user_interface/
+│   └── othello_ui.py
+├── utils/
+│   ├── common_utils.py
+│   ├── game_play_utility_methods.py
+│   └── self_play_bot.py
+├── weights_othello_8/
+│   └── othello-8.keras
+└── weights_ttt_4/
+    └── ttt-4.keras
+e
 └── README.md                # Project documentation
 ```
 
