@@ -223,6 +223,7 @@ class Neural_Net:
             )
 
             checkpoint_callback = ModelCheckpoint(
+
                 ckpt_path,
                 monitor="val_loss",
                 verbose=1,
@@ -281,22 +282,18 @@ class Neural_Net:
             print(f" XLA compilation disabled for {self.game} model")
             self._xla_predict_fn = None
             return
-
         # the attribute is not None
         if getattr(self, "_xla_predict_fn", None) is not None:
             return
         try:
             # Create a dummy input to trace the function
             dummy_input = tf.zeros((1, self.size, self.size, 3), dtype=tf.float32)
-            
             # Compile the predict function with XLA
             @tf.function(jit_compile=True,input_signature=[tf.TensorSpec(shape=(None, self.size, self.size, 3), dtype=tf.float32)],)
             def xla_predict(inputs):
                 return self.model(inputs, training=False)
-            
             # Warm up the compiled function
             xla_predict(dummy_input)
-
             self._xla_predict_fn = xla_predict
             print(f" XLA compilation successful for {self.game} model")
         except Exception as e:
@@ -338,7 +335,6 @@ class Neural_Net:
             # Fallback to regular predict
             return self.predict(board_tensor)
 
-    # To be incorporated
     # Batch prediction for multiple board states at once. Much more efficient than individual predictions.
     def batch_predict(self, board_tensors):
         if isinstance(board_tensors, list):

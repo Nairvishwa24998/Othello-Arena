@@ -1,7 +1,7 @@
 import numpy as np
 
 from utils.common_utils import ttt_validate_bot_play_inp_config, othello_validate_bot_play_inp_config
-from constant_strings import ALPHA_BETA_PRUNING, MCTS_NN, MOVE_B, MOVE_W
+from constant_strings import ALPHA_BETA_PRUNING, MCTS_NN, MOVE_B, MOVE_W, MCTS
 from utils.game_play_utility_methods import setup_tictactoe_instance_for_training_simulations, setup_tictactoe_instance_for_bot_matches, \
     setup_othello_instance_for_bot_matches
 
@@ -193,11 +193,7 @@ class SelfPlayBot:
 
 if __name__ == "__main__":
     bot = SelfPlayBot()
-    # commented out for testing purposes
-    # bot.run_simulations(6, ALPHA_BETA_PRUNING)
-    # bot.run_bot_v_bot_matches(ai_player_1=MCTS_NN, ai_player_2=ALPHA_BETA_PRUNING, rounds=5, board_size=4)
-    # bot.ttt_run_bot_v_bot_matches(ai_player_1=ALPHA_BETA_PRUNING, ai_player_2=ALPHA_BETA_PRUNING, rounds=1)
-    bot.othello_run_bot_v_bot_matches(ai_player_1=ALPHA_BETA_PRUNING, ai_player_2=ALPHA_BETA_PRUNING, rounds=1)
+    bot.othello_run_bot_v_bot_matches(ai_player_1=ALPHA_BETA_PRUNING, ai_player_2=MCTS, rounds=5)
 
 
 

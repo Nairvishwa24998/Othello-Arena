@@ -56,7 +56,6 @@ class MctsParent:
                 value = self.exploitation(child)
                 self.backtracking(child, value)
             else:
-                # new version
                 parent = self.selection()
                 child = self.expansion(parent) or parent
                 game_name = child.state.game_name
@@ -67,24 +66,25 @@ class MctsParent:
                     flat_str = "".join(
                         str(cell) for row in child.state.board for cell in row
                     )
-                    encoded = flattened_board_to_tensor(state_str=flat_str,game_name=game_name, turn_to_move=turn_to_move)
-                    self.pending_batch.append((child, encoded))
+                    encoded_board_state = flattened_board_to_tensor(state_str=flat_str,game_name=game_name, turn_to_move=turn_to_move)
+                    self.pending_batch.append((child, encoded_board_state))
                 else:
                     value = self.exploitation(child)
                     self.backtracking(child, value)
                 # run batch when full or on final simulation
                 if len(self.pending_batch) >= self.BATCH_SIZE or number == max_runs - 1:
                     if self.pending_batch:  # safeguard
-                        batch = np.stack([b for _, b in self.pending_batch], axis=0)
+                        batch = np.stack([encoded_board for linked_node, encoded_board in self.pending_batch], axis=0)
                         start = time.perf_counter()
                         policy_batch, value_batch = self.neural_net.fast_predict(batch)
                         print("batch_time =", time.perf_counter() - start)
-                        for (leaf, _), v in zip(self.pending_batch, value_batch):
+                        # _ is associated with the encoded board tensor. Has been represented with _ since its
+                        # not to be used here
+                        for (leaf, _), predicted_value in zip(self.pending_batch, value_batch):
                             # because of batching a group skips exploitation and gets the predicted values directly
                             child_to_move = leaf.state.current_player()
                             parent_to_move = leaf.parent.player_to_move if leaf.parent else child_to_move
-                            q = float(v) if parent_to_move == child_to_move else -float(v)
+                            q = float(predicted_value) if parent_to_move == child_to_move else -float(predicted_value)
                             self.backtracking(leaf, q)
-
                         self.pending_batch.clear()
 

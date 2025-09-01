@@ -76,14 +76,14 @@ class MctsOthello(MctsParent):
                                         cloned_instance.get_player_symbol(1 - player_turn))
         cloned_instance.increment_total_move_count()
         cloned_instance.last_moved = player_turn
-        next_player = cloned_instance.current_player()
-        child_node = Node(cloned_instance, parent=current_node, move=move,player_to_move=next_player)
+        turn_to_move = cloned_instance.current_player()
+        child_node = Node(cloned_instance, parent=current_node, move=move,player_to_move=turn_to_move)
         if ai_type == MCTS_NN:
             hashed_board_key = board_hash(parent_board, player_turn, ai_type)
             tt_value = self.mcts_transposition_table.get(hashed_board_key)
             if tt_value is None:
                 pre_move_flattened_state_2d = "".join(str(cell) for row in parent_board for cell in row)
-                inp = flattened_board_to_tensor(pre_move_flattened_state_2d, game_name=GAME_OTHELLO, turn_to_move=next_player)[None, ...]
+                inp = flattened_board_to_tensor(pre_move_flattened_state_2d, game_name=GAME_OTHELLO, turn_to_move=turn_to_move)[None, ...]
                 neural_net = self.get_neural_net()
                 # commented out for testing without XLA
                 # policy_prediction, value_prediction = neural_net.model.predict(inp, verbose=0)

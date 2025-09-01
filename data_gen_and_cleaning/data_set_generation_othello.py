@@ -61,14 +61,16 @@ def start_board() -> List[List[str]]:
     b[4][3] = BLACK; b[4][4] = WHITE
     return b
 
+# convert board to string format
 def board_to_str(board: List[List[str]]) -> str:
     return "".join(board[r][c] for r in range(8) for c in range(8))
 
-# WTHOR parsing (8x8)
 
+# WTHOR game parsing (8x8). Designed to stick to matches of 8*8 games and ignore games of other sizes
 def parse_wtb_record(rec: bytes):
-    tourn, pid_b, pid_w, black_real, theo = struct.unpack_from("<HHHBB", rec, 0)
-    moves_raw = rec[8:]  # 60 bytes
+    tournament_id, player_id_black, player_id_white, black_final_disc_count, final_result = struct.unpack_from("<HHHBB", rec, 0)
+    # 60 bytes
+    moves_raw = rec[8:]
     codes = []
     for m in moves_raw:
         if m == 0:
@@ -77,17 +79,18 @@ def parse_wtb_record(rec: bytes):
         if 1 <= row <= 8 and 1 <= col <= 8:
             codes.append(m)
         else:
-            return tourn, pid_b, pid_w, black_real, []  # invalid code → unusable game
-    return tourn, pid_b, pid_w, black_real, codes
+            # invalid code → unusable game
+            return tournament_id, player_id_black, player_id_white, black_final_disc_count, []
+    return tournament_id, player_id_black, player_id_white, black_final_disc_count, codes
+
 
 def decode_code_to_rc_idx(code: int) -> Tuple[int, int, int]:
     row, col = divmod(code, 10)  # row,col in 1..8
     r, c = row - 1, col - 1
     return r, c, r*8 + c
 
-# -----------------------------
+
 # Convert one game → samples
-# -----------------------------
 def game_to_samples(black_final_score: int, move_codes: List[int]):
     """Emit (states, policies, values) for each REAL move (no row for passes)."""
     if not move_codes:
@@ -134,8 +137,8 @@ def game_to_samples(black_final_score: int, move_codes: List[int]):
 
     return states, policies, values, to_move
 
+# Re-simulate and check final Black disc count
 def verify_game(codes: List[int], expected_black_score: int) -> bool:
-    """Re-simulate and check final Black disc count."""
     board = start_board()
     side  = BLACK
     for code in codes:
@@ -154,9 +157,8 @@ def verify_game(codes: List[int], expected_black_score: int) -> bool:
     final_black = sum(ch == BLACK for ch in board_to_str(board))
     return final_black == expected_black_score
 
-# -----------------------------
+
 # File discovery (pick ONE file per year)
-# -----------------------------
 def find_wtb_files(root: str, years: range) -> List[str]:
     """Pick exactly one .wtb/.WTB per year; prefer .wtb; then shortest path."""
     picked = []
@@ -182,9 +184,7 @@ def find_wtb_files(root: str, years: range) -> List[str]:
         picked.append(picks[0])
     return picked
 
-# -----------------------------
 # Main builder
-# -----------------------------
 def build_npz_from_wthor(
     input_dir: str,
     years = range(1990, 2025),

@@ -63,6 +63,24 @@ def minimax_with_alpha_beta_pruning(
     opponent_symbol = othello_game_instance.get_player_symbol(1 - current_player)
     possible_moves = othello_game_instance.get_possible_moves(current_player)
 
+
+
+    # added for TESTING
+    # If no moves: either terminal (already handled above) or forced PASS
+    if not possible_moves:
+        # if opponent has any move, PASS (flip side to move, same board)
+        if othello_game_instance.get_possible_moves(1 - current_player):
+            # depth_to_result increases (one ply consumed), but no board change
+            score = minimax_with_alpha_beta_pruning(
+                othello_game_instance, not isMax, depth_to_result + 1, alpha, beta
+            )
+            othello_game_instance.store_in_transposition_table(score, depth_to_result)
+            return score
+        # else both sides have no moves ⇒ terminal would have returned above
+
+
+
+
     # Loop through children
     for move in possible_moves:
         cloned_child = othello_game_instance.clone_instance()
@@ -128,7 +146,15 @@ def heuristic_minimax_with_alpha_beta_pruning(othello_game_instance, isMax, max_
     current_symbol = othello_game_instance.get_player_symbol(current_player)
     opponent_symbol = othello_game_instance.get_player_symbol(opponent_player)
     possible_moves = othello_game_instance.get_possible_moves(current_player)
-
+    # If no moves: either terminal (already handled above) or forced PASS
+    if not possible_moves:
+        if othello_game_instance.get_possible_moves(opponent_player):
+            return heuristic_minimax_with_alpha_beta_pruning(
+                othello_game_instance, not isMax,
+                max_ai_search_depth,               # do NOT reduce search horizon on pass
+                depth_to_result + 1, alpha, beta
+            )
+        # else both sides stuck → terminal was handled above
     for move in possible_moves:
         clone_game_instance = othello_game_instance.clone_instance()
         clone_game_instance.board[move[0]][move[1]] = current_symbol
@@ -139,7 +165,6 @@ def heuristic_minimax_with_alpha_beta_pruning(othello_game_instance, isMax, max_
         # Recursively call minimax for the next player's turn
         score = heuristic_minimax_with_alpha_beta_pruning(clone_game_instance,not isMax, max_ai_search_depth - 1,
                                                                               depth_to_result + 1, alpha, beta)
-
         # Step 6: Update best score
         if isMax:
             best_score = max(best_score, score)
@@ -153,7 +178,12 @@ def heuristic_minimax_with_alpha_beta_pruning(othello_game_instance, isMax, max_
 
     return best_score
 
+# TT table added with aspiration window
 
+# heuristic aid added to evaluate scores for positions and prevent searching till terminal positions
+# method to get a numerical metric for the next possible move with alpha beta pruning
+# aim to prune branches where alpha >= beta to diminish search space
+# we add a depth_to_result parameter to allow for setting of search depths
 def heuristic_minimax_with_alpha_beta_pruning_with_iterative_deepening(
         othello_game_instance, isMax, max_ply, depth_to_result,
         alpha=-INF, beta=INF):
@@ -194,6 +224,15 @@ def heuristic_minimax_with_alpha_beta_pruning_with_iterative_deepening(
 
             move_list = (othello_game_instance.get_possible_moves(player_code) if not ordered_moves
                          else [move for move, score in ordered_moves])
+
+            # PASS handling
+            if not move_list:
+                if othello_game_instance.get_possible_moves(1 - player_code):
+                    # do NOT shrink depth here; consume only ply count
+                    return heuristic_minimax_with_alpha_beta_pruning_with_iterative_deepening(
+                        othello_game_instance, not isMax, max_ply, depth_to_result + 1, alpha, beta
+                    )
+                # else terminal already returned above
 
             for move in move_list:
                 cloned_child = othello_game_instance.clone_instance()

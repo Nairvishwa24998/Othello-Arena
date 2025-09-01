@@ -107,12 +107,10 @@ def obtain_train_test_validation_data(dataset):
         board_test, policy_test, value_test)
 
 
-# we can use this method to
+# we extract the input features from data and convert it from the flattened board state
+    # to a format tensorflow likes
 def prepare_input_output(data, game_name):
     states, policies, values = data
-    # we extract the input features from data and convert it from the flattened boaed state
-    # to a format tensorflow like
-    # We can remove the doub
     X = np.array(states, dtype=np.float32)
 
     y = {

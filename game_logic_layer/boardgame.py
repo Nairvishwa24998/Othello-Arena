@@ -189,12 +189,9 @@ class BoardGame(ABC):
             policy_full[flat_idx] = p
         return policy_full
 
-    # basically using the softmax function to create a bunch of probabilities for the given move_score list
+    # using the softmax function to create a probability distribution of moves for the given move_score list
     def generate_probability_distribution_with_temperature(self,move_score_list, temperature_control ):
         score_list = np.array([score for move,score in move_score_list], dtype=np.float64)
-        # probability_distribution = np.exp(score_list/temperature_control)
-        # probability_summation = sum(probability_distribution)
-        # probability_distribution = probability_distribution/probability_summation
         probability_distribution = softmax(score_list/temperature_control)
         return probability_distribution
 

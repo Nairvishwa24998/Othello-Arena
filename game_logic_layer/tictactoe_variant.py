@@ -803,8 +803,8 @@ class Tictactoe(BoardGame) :
             result.append([current_board_state[a][(current_board_size -1) - a] for a in range(current_board_size)])
         return result
 
+        # for heuristic offence and defence
 
-    #for heuristic offence and defence
     def calculate_heuristic_value_fork(self):
         current_board_size = self.get_board_size()
         current_board_state = self.get_current_board_state()
@@ -818,25 +818,25 @@ class Tictactoe(BoardGame) :
         for i in range(current_board_size):
             for j in range(current_board_size):
                 if current_board_state[i][j] == ai_symbol:
-                    intersecting_lines = self.get_intersecting_lines([i,j])
+                    intersecting_lines = self.get_intersecting_lines([i, j])
                     ai_winning_lines = 0
                     for line in intersecting_lines:
-                        if self.is_unchallenged(line,ai_symbol,opponent_symbol):
+                        if self.is_unchallenged(line, ai_symbol, opponent_symbol):
                             ai_winning_lines += 1
                         if ai_winning_lines >= 2:
-                            ai_fork_positions.add((i,j))
+                            ai_fork_positions.add((i, j))
         for i in range(current_board_size):
             for j in range(current_board_size):
                 if current_board_state[i][j] == opponent_symbol:
-                    intersecting_lines = self.get_intersecting_lines([i,j])
+                    intersecting_lines = self.get_intersecting_lines([i, j])
                     opponent_winning_lines = 0
                     for line in intersecting_lines:
-                        if self.is_unchallenged(line,opponent_symbol,ai_symbol):
+                        if self.is_unchallenged(line, opponent_symbol, ai_symbol):
                             opponent_winning_lines += 1
                         if opponent_winning_lines >= 2:
-                            opponent_fork_positions.add((i,j))
+                            opponent_fork_positions.add((i, j))
         ai_fork_score = len(ai_fork_positions)
         opponent_fork_score = len(opponent_fork_positions)
         # this is so I can prevent division by 0 errors
-        return (ai_fork_score - opponent_fork_score)/max(1,ai_fork_score + opponent_fork_score)
+        return (ai_fork_score - opponent_fork_score) / max(1, ai_fork_score + opponent_fork_score)
 
