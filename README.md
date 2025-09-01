@@ -133,7 +133,7 @@ venv\Scripts\activate
   ```bash
   pip install numpy tensorflow keras scikit-learn scipy
   ```
-  *(Optional) Create a requirements file for future installs:)*
+  *(Optional) Create a requirements file for future installs*
   ```bash
   pip freeze > requirements.txt
   ```
@@ -147,7 +147,7 @@ venv\Scripts\activate
 
 ---
 
-### ▶️ Usage
+###  Usage
 
 #### 1) Start the interactive game (calls `commence_game_play()`)
 
@@ -229,8 +229,3 @@ SOFTWARE.
 ```
 
 ---
-
-### Notes
-
-- This project is **ongoing**, with **Flask + WebSockets real‑time gameplay** under active development.  
-- Current focus: **Neural‑MCTS pipeline**, **self‑play data generation**, and **scalable search optimizations**.
